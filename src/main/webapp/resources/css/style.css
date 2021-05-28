@@ -2991,7 +2991,7 @@ ol {
 /*--------------------------------- Register Page -----------------------------*/
 
 .signup-form .form-control {
-	border-color: #eee;
+	border-color: #ddd;
 	min-height: 41px;
 	box-shadow: none !important;
 }
@@ -3035,7 +3035,6 @@ ol {
 }
 .signup-form .btn {        
 	font-size: 16px;
-	font-weight: bold;
 	background: #7FAD39;
 	border: none;
 	margin-top: 20px;
@@ -3066,6 +3065,147 @@ ol {
 	}
 }
 
+/*--------------------------------- Member Page -----------------------------*/
+
+.member-form {
+	margin: 0 auto;
+	padding: 30px 0;
+}
+.member-form h2 {
+	color: #333;
+	margin: 0 0 30px 0;
+	display: inline-block;
+	padding: 0 30px 10px 0;
+	border-bottom: 3px solid #7FAD39;
+}
+.member-form {
+	color: #666;
+	border-radius: 3px;
+	margin-bottom: 15px;
+	background: #fff;
+	box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;	
+	padding: 30px;
+}
+.member-form .form-group {
+  border-top: 1px solid #eee;
+}
+.member-form label {
+	font-weight: normal;
+	font-size: 14px;
+	line-height: 2;
+}
+.member-form label + div {
+  min-height: 50px;
+}
+.member-form p {
+    margin-top: 8px;
+}
+.member-form .btn {        
+	font-size: 16px;
+	background: #7FAD39;
+	border: none;
+	margin-top: 20px;
+	min-width: 140px;
+}
+.member-form .btn:hover, .member-form .btn:focus {
+	background: #41cba9;
+	outline: none !important;
+}
+
+/*--------------------------------- Member Modify Page -----------------------------*/
+
+.modify-form .form-control {
+	border-color: #ddd;
+	min-height: 41px;
+	box-shadow: none !important;
+}
+.modify-form .form-control:focus {
+	border-color: #5cd3b4;
+}
+.modify-form .form-control, .btn {        
+	border-radius: 3px;
+}
+.modify-form {
+	margin: 0 auto;
+	padding: 30px 0;
+}
+.modify-form h2 {
+	color: #333;
+	margin: 0 0 30px 0;
+	display: inline-block;
+	padding: 0 30px 10px 0;
+	border-bottom: 3px solid #7FAD39;
+}
+.modify-form form {
+	color: #666;
+	border-radius: 3px;
+	margin-bottom: 15px;
+	background: #fff;
+	box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;	
+	padding: 30px;
+}
+.modify-form .form-group row {
+	margin-bottom: 20px;
+}
+.modify-form label {
+	font-weight: normal;
+	font-size: 14px;
+	line-height: 2;
+}
+.modify-form input[type="radio"] {
+    transform: scale(1.2);
+}
+.modify-form .btn {        
+	font-size: 14px;
+	background: #7FAD39;
+	border: none;
+	margin-top: 20px;
+	min-width: 130px;
+}
+.modify-form .btn:hover, .modify-form .btn:focus {
+	background: #41cba9;
+	outline: none !important;
+}
+.modify-form a {
+	color: #7FAD39;
+	text-decoration: underline;
+}
+.modify-form a:hover {
+	text-decoration: none;
+}
+.modify-form form a {
+	color: #7FAD39;
+	text-decoration: none;
+}	
+.modify-form form a:hover {
+	text-decoration: underline;
+}
+.modify-form p {
+    margin-top: 8px;
+}
+.modify-form .mailing {
+    margin-top: 8px;
+}
+.modify-form .btn-address {
+    height: 40px;
+    margin-right: 15px !important;
+}
+.modify-form .custom-margin {
+  margin: 22px 0 16px;
+}
+.modify-form input[readonly] {
+  background-color: #fff;
+}
+
+@media only screen and (max-width: 576px) {
+  .modify-form .btn-address {
+    margin: 15px !important;
+  }
+  .modify-form .form-address > div {
+    padding: 5px 15px !important;
+    margin: 0 !important;
+  }
+}
 /*--------------------------------- Responsive Media Quaries -----------------------------*/
 
 @media only screen and (min-width: 1200px) {

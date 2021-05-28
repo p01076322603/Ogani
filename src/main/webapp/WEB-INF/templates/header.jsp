@@ -27,7 +27,7 @@
   </div>
   <div class="humberger__menu__widget">
     <div class="header__top__right__auth">
-      <a href="login"><i class="fa fa-user"></i> Login</a>
+      <a href="/login"><i class="fa fa-user"></i> Login</a>
     </div>
   </div>
   <nav class="humberger__menu__nav mobile-menu">
@@ -76,14 +76,14 @@
           <div class="header__top__right">
             <div class="header__top__right__auth d-flex float-right">
               <s:authorize access="isAnonymous()">
-                <a href="login" class="px-3"><i class="fa fa-user"></i>Login</a>
+                <a href="/login" class="px-3"><i class="fa fa-user"></i>Login</a>
                 <a href="register"><i class="fa fa-user"></i>Register</a>
               </s:authorize>
               <s:authorize access="isAuthenticated()">
                 <s:authentication var="principal" property="principal"/>
-                <c:out value="${principal.cust_id}"/>
-                <a href="logout" class="px-3"><i class="fa fa-user"></i>Logout</a>
-                <a href="member/${principal.cust_no}"><i class="fa fa-user"></i>Info</a>
+                <p class="m-0" style="position: relative; bottom: 3px;"><c:out value="${principal.cust_id}"/></p>
+                <a href="/logout" class="px-3"><i class="fa fa-user"></i>Logout</a>
+                <a href="/member"><i class="fa fa-user"></i>Info</a>
               </s:authorize>
             </div>
           </div>

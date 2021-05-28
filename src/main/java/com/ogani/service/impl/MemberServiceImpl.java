@@ -19,12 +19,19 @@ public class MemberServiceImpl implements MemberService {
 	private final MemberMapper mapper;
 	
 	@Override
-	public CustomerDTO selectById(String cust_id) {
-		log.trace("selectById( cust_id = {} )", cust_id);
+	public CustomerDTO getCustomerById(String cust_id) {
+		log.trace("getCustomerById( cust_id = {} )", cust_id);
 		
 		return mapper.selectById(cust_id);
 	}
 
+	@Override
+	public CustomerDTO getCustomerByNo(int cust_no) {
+		log.trace("getCustomerByNo( cust_no = {} )", cust_no);		
+		
+		return mapper.selectByNo(cust_no);
+	}
+	
 	@Override
 	public Date updateLastLogin(String cust_id) {
 		log.trace("updateLastLogin( cust_id = {} )", cust_id);
@@ -35,11 +42,11 @@ public class MemberServiceImpl implements MemberService {
 		return customer.getCust_lastlogin();
 	}
 
+	@Override
 	public boolean register(CustomerDTO customer) {
 		log.trace("register( {} )", customer);
 		
 		return mapper.insert(customer) == 1;
 	}
-
 	
 }

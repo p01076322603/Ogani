@@ -46,7 +46,7 @@ public class CommonController {
 	// LOGOUT
 	@GetMapping("/logout")
 	public String logout(HttpServletRequest request, HttpServletResponse response) {
-		log.trace("logout() GET");
+		log.trace("logout(request, response) GET");
 		
 		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 		if (auth != null) 
@@ -65,7 +65,7 @@ public class CommonController {
 	
 	@PostMapping("/register")
 	public String register(@ModelAttribute CustomerDTO customer, RedirectAttributes redirectAttr) {
-		log.trace("register() POST");
+		log.trace("register(customer, redirectAttr) POST");
 		log.debug("register( {} )", customer);
 
 		String encodedPassword = passwordEncoder.encode(customer.getCust_password());

@@ -78,7 +78,7 @@
           <p>
             <label class="form-check-label"><input type="checkbox" required="required"> I accept the <a href="#">Terms of Use</a> &amp; <a href="#">Privacy Policy</a>.</label>
           </p>
-          <button type="submit" class="btn btn-primary btn-lg">Sign Up</button>
+          <button type="submit" class="btn btn-lg text-white">Sign Up</button>
         </div>
       </div>
       <s:csrfInput/>

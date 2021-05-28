@@ -6,7 +6,9 @@ import com.ogani.domain.CustomerDTO;
 
 public interface MemberService {
 
-	public CustomerDTO selectById(String cust_id);
+	public CustomerDTO getCustomerById(String cust_id);
+	
+	public CustomerDTO getCustomerByNo(int cust_no);
 	
 	public Date updateLastLogin(String user_id);
 	

@@ -6,6 +6,8 @@ public interface MemberMapper {
 
 	public CustomerDTO selectById(String cust_id);
 	
+	public CustomerDTO selectByNo(int cust_no);
+	
 	public int updateLastLogin(CustomerDTO customer);
 	
 	public int insert(CustomerDTO customer);
