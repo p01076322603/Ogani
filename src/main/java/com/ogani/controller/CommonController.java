@@ -27,6 +27,7 @@ public class CommonController {
 	private final MemberService memberService;
 	private final PasswordEncoder passwordEncoder;
 	
+	// INDEX PAGE
 	@GetMapping("/")
 	public String index() {
 		log.trace("index() GET");
@@ -34,6 +35,27 @@ public class CommonController {
 		return "index";
 	}
 	
+	// LOGIN FORM
+	@GetMapping("/login")
+	public String loginForm() {
+		log.trace("loginForm() GET");
+		
+		return "login";
+	}
+	
+	// LOGOUT
+	@GetMapping("/logout")
+	public String logout(HttpServletRequest request, HttpServletResponse response) {
+		log.trace("logout() GET");
+		
+		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+		if (auth != null) 
+			new SecurityContextLogoutHandler().logout(request, response, auth);
+		
+		return "redirect:/";
+	}
+	
+	// REGISTER
 	@GetMapping("/register")
 	public String registerForm() {
 		log.trace("registerForm() GET");
@@ -56,24 +78,6 @@ public class CommonController {
 		}
 		
 		return "redirect:/login";
-	}
-	
-	@GetMapping("/login")
-	public String loginForm() {
-		log.trace("loginForm() GET");
-		
-		return "login";
-	}
-
-	@GetMapping("/logout")
-	public String logout(HttpServletRequest request, HttpServletResponse response) {
-		log.trace("logout() GET");
-		
-		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-		if (auth != null) 
-			new SecurityContextLogoutHandler().logout(request, response, auth);
-		
-		return "redirect:/";
 	}
 	
 	@GetMapping("/blog")

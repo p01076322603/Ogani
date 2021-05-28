@@ -8,7 +8,7 @@ import lombok.ToString;
 
 @Getter @Setter @ToString
 public class CustomerDTO {
-
+	
 	private int cust_no;
 	private String cust_id;
 	private String cust_password;
@@ -20,5 +20,5 @@ public class CustomerDTO {
 	private Date cust_regdate;
 	private Date cust_lastlogin;
 	private int cust_mailing;
-
+	
 }

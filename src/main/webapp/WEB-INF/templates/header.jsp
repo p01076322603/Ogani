@@ -80,9 +80,10 @@
                 <a href="register"><i class="fa fa-user"></i>Register</a>
               </s:authorize>
               <s:authorize access="isAuthenticated()">
-                <c:out value="${sessionScope.customer.cust_id}"/>
+                <s:authentication var="principal" property="principal"/>
+                <c:out value="${principal.cust_id}"/>
                 <a href="logout" class="px-3"><i class="fa fa-user"></i>Logout</a>
-                <a href="member/${sessionScope.customer.cust_no}"><i class="fa fa-user"></i>Info</a>
+                <a href="member/${principal.cust_no}"><i class="fa fa-user"></i>Info</a>
               </s:authorize>
             </div>
           </div>

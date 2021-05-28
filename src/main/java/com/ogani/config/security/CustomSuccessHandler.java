@@ -6,7 +6,6 @@ import java.util.Date;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
@@ -24,18 +23,14 @@ public class CustomSuccessHandler implements AuthenticationSuccessHandler {
 	private MemberService memberService;
 	
 	@Override
-	public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response,
-			Authentication authentication) throws IOException, ServletException {
+	public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) 
+			throws IOException, ServletException {
+		
 		log.debug("로그인에 성공하였습니다.");
-
-		String username = authentication.getName();
-		CustomerDTO customer = memberService.selectById(username);
+		CustomerDTO customer = (CustomerDTO) authentication.getPrincipal();
+		Date loginDate = memberService.updateLastLogin(customer.getCust_id());
 		
-		Date lastLoginDate = memberService.updateLastLogin(username);
-		log.debug("{}, {}", lastLoginDate, customer);
-		
-		HttpSession session = request.getSession();
-		session.setAttribute("customer", customer);
+		log.debug("loginDate = {}, principal = {}", loginDate, customer);
 		
 		response.sendRedirect("/");
 	}

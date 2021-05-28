@@ -41,5 +41,5 @@ public class MemberServiceImpl implements MemberService {
 		return mapper.insert(customer) == 1;
 	}
 
-
+	
 }

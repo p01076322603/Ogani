@@ -12,6 +12,7 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.access.AccessDeniedHandler;
 import org.springframework.security.web.authentication.AuthenticationFailureHandler;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 
@@ -31,24 +32,27 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 	public UserDetailsService customUserService() { return new CustomUserDetailsService(); }
 	
 	@Bean
-	public AuthenticationFailureHandler CustomFailureHandler() { return new CustomFailureHandler(); }
+	public AuthenticationFailureHandler customFailureHandler() { return new CustomFailureHandler(); }
 
 	@Bean
-	public AuthenticationSuccessHandler CustomSuccessHandler() { return new CustomSuccessHandler(); }
+	public AuthenticationSuccessHandler customSuccessHandler() { return new CustomSuccessHandler(); }
 	
     @Bean
-    public AuthenticationProvider authenticationProvider() { return new CustomAuthenticationProvider(); }
+    public AuthenticationProvider customAuthenticationProvider() { return new CustomAuthenticationProvider(); }
 	
+    @Bean
+    public AccessDeniedHandler customAccessDeniedHandler() { return new CustomAccessDeniedHandler(); }
+    
 	@Override
 	protected void configure(AuthenticationManagerBuilder auth) throws Exception {
 		
-		auth.authenticationProvider(authenticationProvider());
+		auth.authenticationProvider(customAuthenticationProvider());
 		auth.userDetailsService(customUserService()).passwordEncoder(passwordEncoder());
 		auth.jdbcAuthentication().dataSource(dataSource).passwordEncoder(passwordEncoder())
     	.usersByUsernameQuery("SELECT cust_id, cust_password, cust_enabled "
 			        		+ "FROM customer "
 			        		+ "WHERE cust_id = ?")
-    	.authoritiesByUsernameQuery("SELECT cust_id, cust_auth "
+    	.authoritiesByUsernameQuery("SELECT cust_id, 'ROLE_USER' as cust_auth "
 				        		  + "FROM customer "
 				        		  + "WHERE cust_id = ?");
 	}
@@ -60,9 +64,12 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 				.antMatchers("/blog").access("hasRole('USER')")
 				.antMatchers("/contact").access("hasRole('ADMIN')");
 
+		http.exceptionHandling()
+				.accessDeniedHandler(customAccessDeniedHandler());
+		
 		http.formLogin()
-				.loginPage("/login").failureHandler(CustomFailureHandler())
-									.successHandler(CustomSuccessHandler());
+				.loginPage("/login").failureHandler(customFailureHandler())
+									.successHandler(customSuccessHandler());
 		
 		http.logout()
 				.logoutUrl("/logout").invalidateHttpSession(true).deleteCookies("remember-me", "JSESSION_ID");
