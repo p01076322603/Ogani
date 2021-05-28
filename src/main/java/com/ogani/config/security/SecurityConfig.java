@@ -4,6 +4,7 @@ import javax.sql.DataSource;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -15,9 +16,7 @@ import org.springframework.security.web.authentication.AuthenticationFailureHand
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 
-@Slf4j
 @Configuration
 @EnableWebSecurity
 @RequiredArgsConstructor
@@ -37,9 +36,13 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 	@Bean
 	public AuthenticationSuccessHandler CustomSuccessHandler() { return new CustomSuccessHandler(); }
 	
+    @Bean
+    public AuthenticationProvider authenticationProvider() { return new CustomAuthenticationProvider(); }
+	
 	@Override
 	protected void configure(AuthenticationManagerBuilder auth) throws Exception {
 		
+		auth.authenticationProvider(authenticationProvider());
 		auth.userDetailsService(customUserService()).passwordEncoder(passwordEncoder());
 		auth.jdbcAuthentication().dataSource(dataSource).passwordEncoder(passwordEncoder())
     	.usersByUsernameQuery("SELECT cust_id, cust_password, cust_enabled "

@@ -39,32 +39,38 @@
   <jsp:include page="../templates/header.jsp" />
   
   <div class="signup-form">
-    <form action="/examples/actions/confirmation.php" method="post" class="form-horizontal">
+    <form action="register" method="post" class="form-horizontal">
       <div class="text-center">
         <h2>Sign Up</h2>
       </div>
       <div class="form-group row">
         <label class="col-form-label col-sm-4 col-12">Username</label>
         <div class="col-sm-8 col-12">
-          <input type="text" class="form-control" name="username" required="required">
-        </div>
-      </div>
-      <div class="form-group row">
-        <label class="col-form-label col-sm-4 col-12">Email Address</label>
-        <div class="col-sm-8 col-12">
-          <input type="email" class="form-control" name="email" required="required">
+          <input type="text" class="form-control" name="cust_id" required="required">
         </div>
       </div>
       <div class="form-group row">
         <label class="col-form-label col-sm-4 col-12">Password</label>
         <div class="col-sm-8 col-12">
-          <input type="password" class="form-control" name="password" required="required">
+          <input type="password" class="form-control" name="cust_password" required="required">
         </div>
       </div>
       <div class="form-group row">
         <label class="col-form-label col-sm-4 col-12">Confirm Password</label>
         <div class="col-sm-8 col-12">
-          <input type="password" class="form-control" name="confirm_password" required="required">
+          <input type="password" class="form-control" name="cust_confirm_password" required="required">
+        </div>
+      </div>
+      <div class="form-group row">
+        <label class="col-form-label col-sm-4 col-12">Email Address</label>
+        <div class="col-sm-8 col-12">
+          <input type="email" class="form-control" name="cust_email" required="required">
+        </div>
+      </div>
+      <div class="form-group row">
+        <label class="col-form-label col-sm-4 col-12">Phone</label>
+        <div class="col-sm-8 col-12">
+          <input type="text" class="form-control" name="cust_phone" required="required">
         </div>
       </div>
       <div class="form-group row">
@@ -75,9 +81,10 @@
           <button type="submit" class="btn btn-primary btn-lg">Sign Up</button>
         </div>
       </div>
+      <s:csrfInput/>
     </form>
-    <div class="text-center">
-      Already have an account? <a href="#">Login here</a>
+    <div class="text-center lead">
+      Already have an account? <a href="login">Login here</a>
     </div>
   </div>
 

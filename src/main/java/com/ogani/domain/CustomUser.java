@@ -8,8 +8,9 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.User;
 
 import lombok.Getter;
+import lombok.Setter;
 
-@Getter
+@Getter @Setter
 public class CustomUser extends User {
 	private static final long serialVersionUID = 2802484444563453869L;
 	private CustomerDTO customer;

@@ -1,5 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib prefix="s" uri="http://www.springframework.org/security/tags" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <!DOCTYPE html>
 <html lang="ko">
 
@@ -38,6 +39,17 @@
 
   <jsp:include page="../templates/header.jsp" />
 
+  <c:if test="${registerResult}">
+    <div class="container">
+      <div class="alert alert-success alert-dismissible fade show" role="alert">
+        <strong>회원가입을 환영합니다!</strong> 로그인 해주세요.
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+    </div>
+  </c:if>
+  
   <div class="login-form my-5">
     <form action="/login" method="post">
       <div class="avatar">
@@ -60,8 +72,8 @@
       <input type="submit" class="btn btn-primary btn-block btn-lg" value="Login">
       <s:csrfInput/>
     </form>
-    <div class="text-center small">
-      Don't have an account? <a href="#">Sign up</a>
+    <div class="text-center lead">
+      Don't have an account? <a href="register">Sign up</a>
     </div>
   </div>
 

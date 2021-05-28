@@ -1,4 +1,5 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="s" uri="http://www.springframework.org/security/tags" %>
 <!-- Page Preloder -->
 <div id="preloder">
@@ -73,12 +74,15 @@
         </div>
         <div class="col-lg-6">
           <div class="header__top__right">
-            <div class="header__top__right__auth">
+            <div class="header__top__right__auth d-flex float-right">
               <s:authorize access="isAnonymous()">
-                <a href="login"><i class="fa fa-user"></i> Login</a>
+                <a href="login" class="px-3"><i class="fa fa-user"></i>Login</a>
+                <a href="register"><i class="fa fa-user"></i>Register</a>
               </s:authorize>
               <s:authorize access="isAuthenticated()">
-                <a href="logout"><i class="fa fa-user"></i> Logout</a>
+                <c:out value="${sessionScope.customer.cust_id}"/>
+                <a href="logout" class="px-3"><i class="fa fa-user"></i>Logout</a>
+                <a href="member/${sessionScope.customer.cust_no}"><i class="fa fa-user"></i>Info</a>
               </s:authorize>
             </div>
           </div>

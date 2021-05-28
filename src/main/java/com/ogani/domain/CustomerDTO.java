@@ -2,9 +2,11 @@ package com.ogani.domain;
 
 import java.util.Date;
 
-import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.ToString;
 
-@Data
+@Getter @Setter @ToString
 public class CustomerDTO {
 
 	private int cust_no;
@@ -17,5 +19,6 @@ public class CustomerDTO {
 	private int cust_enabled;
 	private Date cust_regdate;
 	private Date cust_lastlogin;
+	private int cust_mailing;
 
 }

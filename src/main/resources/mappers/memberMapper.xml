@@ -4,10 +4,24 @@
   "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.ogani.mapper.MemberMapper">
 	
+    <update id="updateLastLogin" parameterType="com.ogani.domain.CustomerDTO">
+      UPDATE customer
+      SET cust_lastlogin = SYSDATE
+      WHERE cust_id = #{cust_id}
+      <selectKey resultType="date" keyProperty="cust_lastlogin" order="AFTER">
+        SELECT SYSDATE FROM DUAL
+      </selectKey>
+    </update>
+  
 	<select id="selectById" resultType="com.ogani.domain.CustomerDTO">
 		SELECT * 
 		FROM customer 
 		WHERE cust_id = #{cust_id}
 	</select>
 	
+    <insert id="insert">
+      INSERT INTO customer(cust_no, cust_id, cust_password, cust_phone, cust_email)
+      VALUES(seq_cust_no.NEXTVAL, #{cust_id}, #{cust_password}, #{cust_phone}, #{cust_email})
+    </insert>
+  
 </mapper>

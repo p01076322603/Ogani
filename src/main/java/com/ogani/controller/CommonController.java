@@ -5,32 +5,64 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import com.ogani.domain.CustomerDTO;
+import com.ogani.service.MemberService;
+
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @Controller
+@RequiredArgsConstructor
 public class CommonController {
+
+	private final MemberService memberService;
+	private final PasswordEncoder passwordEncoder;
 	
 	@GetMapping("/")
 	public String index() {
 		log.trace("index() GET");
+		
 		return "index";
 	}
 	
-	@GetMapping("/login")
-	public String login() {
-		log.trace("login() GET");
-		return "login";
-	}
-
 	@GetMapping("/register")
-	public String register() {
-		log.trace("register() GET");
+	public String registerForm() {
+		log.trace("registerForm() GET");
+		
 		return "register";
+	}
+	
+	@PostMapping("/register")
+	public String register(@ModelAttribute CustomerDTO customer, RedirectAttributes redirectAttr) {
+		log.trace("register() POST");
+		log.debug("register( {} )", customer);
+
+		String encodedPassword = passwordEncoder.encode(customer.getCust_password());
+		customer.setCust_password(encodedPassword);
+		
+		boolean registerResult = memberService.register(customer);
+		if (registerResult) {
+			log.debug("register result = {}", registerResult);
+			redirectAttr.addFlashAttribute("registerResult", registerResult);
+		}
+		
+		return "redirect:/login";
+	}
+	
+	@GetMapping("/login")
+	public String loginForm() {
+		log.trace("loginForm() GET");
+		
+		return "login";
 	}
 
 	@GetMapping("/logout")
@@ -47,12 +79,14 @@ public class CommonController {
 	@GetMapping("/blog")
 	public String blog() {
 		log.trace("blog() GET");
+		
 		return "blog";
 	}
 	
 	@GetMapping("/contact")
 	public String contact() {
 		log.trace("contact() GET");
+		
 		return "contact";
 	}
 }
