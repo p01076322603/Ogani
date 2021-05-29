@@ -6,11 +6,13 @@ import com.ogani.domain.CustomerDTO;
 
 public interface MemberService {
 
-	public CustomerDTO getCustomerById(String cust_id);
+	public CustomerDTO getMemberById(String cust_id);
 	
-	public CustomerDTO getCustomerByNo(int cust_no);
+	public CustomerDTO getMemberByNo(int cust_no);
 	
 	public Date updateLastLogin(String user_id);
 	
-	public boolean register(CustomerDTO customer);
+	public CustomerDTO modifyMember(CustomerDTO customer);
+	
+	public boolean registerMember(CustomerDTO customer);
 }

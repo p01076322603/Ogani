@@ -219,11 +219,7 @@
             }
         }
         $button.parent().find('input').val(newVal);
-    });
-
-    /*-------------------
-		Bootstrap Init	
-	--------------------- */
+    });	
 	
 })(jQuery);
 
@@ -295,7 +291,7 @@ function sample3_execDaumPostcode() {
         },
         // 우편번호 찾기 화면 크기가 조정되었을때 실행할 코드를 작성하는 부분. iframe을 넣은 element의 높이값을 조정한다.
         onresize : function(size) {
-            element_wrap.style.height = size.height+'px';
+            element_wrap.style.height = size.height + 'px';
         },
         width : '100%',
         height : '100%'
@@ -304,3 +300,179 @@ function sample3_execDaumPostcode() {
     // iframe을 넣은 element를 보이게 한다.
     element_wrap.style.display = 'block';
 }
+
+/*-------------------
+	jQuery shake()	
+--------------------- */
+
+jQuery.fn.shake = function(interval, distance, times) {
+	interval = typeof interval == "undefined" ? 100 : interval;
+	distance = typeof distance == "undefined" ? 10 : distance;
+	times = typeof times == "undefined" ? 3 : times;
+	var jTarget = $(this);
+	jTarget.css('position', 'relative');
+	for (var iter = 0; iter < (times + 1); iter++) {
+		jTarget.animate({
+			left: ((iter % 2 == 0 ? distance : distance * -1))
+		}, interval);
+	}
+	return jTarget.animate({
+		left: 0
+	}, interval);
+}
+
+/*-------------------
+    CSRF Header
+-------------------- */
+
+var CSRFheader = $("meta[name='_csrf_header']").attr('content');
+var CSRFtoken  = $("meta[name='_csrf']").attr('content');
+
+/*-------------------
+    	Regex
+-------------------- */
+
+const getId = RegExp(/^[a-zA-Z]{1}[a-zA-Z0-9]{5,19}$/);
+const getPwd = RegExp(/^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{6,30}$/);
+const getEmail = RegExp(/^[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*@[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*.[a-zA-Z]{2,3}$/i);
+const getPhone = RegExp(/^(01[016789]{1})-\d{3,4}-\d{4}$/);
+
+
+/*-------------------
+  Register Validation	
+--------------------- */
+
+$("#signup-cust_id").blur(function() {
+	$("#v-cust_idcheck").text("");
+		var id = $("#signup-cust_id").val();
+		if (id == "") {
+			$("#v-cust_idcheck").text("필수 입력 항목 입니다.");
+			$("#v-cust_idcheck").shake();
+		} else {
+			$.ajax({
+				url: "register/idcheck",
+				type: "POST",
+				data: { 'id': id },
+				dataType: "json",
+				beforeSend : (xhr) => xhr.setRequestHeader(CSRFheader, CSRFtoken),
+				success: (data) => {
+					if (data.checkResult == "1") {
+						$("#v-cust_idcheck").text("이미 존재하거나 사용이 불가능한 아이디 입니다");
+						$("#v-cust_idcheck").shake();
+					} else {
+						$("#v-cust_idcheck").text("");
+					}
+				},
+				fail: () =>	alert("시스템 에러")
+			});
+		}
+});
+
+
+$("#signup-cust_password, #signup-cust_confirm_password").blur(function() {
+	$("#v-cust_confirm_password").text("");
+});
+$("#signup-cust_email").blur(function() {
+	$("#v-cust_email").text("");
+});
+$("#signup-cust_phone").blur(function() {
+	$("#v-cust_phone").text("");
+	$(this).val( $(this).val().replace(/[^0-9]/g, "").replace(/(^02|^0505|^1[0-9]{3}|^0[0-9]{2})([0-9]+)?([0-9]{4})$/,"$1-$2-$3").replace("--", "-") );
+});
+
+function registerCheck() {
+
+	if (!getId.test($("#signup-cust_id").val())) {
+		$("#signup-cust_id").focus();
+		$("#v-cust_id").shake();
+		return false;
+	}
+	if (!getPwd.test($("#signup-cust_password").val())) {
+		$("#signup-cust_password").focus();
+		$("#v-cust_password").shake();
+		return false;
+	}
+	if ($("#signup-cust_id").val() == $("#signup-cust_password").val()) {
+		$("#v-cust_confirm_password").text("아이디와 비밀번호가 같습니다");
+		$("#signup-cust_password").val("");
+		$("#signup-cust_confirm_password").val("");
+		$("#signup-cust_password").focus();
+		$("#v-cust_confirm-password").shake();
+		return false;
+	}
+	if ($("#signup-cust_password").val() != $("#signup-cust_confirm_password").val()) {
+		$("#v-cust_confirm_password").text("비밀번호가 일치하지 않습니다");
+		$("#signup-cust_confirm_password").val("");
+		$("#signup-cust_confirm_password").focus();
+		$("#v-cust_confirm-password").shake();
+		return false;
+	}
+	if (!getEmail.test($("#signup-cust_email").val())) {
+		$("#v-cust_email").text("올바르지 않은 이메일입니다");
+		$("#signup-cust_email").focus();
+		$("#v-cust_email").shake();
+		return false;
+	}
+	if (!getPhone.test($("#signup-cust_phone").val())) {
+		$("#v-cust_phone").text("올바르지 않은 전화번호입니다");
+		$("#signup-cust_phone").focus();
+		$("#v-cust_phone").shake();
+		return false;
+	}
+
+	return true;
+}
+
+/*-------------------
+   Login Validation	
+--------------------- */
+
+$("#username, #password").blur(function() {
+	$("#login-result").text("");
+});
+
+function loginCheck() {
+	
+	$("#login-result").text("");
+	if ($.trim($("#username").val()) == "") {
+		$("#login-result").text("아이디를 입력해주세요");
+		$("#login-result").shake();
+		return false;
+	}
+	if ($.trim($("#password").val()) == "") {
+		$("#login-result").text("비밀번호를 입력해주세요");
+		$("#login-result").shake();
+		return false;
+	}
+	
+	var loginUsername = $("#username").val();
+	var loginPassword = $("#password").val();
+	$.ajax({
+		url: "/login",
+		type : "POST",
+		data : "username=" + loginUsername + "&password=" + loginPassword,
+		dataType : "json",
+		beforeSend : (xhr) => xhr.setRequestHeader(CSRFheader, CSRFtoken),
+		success: (data) => {
+			if (data.loginResult == 0) {
+				$("#login-result").text("아이디 혹은 비밀번호가 일치하지 않습니다");	
+				$("#login-result").shake();
+			}
+			if (data.loginResult == 1) {
+				 $(document).ajaxStop(function(){
+    			     window.location.assign(data.targetUrl);
+				 });
+			}				
+		},
+		fail: () =>	alert("시스템 에러")
+	});
+}
+
+$("#login-submit").click(function () {
+	loginCheck();
+});
+
+
+/*-------------------
+MemberModify Validation	
+--------------------- */

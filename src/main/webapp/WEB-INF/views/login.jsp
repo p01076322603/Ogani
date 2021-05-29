@@ -10,6 +10,12 @@
 <meta name="keywords" content="Ogani, unica, creative, html">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta http-equiv="X-UA-Compatible" content="ie=edge">
+
+<s:csrfMetaTags/>
+<s:authorize access="isAuthenticated()">
+  <% response.sendRedirect("/member"); %>
+</s:authorize>
+
 <title>Ogani</title>
 
 <!-- Google Font -->
@@ -55,25 +61,25 @@
       <div class="avatar">
         <i class="fa fa-user fa-4x"></i>
       </div>
-      <h4 class="modal-title">Login to Your Account</h4>
+      <p class="lead text-center">로그인</p>
       <div class="form-group">
-        <input type="text" class="form-control" name="username" placeholder="Username" required="required">
+        <input type="text" class="form-control" id="username" name="username" placeholder="아이디" required="required">
       </div>
       <div class="form-group mb-1">
-        <input type="password" class="form-control" name="password" placeholder="Password" required="required">
+        <input type="password" class="form-control" id="password" name="password" placeholder="비밀번호" required="required">
       </div>
       <div class="query-result">
-        <small class="text-danger"></small>
+        <small id="login-result" class="text-danger" style="min-height: 30px;"></small>
       </div>
       <div class="form-group small clearfix">
-        <label class="form-check-label"><input type="checkbox"> Remember me</label> <a href="#"
-          class="forgot-link">Forgot Password?</a>
+        <label class="form-check-label"><input type="checkbox"> 로그인 기억하기</label> <a href="#"
+          class="forgot-link">비밀번호 찾기</a>
       </div>
-      <input type="submit" class="btn btn-primary btn-block btn-lg" value="Login">
+      <input type="button" id="login-submit" class="btn btn-primary btn-block btn-lg" value="Login">
       <s:csrfInput/>
     </form>
     <div class="text-center lead">
-      Don't have an account? <a href="register">Sign up</a>
+      <p>계정이 없으신가요? <a href="register">회원가입</a></p>
     </div>
   </div>
 

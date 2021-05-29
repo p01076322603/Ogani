@@ -42,6 +42,27 @@
   <s:authentication var="principal" property="principal"/>
   
   <div class="container">
+    <c:choose>
+      <c:when test="${modifyResult eq true}">
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+          <strong>회원 정보가 수정되었습니다.</strong>
+          <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+      </c:when>
+      <c:when test="${modifyResult eq false}">
+        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+          <strong>회원 정보 수정에 실패하였습니다.</strong>
+          <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+      </c:when>
+    </c:choose>
+  </div>
+  
+  <div class="container">
     <div class="member-form">
       <div class="text-center">
         <h2>Member Info</h2>

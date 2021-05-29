@@ -47,34 +47,43 @@
         <div class="text-center">
           <h2>Member Modify</h2>
         </div>
+        <div class="form-group row mb-2">
+          <div class="col-sm-4">
+            <small class="text-danger" style="position: relative; top: 8px;">* : 필수 항목입니다.</small>
+          </div>
+          <label class="col-form-label col-sm-2 offset-sm-2 col-12">Username</label>
+          <div class="col-sm-4">
+            <p class="ml-2"><c:out value="${principal.cust_id}"/></p>
+          </div>
+        </div>
         <div class="row">
           <div class="col-lg-6">
             <div class="form-group row">
-              <label class="col-form-label col-sm-4 col-12">Username</label>
-              <div class="col-sm-8">
-                <p class="ml-2"><c:out value="${principal.cust_id}"/></p>
-              </div>
-            </div>
-            <div class="form-group row">
-              <label class="col-form-label col-sm-4 col-12">Password</label>
+              <label class="col-form-label col-sm-4 col-12">Password<span class="float-right">*</span></label>
               <div class="col-sm-8">
                 <input type="password" class="form-control" name="cust_password" required="required">
               </div>
             </div>
             <div class="form-group row">
-              <label class="col-form-label col-sm-4 col-12">Confirm Password</label>
+              <label class="col-form-label col-sm-4 col-12">Modified Password</label>
               <div class="col-sm-8">
-                <input type="password" class="form-control" name="cust_confirm_password" required="required">
+                <input type="password" class="form-control" name="cust_new_password">
               </div>
             </div>
             <div class="form-group row">
-              <label class="col-form-label col-sm-4 col-12">Email Address</label>
+              <label class="col-form-label col-sm-4 col-12">Confirm Password</label>
+              <div class="col-sm-8">
+                <input type="password" class="form-control" name="cust_confirm_new_password">
+              </div>
+            </div>
+            <div class="form-group row">
+              <label class="col-form-label col-sm-4 col-12">Email Address<span class="float-right">*</span></label>
               <div class="col-sm-8">
                 <input type="email" class="form-control" name="cust_email" value="${principal.cust_email}">
               </div>
             </div>
             <div class="form-group row">
-              <label class="col-form-label col-sm-4 col-12">Phone</label>
+              <label class="col-form-label col-sm-4 col-12">Phone<span class="float-right">*</span></label>
               <div class="col-sm-8">
                 <input type="text" class="form-control" name="cust_phone" value="${principal.cust_phone}">
               </div>
@@ -90,28 +99,34 @@
             <div class="form-group row">
               <label class="col-form-label col-sm-4 col-12">Mailing</label>
               <div class="mailing col-sm-8">
-                <label><input type="radio" name="cust_mailing"><span class="mr-2"> 동의합니다.</span></label> 
-                <label><input type="radio" name="cust_mailing"><span> 동의하지 않습니다.</span></label> 
+                <label><input type="radio" name="cust_mailing" value="1" ${principal.cust_mailing == 1 ? 'checked' : ''}><span class="mr-2"> 동의합니다.</span></label> 
+                <label><input type="radio" name="cust_mailing" value="0" ${principal.cust_mailing == 0 ? 'checked' : ''}><span > 동의하지 않습니다.</span></label> 
               </div>
             </div>
             <div class="form-group form-address row mb-0">
               <label class="col-form-label col-sm-4 col-12">Address</label>
               <div class="col-sm-3 pr-0">
-                <input type="text" class="form-control" id="sample3_postcode" name="cust_address1" readonly>
+                <input type="text" class="form-control" id="sample3_postcode" name="cust_address1" value="${address[0]}" readonly>
               </div>
               <button class="col-sm-4 btn btn-address text-white m-0 ml-auto" type="button" onclick="sample3_execDaumPostcode()">우편번호 찾기</button>
               <div class="col-sm-12 custom-margin">
-                <input type="text" class="form-control" id="sample3_address" name="cust_address2" readonly>
+                <input type="text" class="form-control" id="sample3_address" name="cust_address2" value="${address[1]}" readonly>
               </div>
-              <div class="col-sm-6 pr-1">
-                <input type="text" class="form-control" id="sample3_detailAddress" name="cust_address3">
+              <div class="col-sm-6 pr-1 mb-3">
+                <input type="text" class="form-control" id="sample3_detailAddress" name="cust_address3" value="${address[2]}">
               </div>
-              <div class="col-sm-6 pl-1">
-                <input type="text" class="form-control" id="sample3_extraAddress" name="cust_address4">
+              <div class="col-sm-6 pl-1 mb-3">
+                <input type="text" class="form-control" id="sample3_extraAddress" name="cust_address4" value="${address[3]}">
               </div>
             </div>
           </div>
         </div>
+        <div class="buttons">
+          <button type="submit" class="btn text-white mt-1">수정하기</button>
+          <a href="/member"><button type="button" class="btn text-white ml-3 mt-1">취소</button></a>
+          <button type="button" class="btn text-white float-right mt-1">회원 탈퇴</button>
+        </div>
+        <input type="hidden" name="cust_no" value="${principal.cust_no}">
         <s:csrfInput/>
       </form>
       <div class="col-lg-12 p-0">

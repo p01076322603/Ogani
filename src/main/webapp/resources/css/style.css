@@ -3014,7 +3014,7 @@ ol {
 	border-bottom: 3px solid #7FAD39;
 }
 .signup-form form {
-	color: #999;
+	color: #666;
 	border-radius: 3px;
 	margin-bottom: 15px;
 	background: #fff;
@@ -3057,6 +3057,9 @@ ol {
 }	
 .signup-form form a:hover {
 	text-decoration: underline;
+}
+.signup-form small {
+    min-height: 30px;
 }
 
 @media only screen and (max-width: 576px) {
@@ -3112,6 +3115,13 @@ ol {
 	outline: none !important;
 }
 
+@media only screen and (max-width: 576px) {
+
+  .member-form .btn {
+    width: 49%;
+    min-width: 90px;
+  }
+}
 /*--------------------------------- Member Modify Page -----------------------------*/
 
 .modify-form .form-control {
@@ -3191,10 +3201,13 @@ ol {
     margin-right: 15px !important;
 }
 .modify-form .custom-margin {
-  margin: 22px 0 16px;
+  margin: 15px 0 16px;
 }
 .modify-form input[readonly] {
   background-color: #fff;
+}
+.modify-form span.float-right {
+  color: red;
 }
 
 @media only screen and (max-width: 576px) {
@@ -3204,6 +3217,18 @@ ol {
   .modify-form .form-address > div {
     padding: 5px 15px !important;
     margin: 0 !important;
+  }
+  .modify-form .buttons {
+    margin-top: 50px;
+  }
+  .modify-form .buttons > button[type="submit"] {
+    width: 100%;
+    margin: 5px 0 !important;
+  }
+  .modify-form .buttons button[type="button"] {
+    width: 49%;
+    min-width: 90px;
+    margin: 5px 0 !important;
   }
 }
 /*--------------------------------- Responsive Media Quaries -----------------------------*/

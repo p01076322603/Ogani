@@ -10,5 +10,7 @@ public interface MemberMapper {
 	
 	public int updateLastLogin(CustomerDTO customer);
 	
-	public int insert(CustomerDTO customer);
+	public int insertMember(CustomerDTO customer);
+	
+	public int updateMember(CustomerDTO customer);
 }

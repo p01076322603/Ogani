@@ -19,14 +19,14 @@ public class MemberServiceImpl implements MemberService {
 	private final MemberMapper mapper;
 	
 	@Override
-	public CustomerDTO getCustomerById(String cust_id) {
+	public CustomerDTO getMemberById(String cust_id) {
 		log.trace("getCustomerById( cust_id = {} )", cust_id);
 		
 		return mapper.selectById(cust_id);
 	}
 
 	@Override
-	public CustomerDTO getCustomerByNo(int cust_no) {
+	public CustomerDTO getMemberByNo(int cust_no) {
 		log.trace("getCustomerByNo( cust_no = {} )", cust_no);		
 		
 		return mapper.selectByNo(cust_no);
@@ -43,10 +43,20 @@ public class MemberServiceImpl implements MemberService {
 	}
 
 	@Override
-	public boolean register(CustomerDTO customer) {
-		log.trace("register( {} )", customer);
+	public boolean registerMember(CustomerDTO customer) {
+		log.trace("registerMember( {} )", customer);
 		
-		return mapper.insert(customer) == 1;
+		return mapper.insertMember(customer) == 1;
+	}
+
+	@Override
+	public CustomerDTO modifyMember(CustomerDTO customer) {
+		log.trace("modifyMember( {} )", customer);
+		
+		int modifyResult = mapper.updateMember(customer);
+		log.debug("modifyResult = {}", modifyResult);
+
+		return modifyResult == 1 ? mapper.selectByNo(customer.getCust_no()) : null;
 	}
 	
 }
