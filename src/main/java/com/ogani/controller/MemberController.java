@@ -1,20 +1,28 @@
 package com.ogani.controller;
 
 import java.util.Collection;
+import java.util.Collections;
 import java.util.Map;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.ogani.domain.CustomerDTO;
@@ -45,14 +53,16 @@ public class MemberController {
 		log.trace("memberModifyForm() GET");
 		log.debug("memberModifyForm( {} )", customer);
 		
-		String[] address = customer.getCust_address().split("，");
-		model.addAttribute("address", address);
+		if (customer.getCust_address() != null) {
+			String[] address = customer.getCust_address().split("，");
+			model.addAttribute("address", address);
+		}
 		
 		return "memberModify";
 	}
 
 	@PostMapping("/modify")
-	public String memberModify(@RequestParam() Map<String, String> paramMap, RedirectAttributes redirectAttr) {
+	public String memberModify(@RequestParam Map<String, String> paramMap, RedirectAttributes redirectAttr) {
 		log.trace("memberModify() POST");
 		log.debug("memberModify( paramMap = {} )", paramMap);
 
@@ -111,5 +121,39 @@ public class MemberController {
 		redirectAttr.addFlashAttribute("modifyResult", true);
 		
 		return "redirect:/member";
+	}
+	
+	@ResponseBody
+	@PostMapping("/modify/passwordcheck")
+	public Map<String, Object> passwordCheck(@RequestBody Map<String, String> validateInfo) { 
+		log.trace("passwordCheck() POST");
+		log.debug("passwordCheck( validateInfo = {} )", validateInfo);
+		
+		CustomerDTO customer = memberService.getMemberByNo(Integer.parseInt(validateInfo.get("cust_no")));
+		boolean result = passwordEncoder.matches(validateInfo.get("cust_password"), customer.getCust_password());
+		log.debug("passwordCheck result = {}", result);
+		
+		return Collections.singletonMap("checkResult", result == true ? 1 : 0);
+	}
+
+	@PostMapping("/modify/leave")
+	public String memberLeave(@RequestParam int cust_no, RedirectAttributes redirectAttr,
+							  HttpServletRequest request, HttpServletResponse response) {
+		log.trace("memberLeave() POST");
+		log.debug("memberLeave( cust_no = {} )", cust_no);
+		
+		boolean leaveResult = memberService.leaveMember(cust_no);
+		log.debug("memberLeave result = {}", leaveResult);
+		
+		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+		if (auth != null) { 
+			new SecurityContextLogoutHandler().logout(request, response, auth); 
+		}
+		
+		if (leaveResult) {
+			redirectAttr.addFlashAttribute("leaveResult", leaveResult);
+		}
+		
+		return "redirect:/";
 	}
 }

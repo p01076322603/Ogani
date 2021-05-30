@@ -1,6 +1,8 @@
 package com.ogani.service.impl;
 
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 
 import org.springframework.stereotype.Service;
 
@@ -31,7 +33,14 @@ public class MemberServiceImpl implements MemberService {
 		
 		return mapper.selectByNo(cust_no);
 	}
-	
+
+	@Override
+	public boolean registerMember(CustomerDTO customer) {
+		log.trace("registerMember( {} )", customer);
+		
+		return mapper.insertMember(customer) == 1;
+	}
+
 	@Override
 	public Date updateLastLogin(String cust_id) {
 		log.trace("updateLastLogin( cust_id = {} )", cust_id);
@@ -43,13 +52,6 @@ public class MemberServiceImpl implements MemberService {
 	}
 
 	@Override
-	public boolean registerMember(CustomerDTO customer) {
-		log.trace("registerMember( {} )", customer);
-		
-		return mapper.insertMember(customer) == 1;
-	}
-
-	@Override
 	public CustomerDTO modifyMember(CustomerDTO customer) {
 		log.trace("modifyMember( {} )", customer);
 		
@@ -57,6 +59,17 @@ public class MemberServiceImpl implements MemberService {
 		log.debug("modifyResult = {}", modifyResult);
 
 		return modifyResult == 1 ? mapper.selectByNo(customer.getCust_no()) : null;
+	}
+
+	@Override
+	public boolean leaveMember(int cust_no) {
+		log.trace("leaveMember( cust_no = {} )", cust_no);
+		
+		Map<String, Object> paramMap = new HashMap<>();
+		paramMap.put("cust_no", cust_no);
+		paramMap.put("cust_enabled", 0);
+		
+		return mapper.updateEnabled(paramMap) == 1;
 	}
 	
 }

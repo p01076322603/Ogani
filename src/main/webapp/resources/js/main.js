@@ -16,7 +16,7 @@
     --------------------*/
     $(window).on('load', function () {
         $(".loader").fadeOut();
-        $("#preloder").delay(200).fadeOut("slow");
+        $("#preloder").delay(100).fadeOut("slow");
 
         /*------------------
             Gallery filter
@@ -227,69 +227,52 @@
   Daum Postcode API	
 -------------------- */
  
-// 우편번호 찾기 찾기 화면을 넣을 element
 var element_wrap = document.getElementById('wrap');
 
 function foldDaumPostcode() {
-    // iframe을 넣은 element를 안보이게 한다.
     element_wrap.style.display = 'none';
 }
 
 function sample3_execDaumPostcode() {
-    // 현재 scroll 위치를 저장해놓는다.
-    var currentScroll = Math.max(document.body.scrollTop, document.documentElement.scrollTop);
+
+	$("#vm-cust_address").text("");
+    
+	var currentScroll = Math.max(document.body.scrollTop, document.documentElement.scrollTop);
     new daum.Postcode({
         oncomplete: function(data) {
-            // 검색결과 항목을 클릭했을때 실행할 코드를 작성하는 부분.
+            var addr = '';
+            var extraAddr = '';
 
-            // 각 주소의 노출 규칙에 따라 주소를 조합한다.
-            // 내려오는 변수가 값이 없는 경우엔 공백('')값을 가지므로, 이를 참고하여 분기 한다.
-            var addr = ''; // 주소 변수
-            var extraAddr = ''; // 참고항목 변수
-
-            //사용자가 선택한 주소 타입에 따라 해당 주소 값을 가져온다.
-            if (data.userSelectedType === 'R') { // 사용자가 도로명 주소를 선택했을 경우
+            if (data.userSelectedType === 'R') { 
                 addr = data.roadAddress;
-            } else { // 사용자가 지번 주소를 선택했을 경우(J)
+            } else { 							 
                 addr = data.jibunAddress;
             }
 
-            // 사용자가 선택한 주소가 도로명 타입일때 참고항목을 조합한다.
             if(data.userSelectedType === 'R'){
-                // 법정동명이 있을 경우 추가한다. (법정리는 제외)
-                // 법정동의 경우 마지막 문자가 "동/로/가"로 끝난다.
                 if(data.bname !== '' && /[동|로|가]$/g.test(data.bname)){
                     extraAddr += data.bname;
                 }
-                // 건물명이 있고, 공동주택일 경우 추가한다.
                 if(data.buildingName !== '' && data.apartment === 'Y'){
                     extraAddr += (extraAddr !== '' ? ', ' + data.buildingName : data.buildingName);
                 }
-                // 표시할 참고항목이 있을 경우, 괄호까지 추가한 최종 문자열을 만든다.
                 if(extraAddr !== ''){
                     extraAddr = ' (' + extraAddr + ')';
                 }
-                // 조합된 참고항목을 해당 필드에 넣는다.
                 document.getElementById("sample3_extraAddress").value = extraAddr;
             
             } else {
                 document.getElementById("sample3_extraAddress").value = '';
             }
 
-            // 우편번호와 주소 정보를 해당 필드에 넣는다.
             document.getElementById('sample3_postcode').value = data.zonecode;
             document.getElementById("sample3_address").value = addr;
-            // 커서를 상세주소 필드로 이동한다.
             document.getElementById("sample3_detailAddress").focus();
 
-            // iframe을 넣은 element를 안보이게 한다.
-            // (autoClose:false 기능을 이용한다면, 아래 코드를 제거해야 화면에서 사라지지 않는다.)
             element_wrap.style.display = 'none';
 
-            // 우편번호 찾기 화면이 보이기 이전으로 scroll 위치를 되돌린다.
             document.body.scrollTop = currentScroll;
         },
-        // 우편번호 찾기 화면 크기가 조정되었을때 실행할 코드를 작성하는 부분. iframe을 넣은 element의 높이값을 조정한다.
         onresize : function(size) {
             element_wrap.style.height = size.height + 'px';
         },
@@ -297,7 +280,6 @@ function sample3_execDaumPostcode() {
         height : '100%'
     }).embed(element_wrap);
 
-    // iframe을 넣은 element를 보이게 한다.
     element_wrap.style.display = 'block';
 }
 
@@ -335,92 +317,96 @@ var CSRFtoken  = $("meta[name='_csrf']").attr('content');
 const getId = RegExp(/^[a-zA-Z]{1}[a-zA-Z0-9]{5,19}$/);
 const getPwd = RegExp(/^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{6,30}$/);
 const getEmail = RegExp(/^[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*@[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*.[a-zA-Z]{2,3}$/i);
-const getPhone = RegExp(/^(01[016789]{1})-\d{3,4}-\d{4}$/);
-
+const getPhone = RegExp(/^(01[016789]{1})-(\d{3,4})-(\d{4})$/);
+const getName = RegExp(/^[가-힣]{2,20}$/);
 
 /*-------------------
   Register Validation	
 --------------------- */
 
 $("#signup-cust_id").blur(function() {
-	$("#v-cust_idcheck").text("");
-		var id = $("#signup-cust_id").val();
-		if (id == "") {
-			$("#v-cust_idcheck").text("필수 입력 항목 입니다.");
-			$("#v-cust_idcheck").shake();
-		} else {
-			$.ajax({
-				url: "register/idcheck",
-				type: "POST",
-				data: { 'id': id },
-				dataType: "json",
-				beforeSend : (xhr) => xhr.setRequestHeader(CSRFheader, CSRFtoken),
-				success: (data) => {
-					if (data.checkResult == "1") {
-						$("#v-cust_idcheck").text("이미 존재하거나 사용이 불가능한 아이디 입니다");
-						$("#v-cust_idcheck").shake();
-					} else {
-						$("#v-cust_idcheck").text("");
-					}
-				},
-				fail: () =>	alert("시스템 에러")
-			});
-		}
+	
+	$("#vr-cust_idcheck").text("");
+	
+	var id = $("#signup-cust_id").val();
+	if (id == "") {
+		$("#vr-cust_idcheck").text("필수 입력 항목 입니다.");
+		$("#vr-cust_idcheck").shake();
+	
+	} else {
+		$.ajax({
+			url: "register/idcheck",
+			type: "POST",
+			data: id,
+			contentType: "text/plain",
+			dataType: "json",
+			beforeSend : (xhr) => xhr.setRequestHeader(CSRFheader, CSRFtoken),
+			success: (data) => {
+				if (data.checkResult == "1") {
+					$("#vr-cust_idcheck").text("이미 존재하거나 사용이 불가능한 아이디 입니다");
+					$("#vr-cust_idcheck").shake();
+					$("#signup-cust_id").focus();
+				} else {
+					$("#vr-cust_idcheck").text("");
+				}
+			},
+			
+			fail: () =>	alert("서버로부터 응답이 없습니다. 관리자에게 문의 해주세요")
+		});
+	}
 });
 
 
 $("#signup-cust_password, #signup-cust_confirm_password").blur(function() {
-	$("#v-cust_confirm_password").text("");
+	$("#vr-cust_confirm_password").text("");
 });
 $("#signup-cust_email").blur(function() {
-	$("#v-cust_email").text("");
+	$("#vr-cust_email").text("");
 });
 $("#signup-cust_phone").blur(function() {
-	$("#v-cust_phone").text("");
-	$(this).val( $(this).val().replace(/[^0-9]/g, "").replace(/(^02|^0505|^1[0-9]{3}|^0[0-9]{2})([0-9]+)?([0-9]{4})$/,"$1-$2-$3").replace("--", "-") );
+	$("#vr-cust_phone").text("");
+	$(this).val( $(this).val().replace(/[^0-9]/g, "").replace(/(^01[016789]{1})(\d{3,4})(\d{4})$/, "$1-$2-$3").replace("--", "-") );
 });
 
 function registerCheck() {
 
 	if (!getId.test($("#signup-cust_id").val())) {
 		$("#signup-cust_id").focus();
-		$("#v-cust_id").shake();
+		$("#vr-cust_id").shake();
 		return false;
 	}
 	if (!getPwd.test($("#signup-cust_password").val())) {
 		$("#signup-cust_password").focus();
-		$("#v-cust_password").shake();
+		$("#vr-cust_password").shake();
 		return false;
 	}
 	if ($("#signup-cust_id").val() == $("#signup-cust_password").val()) {
-		$("#v-cust_confirm_password").text("아이디와 비밀번호가 같습니다");
-		$("#signup-cust_password").val("");
+		$("#vr-cust_confirm_password").text("아이디와 비밀번호가 같습니다").shake();
 		$("#signup-cust_confirm_password").val("");
-		$("#signup-cust_password").focus();
-		$("#v-cust_confirm-password").shake();
+		$("#signup-cust_password").val("").focus();
 		return false;
 	}
 	if ($("#signup-cust_password").val() != $("#signup-cust_confirm_password").val()) {
-		$("#v-cust_confirm_password").text("비밀번호가 일치하지 않습니다");
-		$("#signup-cust_confirm_password").val("");
-		$("#signup-cust_confirm_password").focus();
-		$("#v-cust_confirm-password").shake();
+		$("#vr-cust_confirm_password").text("비밀번호가 일치하지 않습니다").shake();
+		$("#signup-cust_confirm_password").val("").focus();
 		return false;
 	}
 	if (!getEmail.test($("#signup-cust_email").val())) {
-		$("#v-cust_email").text("올바르지 않은 이메일입니다");
+		$("#vr-cust_email").text("올바르지 않은 이메일입니다").shake();
 		$("#signup-cust_email").focus();
-		$("#v-cust_email").shake();
 		return false;
 	}
 	if (!getPhone.test($("#signup-cust_phone").val())) {
-		$("#v-cust_phone").text("올바르지 않은 전화번호입니다");
+		$("#vr-cust_phone").text("올바르지 않은 전화번호입니다").shake();
 		$("#signup-cust_phone").focus();
-		$("#v-cust_phone").shake();
 		return false;
 	}
 
 	return true;
+}
+
+function checkAgreement() {
+	$("input:checkbox[id='agreement_checkbox']").prop("checked", true);
 }
 
 /*-------------------
@@ -435,13 +421,11 @@ function loginCheck() {
 	
 	$("#login-result").text("");
 	if ($.trim($("#username").val()) == "") {
-		$("#login-result").text("아이디를 입력해주세요");
-		$("#login-result").shake();
+		$("#login-result").text("아이디를 입력해주세요").shake();
 		return false;
 	}
 	if ($.trim($("#password").val()) == "") {
-		$("#login-result").text("비밀번호를 입력해주세요");
-		$("#login-result").shake();
+		$("#login-result").text("비밀번호를 입력해주세요").shake();
 		return false;
 	}
 	
@@ -450,13 +434,16 @@ function loginCheck() {
 	$.ajax({
 		url: "/login",
 		type : "POST",
-		data : "username=" + loginUsername + "&password=" + loginPassword,
+		data : {
+			username: loginUsername,
+			password: loginPassword
+		},
 		dataType : "json",
 		beforeSend : (xhr) => xhr.setRequestHeader(CSRFheader, CSRFtoken),
 		success: (data) => {
 			if (data.loginResult == 0) {
-				$("#login-result").text("아이디 혹은 비밀번호가 일치하지 않습니다");	
-				$("#login-result").shake();
+				$("#login-result").text("아이디 혹은 비밀번호가 일치하지 않습니다").shake();	
+				$("#password").val("");
 			}
 			if (data.loginResult == 1) {
 				 $(document).ajaxStop(function(){
@@ -464,15 +451,141 @@ function loginCheck() {
 				 });
 			}				
 		},
-		fail: () =>	alert("시스템 에러")
+		
+		fail: () =>	alert("로그인에 실패하였습니다. 관리자에게 문의 해주세요")
 	});
 }
 
-$("#login-submit").click(function () {
-	loginCheck();
-});
+$("#login-submit").click( () => loginCheck() );
 
+$("#username, #password").on('keypress', (e) => {
+    	if(e.which == 13) { loginCheck(); }
+});
 
 /*-------------------
 MemberModify Validation	
 --------------------- */
+
+$("#modify-cust_password").blur(function() {
+	$("#vm-cust_password").text("");
+});
+$("#modify-cust_new_password, #modify-cust_confirm_new_password").blur(function() {
+	$("#vm-cust_confirm_new_password").text("");
+});
+$("#modify-cust_email").blur(function() {
+	$("#vm-cust_email").text("");
+});
+$("#modify-cust_phone").blur(function() {
+	$("#vm-cust_phone").text("");
+	$(this).val( $(this).val().replace(/[^0-9]/g, "").replace(/(^01[016789]{1})(\d{3,4})(\d{4})$/,"$1-$2-$3").replace("--", "-") );
+});
+$("#modify-cust_name").blur(function() {
+	$("#modify-cust_name").val($.trim($("#modify-cust_name").val()));
+	$("#vm-cust_name").text("");
+});
+$("#sample3_postcode, #sample3_address, #sample3_detailAddress, #sample3_extraAddress").blur(function() {
+	$("#vm-cust_address").text("");
+});
+
+function modifyCheck() {
+	
+	if (!$("#modify-cust_new_password").val() == "" &&
+		!getPwd.test($("#modify-cust_new_password").val())) {
+		$("#modify-cust_new_password").focus();
+		$("#vm-cust_new_password").shake();
+		return false;
+	}
+	if ($("#modify-cust_id").val() == $("#modify-cust_new_password").val()) {
+		$("#vm-cust_confirm_new_password").text("아이디와 비밀번호가 같습니다").shake();
+		$("#modify-cust_confirm_new_password").val("");
+		$("#modify-cust_new_password").val("").focus();
+		return false;
+	}
+	if ($("#modify-cust_new_password").val() != $("#modify-cust_confirm_new_password").val()) {
+		$("#vm-cust_confirm_new_password").text("비밀번호가 일치하지 않습니다").shake();
+		$("#modify-cust_confirm_new_password").val("").focus();
+		return false;
+	}
+	if (!getEmail.test($("#modify-cust_email").val())) {
+		$("#vm-cust_email").text("올바르지 않은 이메일입니다").shake();
+		$("#modify-cust_email").focus();
+		return false;
+	}
+	if (!getPhone.test($("#modify-cust_phone").val())) {
+		$("#vm-cust_phone").text("올바르지 않은 전화번호입니다").shake();
+		$("#modify-cust_phone").focus();
+		return false;
+	}
+	if ($.trim($("#modify-cust_name").val()).length < 2 ||
+		$.trim($("#modify-cust_name").val()).length > 20) {
+		$("#vm-cust_name").text("이름은 2글자 이상 20글자 이하 한글로 작성 해주세요.").shake();
+		$("#modify-cust_name").focus();
+		return false;
+	}
+	if (!getName.test($.trim($("#modify-cust_name").val()))) {
+		$("#vm-cust_name").text("이름은 2글자 이상 20글자 이하로 한글로 작성 해주세요.").shake();
+		$("#modify-cust_name").focus();
+		return false;
+	}
+	if ($("#sample3_postcode").val() == "" &&
+		$("#sample3_detailAddress").val() != "") {
+		$("#vm-cust_address").text("우편번호 찾기를 눌러 주소를 입력해주세요").shake();
+		return false;
+	}
+	if ($("#sample3_postcode").val() != "" &&
+		$("#sample3_detailAddress").val() == "") {
+		$("#vm-cust_address").text("상세 주소를 입력해주세요").shake();
+		$("#sample3-detailAddress").focus();
+		return false;
+	}
+
+	var currentPassword = $("#modify-cust_password").val();
+	var customerNo      = $("#modify-cust_no").val();
+	var passwordCheckResult = false;
+	$.ajax({
+		url: "/member/modify/passwordcheck",
+		type : "POST",
+		async: false,
+		data : JSON.stringify({
+			cust_password: currentPassword,
+			cust_no: customerNo
+		}),
+		contentType: 'application/json',
+		dataType : "json",
+		beforeSend : (xhr) => xhr.setRequestHeader(CSRFheader, CSRFtoken),
+		success: (data) => {
+			if (data.checkResult === 0) {
+				$("#modify-cust_password").focus();
+				$("#vm-cust_password").text("계정의 비밀번호가 일치하지 않습니다.").shake();	
+			}
+			if (data.checkResult === 1) {
+				passwordCheckResult = true;
+			}
+		},
+		
+		fail: () =>	alert("서버로부터 응답이 없습니다. 관리자에게 문의 해주세요")
+	});
+	
+	if (passwordCheckResult === false) { return false; }
+
+	return true;
+}
+/*-------------------
+  MemberModify Leave	
+--------------------- */
+$('[data-oper="leaveModal"]').click( () => {
+	$('#leaveModal').modal({ backdrop: 'static', keyboard: false });
+	$('#leaveModalModal').modal('show');
+});
+$('[data-oper="leave"]').click( () => {
+	const cust_no = $('#modify-cust_no').data("cust_no");
+	let leaveForm = $("<form></form>");
+
+	leaveForm.attr("method", "POST");
+	leaveForm.attr("action", "/member/modify/leave");
+
+	leaveForm.append($("<input/>", { type: "hidden", name: "_csrf", value: CSRFtoken}));
+	leaveForm.append($("<input/>", { type: "hidden", name: "cust_no", value: cust_no}));
+	leaveForm.appendTo("body");
+	leaveForm.submit();
+});

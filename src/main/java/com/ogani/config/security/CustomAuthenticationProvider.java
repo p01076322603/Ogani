@@ -5,12 +5,14 @@ import java.util.Date;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.authentication.DisabledException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
+import com.ogani.domain.CustomerDTO;
 import com.ogani.domain.adapter.CustomerAdapter;
 import com.ogani.service.MemberService;
 
@@ -36,16 +38,24 @@ public class CustomAuthenticationProvider implements AuthenticationProvider {
 		CustomerAdapter userDetails = (CustomerAdapter) userDetailsService.loadUserByUsername(username);
 		log.debug("userDetails = {}", userDetails);
 		
-		if(!passwordEncoder.matches(password, userDetails.getPassword())){
+		CustomerDTO customer = userDetails.getCustomer();
+		
+		// 로그인 실패
+		if (customer.getCust_enabled() == 0) {
+			throw new DisabledException("DisabledException");
+		}
+		if (!passwordEncoder.matches(password, userDetails.getPassword())){
             throw new BadCredentialsException("BadCredentialsException");
         }
-
-		Date loginDate = memberService.updateLastLogin(userDetails.getCustomer().getCust_id());
-		log.debug("lastLoginDate = {}", loginDate);
 		
-		userDetails.getCustomer().setCust_lastlogin(loginDate);
-		userDetails.getCustomer().setCust_password("[PROTECTED]");
-		return new UsernamePasswordAuthenticationToken(userDetails.getCustomer(), password, userDetails.getAuthorities());
+		log.debug("로그인에 성공하였습니다.");
+		
+		Date loginDate = memberService.updateLastLogin(userDetails.getUsername());
+		log.debug("LoginDate = {}", loginDate);
+		
+		customer.setCust_lastlogin(loginDate);
+		customer.setCust_password("[PROTECTED]");
+		return new UsernamePasswordAuthenticationToken(customer, userDetails.getPassword(), userDetails.getAuthorities());
 	}
 
 	@Override

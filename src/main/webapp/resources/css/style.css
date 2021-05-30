@@ -3114,6 +3114,9 @@ ol {
 	background: #41cba9;
 	outline: none !important;
 }
+#leaveModal button {
+  width: 80px;
+}
 
 @media only screen and (max-width: 576px) {
 
@@ -3201,13 +3204,22 @@ ol {
     margin-right: 15px !important;
 }
 .modify-form .custom-margin {
-  margin: 15px 0 16px;
+  margin: 12px 0;
 }
 .modify-form input[readonly] {
   background-color: #fff;
 }
 .modify-form span.float-right {
   color: red;
+}
+.modify-form small {
+    min-height: 30px;
+}
+
+@media only screen and (min-width: 576px) {
+  .modify-form .form-address {
+    margin-top: 44px;
+  }
 }
 
 @media only screen and (max-width: 576px) {

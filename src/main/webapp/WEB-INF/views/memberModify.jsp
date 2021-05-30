@@ -10,6 +10,8 @@
 <meta name="keywords" content="Ogani, unica, creative, html">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta http-equiv="X-UA-Compatible" content="ie=edge">
+<s:csrfMetaTags/>
+
 <title>Ogani</title>
 
 <!-- Google Font -->
@@ -43,7 +45,7 @@
   
   <div class="container">
     <div class="modify-form">
-      <form action="modify" method="post">
+      <form action="modify" method="post" onsubmit="return modifyCheck();">
         <div class="text-center">
           <h2>Member Modify</h2>
         </div>
@@ -51,60 +53,78 @@
           <div class="col-sm-4">
             <small class="text-danger" style="position: relative; top: 8px;">* : 필수 항목입니다.</small>
           </div>
-          <label class="col-form-label col-sm-2 offset-sm-2 col-12">Username</label>
+          <label class="col-form-label col-sm-2 offset-sm-2 col-12">아이디</label>
           <div class="col-sm-4">
-            <p class="ml-2"><c:out value="${principal.cust_id}"/></p>
+            <p class="ml-2 lead"><c:out value="${principal.cust_id}"/></p>
           </div>
         </div>
         <div class="row">
           <div class="col-lg-6">
             <div class="form-group row">
-              <label class="col-form-label col-sm-4 col-12">Password<span class="float-right">*</span></label>
+              <label class="col-form-label col-sm-4 col-12">비밀번호<span class="float-right">*</span></label>
               <div class="col-sm-8">
-                <input type="password" class="form-control" name="cust_password" required="required">
+                <input type="password" class="form-control" id="modify-cust_password" name="cust_password" required="required">
               </div>
             </div>
-            <div class="form-group row">
-              <label class="col-form-label col-sm-4 col-12">Modified Password</label>
-              <div class="col-sm-8">
-                <input type="password" class="form-control" name="cust_new_password">
-              </div>
+            <div class="row" style="position: relative; bottom: 8px;">
+              <small class="col-sm-8 offset-sm-4 text-danger" id="vm-cust_password"></small>
             </div>
             <div class="form-group row">
-              <label class="col-form-label col-sm-4 col-12">Confirm Password</label>
+              <label class="col-form-label col-sm-4 col-12">새 비밀번호</label>
               <div class="col-sm-8">
-                <input type="password" class="form-control" name="cust_confirm_new_password">
+                <input type="password" class="form-control" id="modify-cust_new_password" name="cust_new_password">
               </div>
             </div>
-            <div class="form-group row">
-              <label class="col-form-label col-sm-4 col-12">Email Address<span class="float-right">*</span></label>
-              <div class="col-sm-8">
-                <input type="email" class="form-control" name="cust_email" value="${principal.cust_email}">
-              </div>
+            <div class="row" style="position: relative; bottom: 8px;">
+              <small class="col-sm-8 offset-sm-4" id="vm-cust_new_password">비밀번호는 6자리 이상 30자리 이하 영문과 숫자를 반드시 포함해야 합니다.</small>
             </div>
             <div class="form-group row">
-              <label class="col-form-label col-sm-4 col-12">Phone<span class="float-right">*</span></label>
+              <label class="col-form-label col-sm-4 col-12">새 비밀번호 확인</label>
               <div class="col-sm-8">
-                <input type="text" class="form-control" name="cust_phone" value="${principal.cust_phone}">
+                <input type="password" class="form-control" id="modify-cust_confirm_new_password" name="cust_confirm_new_password">
               </div>
+            </div>
+            <div class="row" style="position: relative; bottom: 8px;">
+              <small class="col-sm-8 offset-sm-4 text-danger" id="vm-cust_confirm_new_password"></small>
+            </div>
+            <div class="form-group row">
+              <label class="col-form-label col-sm-4 col-12">이메일 주소<span class="float-right">*</span></label>
+              <div class="col-sm-8">
+                <input type="email" class="form-control" id="modify-cust_email" name="cust_email" value="${principal.cust_email}" required="required">
+              </div>
+            </div>
+            <div class="row" style="position: relative; bottom: 8px;">
+              <small class="col-sm-8 offset-sm-4 text-danger" id="vm-cust_email"></small>
+            </div>
+            <div class="form-group row">
+              <label class="col-form-label col-sm-4 col-12">휴대전화<span class="float-right">*</span></label>
+              <div class="col-sm-8">
+                <input type="text" class="form-control" id="modify-cust_phone" name="cust_phone" value="${principal.cust_phone}" required="required">
+              </div>
+            </div>
+            <div class="row" style="position: relative; bottom: 8px;">
+              <small class="col-sm-8 offset-sm-4 text-danger" id="vm-cust_phone"></small>
             </div>
           </div>
           <div class="col-lg-6">
             <div class="form-group row">
-              <label class="col-form-label col-sm-4 col-12">Name</label>
+              <label class="col-form-label col-sm-4 col-12">이름</label>
               <div class="col-sm-8">
-                <input type="text" class="form-control" name="cust_name" value="${principal.cust_name}">
+                <input type="text" class="form-control" id="modify-cust_name" name="cust_name" value="${principal.cust_name}">
               </div>
             </div>
-            <div class="form-group row">
-              <label class="col-form-label col-sm-4 col-12">Mailing</label>
+            <div class="row" style="position: relative; bottom: 8px;">
+              <small class="col-sm-8 offset-sm-4 text-danger" id="vm-cust_name"></small>
+            </div>
+            <div class="form-group row mt-2">
+              <label class="col-form-label col-sm-4 col-12">메일링 동의 여부</label>
               <div class="mailing col-sm-8">
                 <label><input type="radio" name="cust_mailing" value="1" ${principal.cust_mailing == 1 ? 'checked' : ''}><span class="mr-2"> 동의합니다.</span></label> 
                 <label><input type="radio" name="cust_mailing" value="0" ${principal.cust_mailing == 0 ? 'checked' : ''}><span > 동의하지 않습니다.</span></label> 
               </div>
             </div>
             <div class="form-group form-address row mb-0">
-              <label class="col-form-label col-sm-4 col-12">Address</label>
+              <label class="col-form-label col-sm-4 col-12">주소</label>
               <div class="col-sm-3 pr-0">
                 <input type="text" class="form-control" id="sample3_postcode" name="cust_address1" value="${address[0]}" readonly>
               </div>
@@ -119,14 +139,18 @@
                 <input type="text" class="form-control" id="sample3_extraAddress" name="cust_address4" value="${address[3]}">
               </div>
             </div>
+            <div class="row">
+              <small class="col-sm-12 text-danger" id="vm-cust_address"></small>
+            </div>
           </div>
         </div>
         <div class="buttons">
           <button type="submit" class="btn text-white mt-1">수정하기</button>
           <a href="/member"><button type="button" class="btn text-white ml-3 mt-1">취소</button></a>
-          <button type="button" class="btn text-white float-right mt-1">회원 탈퇴</button>
+          <button type="button" class="btn text-white float-right mt-1" data-oper="leaveModal">회원 탈퇴</button>
         </div>
-        <input type="hidden" name="cust_no" value="${principal.cust_no}">
+        <input type="hidden" id="modify-cust_id" name="cust_id" value="${principal.cust_id}">
+        <input type="hidden" id="modify-cust_no" name="cust_no" value="${principal.cust_no}" data-cust_no="${principal.cust_no}">
         <s:csrfInput/>
       </form>
       <div class="col-lg-12 p-0">
@@ -138,6 +162,29 @@
     </div>
   </div>
 
+  <!-- Leave Modal -->
+  <div class="modal fade" id="leaveModal" tabindex="-1" role="dialog" aria-labelledby="leaveModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="leaveModalLabel">회원 탈퇴</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <p class="text-center m-3">정말로 탈퇴 하시겠습니까? <br> 탈퇴 이후 복구 할 수 없습니다.</p>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary mr-auto" data-dismiss="modal">취소</button>
+          <button type="button" class="btn btn-danger" data-oper="leave">탈퇴</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- /Leave Modal -->
+  
   <jsp:include page="../templates/footer.jsp" />
+  
 </body>
 </html>

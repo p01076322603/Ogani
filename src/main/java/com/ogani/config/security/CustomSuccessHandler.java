@@ -25,9 +25,7 @@ public class CustomSuccessHandler implements AuthenticationSuccessHandler {
 	@Override
 	public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) 
 			throws IOException, ServletException {
-		
-		log.debug("로그인에 성공하였습니다.");
-		
+
 		CustomerDTO customer = (CustomerDTO) authentication.getPrincipal();
 		log.debug("principal = {}", customer);
 		
@@ -36,6 +34,7 @@ public class CustomSuccessHandler implements AuthenticationSuccessHandler {
 		
 		String targetUrl = savedRequest == null ? request.getRequestURL().toString().replace(request.getRequestURI(), "") 
 												: savedRequest.getRedirectUrl();
+		requestCache.removeRequest(request, response);
 		log.debug("targetUrl = {}", targetUrl);
 		
 		Map<String, Object> paramMap = new HashMap<>();

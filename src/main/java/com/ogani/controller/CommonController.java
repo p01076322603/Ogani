@@ -11,6 +11,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -42,7 +43,7 @@ public class CommonController {
 	
 	// LOGIN
 	@GetMapping("/login")
-	public String loginForm(HttpServletRequest request) {
+	public String loginForm() {
 		log.trace("loginForm() GET");
 		
 		return "login";
@@ -96,8 +97,7 @@ public class CommonController {
 		log.trace("validateDuplicateMember(id) POST");
 		log.debug("validateDuplicateMember( id = {} )", id);
 		
-		String username = id.substring(id.lastIndexOf("=") + 1);
-		int result = memberService.getMemberById(username) == null ? 0 : 1;
+		int result = memberService.getMemberById(id) == null ? 0 : 1;
 		log.debug("result = {}", result);
 		
 		return Collections.singletonMap("checkResult", result);

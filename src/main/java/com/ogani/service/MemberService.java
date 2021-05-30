@@ -10,9 +10,11 @@ public interface MemberService {
 	
 	public CustomerDTO getMemberByNo(int cust_no);
 	
+	public boolean registerMember(CustomerDTO customer);
+	
 	public Date updateLastLogin(String user_id);
 	
 	public CustomerDTO modifyMember(CustomerDTO customer);
 	
-	public boolean registerMember(CustomerDTO customer);
+	public boolean leaveMember(int cust_no);
 }

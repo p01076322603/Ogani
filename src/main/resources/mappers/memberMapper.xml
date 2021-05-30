@@ -13,16 +13,22 @@
       </selectKey>
     </update>
   
-	<select id="selectById" resultType="com.ogani.domain.CustomerDTO">
-		SELECT * 
-		FROM customer 
-		WHERE cust_id = #{cust_id}
-	</select>
-
+  	<update id="updateEnabled" parameterType="hashMap">
+  		UPDATE customer
+  		SET cust_enabled = #{cust_enabled}
+  		WHERE cust_no = #{cust_no}
+  	</update>
+  
 	<select id="selectByNo" resultType="com.ogani.domain.CustomerDTO">
 		SELECT * 
 		FROM customer 
 		WHERE cust_no = #{cust_no}
+	</select>
+
+	<select id="selectById" resultType="com.ogani.domain.CustomerDTO">
+		SELECT * 
+		FROM customer 
+		WHERE cust_id = #{cust_id}
 	</select>
 	
     <insert id="insertMember">

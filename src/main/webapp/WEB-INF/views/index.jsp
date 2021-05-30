@@ -1,4 +1,5 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <!DOCTYPE html>
 <html lang="ko">
 
@@ -36,7 +37,20 @@
 
 <body>
   <jsp:include page="../templates/header.jsp" />
-
+  
+  <!-- leaveResultAlert -->
+  <c:if test="${leaveResult}">
+    <div class="container">
+      <div class="alert alert-success alert-dismissible fade show" role="alert">
+        성공적으로 탈퇴 처리 되었습니다. 이용해주셔서 감사합니다.
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+    </div>
+  </c:if>
+  <!-- /leaveResultAlert -->
+  
   <!-- Categories Section Begin -->
   <section class="categories">
     <div class="container">

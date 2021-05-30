@@ -8,6 +8,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.authentication.DisabledException;
 import org.springframework.security.authentication.InternalAuthenticationServiceException;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.authentication.AuthenticationFailureHandler;
@@ -28,15 +29,20 @@ public class CustomFailureHandler implements AuthenticationFailureHandler {
 		if(exception instanceof BadCredentialsException || 
 		   exception instanceof InternalAuthenticationServiceException) {
 			errorMessage = "아이디나 비밀번호가 맞지 않습니다.";
+		
+		} else if (exception instanceof DisabledException) {
+			errorMessage = "비활성화된 계정입니다.";
+		
 		} else {
 			errorMessage = "로그인에 실패하였습니다.";
 		}
+		
 		log.debug("errorMessage = {}", errorMessage);
 
-		String jsonString = new ObjectMapper()
+		String loginResult = new ObjectMapper()
 				.writeValueAsString(Collections.singletonMap("loginResult", 0));
 		
-		response.getWriter().print(jsonString);
+		response.getWriter().print(loginResult);
 	}		
 	
 }

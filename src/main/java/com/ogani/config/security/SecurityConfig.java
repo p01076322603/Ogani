@@ -71,8 +71,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         http.addFilterBefore(filter, CsrfFilter.class);
 		
 		http.authorizeRequests()
-				.antMatchers("/blog").access("hasRole('USER')")
-				.antMatchers("/contact").access("hasRole('ADMIN')");
+				.antMatchers("/blog").access("hasRole('USER')");
 
 		http.exceptionHandling()
 				.accessDeniedHandler(customAccessDeniedHandler());
