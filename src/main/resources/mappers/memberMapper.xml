@@ -33,15 +33,15 @@
 	
     <insert id="insertMember">
       INSERT INTO customer(cust_no, cust_id, cust_password, cust_phone, cust_email)
-      VALUES(seq_cust_no.NEXTVAL, #{cust_id}, #{cust_password}, #{cust_phone}, #{cust_email})
+      VALUES(seq_customer.NEXTVAL, #{cust_id}, #{cust_password}, #{cust_phone}, #{cust_email})
     </insert>
 
     <insert id="updateMember">
       UPDATE customer
       SET cust_email = #{cust_email}, 
       	  cust_phone = #{cust_phone}, 
-      	  cust_mailing = #{cust_mailing}, 
-          <trim prefixOverrides="," suffixOverrides=",">
+      	  cust_mailing = #{cust_mailing}
+          <trim prefix="," suffixOverrides=",">
             <if test="cust_password != ''">
           	  cust_password = #{cust_password}, 
             </if>

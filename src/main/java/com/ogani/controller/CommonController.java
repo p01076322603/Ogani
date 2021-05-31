@@ -11,11 +11,11 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
@@ -38,7 +38,7 @@ public class CommonController {
 	public String index() {
 		log.trace("index() GET");
 		
-		return "index";
+		return "ogani/index";
 	}
 	
 	// LOGIN
@@ -46,7 +46,7 @@ public class CommonController {
 	public String loginForm() {
 		log.trace("loginForm() GET");
 		
-		return "login";
+		return "ogani/login";
 	}
 	
 	// LOGOUT
@@ -67,7 +67,7 @@ public class CommonController {
 	public String registerForm() {
 		log.trace("registerForm() GET");
 		
-		return "register";
+		return "ogani/register";
 	}
 	
 	@PostMapping("/register")
@@ -108,13 +108,13 @@ public class CommonController {
 	public String blog() {
 		log.trace("blog() GET");
 		
-		return "blog";
+		return "ogani/blog";
 	}
 	
 	@GetMapping("/contact")
 	public String contact() {
 		log.trace("contact() GET");
 		
-		return "contact";
+		return "ogani/contact";
 	}
 }

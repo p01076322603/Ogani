@@ -45,7 +45,7 @@ public class MemberController {
 	public String memberInfo() {
 		log.trace("memberInfo() GET");
 
-		return "memberInfo";
+		return "ogani/memberInfo";
 	}
 
 	@GetMapping("/modify")
@@ -58,7 +58,7 @@ public class MemberController {
 			model.addAttribute("address", address);
 		}
 		
-		return "memberModify";
+		return "ogani/memberModify";
 	}
 
 	@PostMapping("/modify")
@@ -103,6 +103,7 @@ public class MemberController {
 		
 		if (modifiedCustomer == null) {
 			redirectAttr.addFlashAttribute("modifyResult", false);
+			
 			return "redirect:/member";
 		}
 		

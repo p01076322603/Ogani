@@ -10,6 +10,8 @@ import org.springframework.security.config.annotation.method.configuration.Enabl
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.core.session.SessionRegistry;
+import org.springframework.security.core.session.SessionRegistryImpl;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -48,6 +50,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Bean
     public AccessDeniedHandler customAccessDeniedHandler() { return new CustomAccessDeniedHandler(); }
     
+    @Bean
+    public SessionRegistry sessionRegistry() { return new SessionRegistryImpl(); }
+    
 	@Override
 	protected void configure(AuthenticationManagerBuilder auth) throws Exception {
 		
@@ -65,23 +70,25 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 	@Override
 	protected void configure(HttpSecurity http) throws Exception {
 
+		// FILTER
 		CharacterEncodingFilter filter = new CharacterEncodingFilter();
         filter.setEncoding("UTF-8");
         filter.setForceEncoding(true);
         http.addFilterBefore(filter, CsrfFilter.class);
 		
-		http.authorizeRequests()
+        // AUTHORIZE PAGES
+        http.authorizeRequests()
 				.antMatchers("/blog").access("hasRole('USER')");
-
+		
+        // EXCEPTION HANDLER
 		http.exceptionHandling()
 				.accessDeniedHandler(customAccessDeniedHandler());
 		
+		// LOGIN AND LOGOUT
 		http.formLogin()
 				.loginPage("/login").failureHandler(customFailureHandler())
-									.successHandler(customSuccessHandler());
-		
-		http.logout()
+									.successHandler(customSuccessHandler())
+	    .and().logout()	
 				.logoutUrl("/logout").invalidateHttpSession(true).deleteCookies("remember-me", "JSESSION_ID");
-				
 	}
 }
