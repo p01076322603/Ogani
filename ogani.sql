@@ -85,3 +85,26 @@ ALTER TABLE cart ADD CONSTRAINT cart_cust_no_FK
 FOREIGN KEY(cust_no) REFERENCES customer(cust_no);
 ALTER TABLE cart ADD CONSTRAINT cart_prod_no_FK
 FOREIGN KEY(prod_no) REFERENCES product(prod_no);
+
+CREATE TABLE admin_info (
+    admin_no        NUMBER(10)          NOT NULL,
+	admin_id	    VARCHAR2(20)		UNIQUE NOT NULL,
+	admin_password	VARCHAR2(100)		NOT NULL,
+	admin_name	    VARCHAR2(20 CHAR)	NOT NULL,
+	admin_phone	    VARCHAR2(13)		UNIQUE NOT NULL,
+	admin_email	    VARCHAR2(255)		UNIQUE NOT NULL,
+	admin_image	    VARCHAR2(255)		DEFAULT 'admin-default.jpg' NOT NULL,
+	admin_role	    VARCHAR2(20)		DEFAULT 'ROLE_ADMIN' NOT NULL,
+	admin_enabled	NUMBER(1)		    DEFAULT '1' NOT NULL,
+	admin_lastlogin	DATE		        DEFAULT SYSDATE NOT NULL
+);
+ALTER TABLE admin_info
+ADD CONSTRAINT admin_no_PK PRIMARY KEY(admin_no);
+
+CREATE SEQUENCE seq_admin_info
+START WITH 1
+INCREMENT BY 1
+NOCYCLE;
+
+INSERT INTO admin_info(admin_no, admin_id, admin_password, admin_name, admin_phone, admin_email)
+VALUES(seq_admin_info.NEXTVAL, 'admin', '1234', '¾îµå¹Î', '010-1234-5678', 'admin@email.com');

@@ -58,13 +58,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 		
 		auth.authenticationProvider(customAuthenticationProvider());
 		auth.userDetailsService(customUserService()).passwordEncoder(passwordEncoder());
-		auth.jdbcAuthentication().dataSource(dataSource).passwordEncoder(passwordEncoder())
-    	.usersByUsernameQuery("SELECT cust_id, cust_password, cust_enabled "
-			        		+ "FROM customer "
-			        		+ "WHERE cust_id = ?")
-    	.authoritiesByUsernameQuery("SELECT cust_id, 'ROLE_USER' as cust_auth "
-				        		  + "FROM customer "
-				        		  + "WHERE cust_id = ?");
+		auth.jdbcAuthentication().dataSource(dataSource).passwordEncoder(passwordEncoder());
+		
 	}
 	
 	@Override
