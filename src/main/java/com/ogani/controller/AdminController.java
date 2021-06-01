@@ -25,18 +25,4 @@ public class AdminController {
 		return "admin/blank";
 	}
 	
-	@GetMapping("/product")
-	public String product() {
-		log.trace("product() GET");
-		
-		return "admin/product";
-	}
-
-	@GetMapping("/product/register")
-	public String productRegister() {
-		log.trace("productRegister() GET");
-		
-		return "admin/productRegister";
-	}
-	
 }

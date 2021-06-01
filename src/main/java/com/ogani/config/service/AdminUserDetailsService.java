@@ -1,32 +1,32 @@
-package com.ogani.config.security;
+package com.ogani.config.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 
-import com.ogani.domain.CustomerDTO;
-import com.ogani.domain.adapter.CustomerAdapter;
-import com.ogani.mapper.MemberMapper;
+import com.ogani.domain.AdminDTO;
+import com.ogani.domain.adapter.AdminAdapter;
+import com.ogani.mapper.AdminMapper;
 
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
-public class CustomUserDetailsService implements UserDetailsService {
+public class AdminUserDetailsService implements UserDetailsService {
 
 	@Autowired
-	private MemberMapper mapper;
+	private AdminMapper mapper;
 	
 	@Override
 	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-		CustomerDTO customer = mapper.selectById(username);
-		log.trace("mapper.selectById(username) = {}", customer);
+		AdminDTO admin = mapper.selectById(username);
+		log.trace("mapper.selectById(username) = {}", admin);
 		
-		if (customer == null) {
+		if (admin == null) {
 			throw new UsernameNotFoundException("UsernameNotFoundException");
 		}
 
-		return new CustomerAdapter(customer);
+		return new AdminAdapter(admin);
 	}
 	
 }

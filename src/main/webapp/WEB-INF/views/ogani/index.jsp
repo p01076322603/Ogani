@@ -44,7 +44,7 @@
       <div class="alert alert-success alert-dismissible fade show" role="alert">
         성공적으로 탈퇴 처리 되었습니다. 이용해주셔서 감사합니다.
         <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-          <span aria-hidden="true">&times;</span>
+          <span aria-hidden="true"> <i class="fas fa-times"></i> </span>
         </button>
       </div>
     </div>

@@ -1,0 +1,8 @@
+.productRegister input[type=number]::-webkit-inner-spin-button, 
+.productRegister input[type=number]::-webkit-outer-spin-button { 
+  -webkit-appearance: none; 
+  margin: 0;
+}
+.productRegister input[type=radio] {
+  transform: scale(1.5);	
+}

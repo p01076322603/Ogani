@@ -74,16 +74,22 @@
         </div>
         <div class="col-lg-6">
           <div class="header__top__right">
-            <div class="header__top__right__auth d-flex float-right">
+            <div class="header__top__right__auth d-flex float-right">        
               <s:authorize access="isAnonymous()">
                 <a href="/login" class="px-3"><i class="fa fa-user"></i>Login</a>
                 <a href="register"><i class="fa fa-user"></i>Register</a>
               </s:authorize>
-              <s:authorize access="isAuthenticated()">
+              <s:authorize access="hasRole('ROLE_USER')">
                 <s:authentication var="principal" property="principal"/>
                 <p class="m-0" style="position: relative; bottom: 3px;"><c:out value="${principal.cust_id}"/></p>
                 <a href="/logout" class="px-3"><i class="fa fa-user"></i>Logout</a>
                 <a href="/member"><i class="fa fa-user"></i>Info</a>
+              </s:authorize>
+              <s:authorize access="hasRole('ROLE_ADMIN')">
+                <s:authentication var="principal" property="principal"/>
+                <p class="m-0" style="position: relative; bottom: 3px;"><c:out value="${principal.admin_id}"/></p>
+                <a href="/logout" class="px-3"><i class="fa fa-user"></i>Logout</a>
+                <a href="/admin"><i class="fa fa-user"></i>Admin</a>
               </s:authorize>
             </div>
           </div>
