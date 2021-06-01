@@ -17,6 +17,7 @@
 
 <!-- Custom styles for this template-->
 <link href="/resources/admin/css/sb-admin-2.min.css" rel="stylesheet">
+<link href="/resources/admin/css/main.css" rel="stylesheet">
 
 <!-- Bootstrap core JavaScript-->
 <script defer src="/resources/admin/vendor/jquery/jquery.min.js"></script>
@@ -29,7 +30,7 @@
 <script defer src="/resources/admin/js/sb-admin-2.min.js"></script>
 </head>
 
-<body id="page-top">
+<body id="page-top" class="productRegister">
 
   <!-- Page Wrapper -->
   <div id="wrapper">
@@ -46,10 +47,84 @@
 
         <!-- Begin Page Content -->
         <div class="container-fluid">
-
-          <!-- Page Heading -->
-          <h1 class="h3 mb-4 text-gray-800">상품 등록 페이지</h1>
-
+        
+          <nav aria-label="breadcrumb">
+            <ol class="breadcrumb">
+              <li class="breadcrumb-item"><a href="#">Home</a></li>
+              <li class="breadcrumb-item"><a href="#">상품</a></li>
+              <li class="breadcrumb-item active" aria-current="page">상품 등록</li>
+            </ol>
+          </nav>
+            
+         <p class="lead text-dark">상품 등록 페이지</p>
+         
+         <form action="#" method="POST">
+           <div class="row">
+             <div class="col-lg-6">
+                <div class="card mb-4">
+                  <div class="card-header">
+                     상품 정보 입력
+                  </div>
+                  <div class="card-body">
+                    <div class="col-lg-12 col-xl-4 offset-xl-2 mb-3">
+                      <p class="lead">상품 카테고리</p>
+                      <select class="form-control">
+                        <option>테스트</option>
+                        <option>테스트</option>
+                        <option>테스트</option>
+                      </select>
+                    </div>
+                    <div class="col-lg-12 col-xl-8 offset-xl-2 mb-3">
+                      <p class="lead">상품 이름</p>
+                      <input class="form-control" type="text">
+                    </div>
+                    <div class="col-lg-12 col-xl-8 offset-xl-2 mb-3">
+                      <p class="lead">상품 가격</p>
+                      <input class="form-control" type="number">
+                    </div>
+                    <div class="col-lg-12 col-xl-8 offset-xl-2 mb-3">
+                      <p class="lead">상품 내용</p>
+                      <textarea class="form-control" rows="10"></textarea>
+                    </div>                                   
+                    <div class="col-lg-12 col-xl-8 offset-xl-2 mb-3">
+                      <p class="lead">상품 재고</p>
+                      <input class="form-control" type="number" placeholder="기본값 : 0">
+                    </div>
+                    <div class="col-lg-12 col-xl-8 offset-xl-2">
+                      <p class="lead">상품 진열 여부</p>
+                      <div class="d-flex">
+                        <label><input type="radio" name="prod_display" checked> 진열</label>
+                        <label class="ml-3"><input type="radio" name="prod_display"> 미진열</label>
+                      </div>
+                    </div>                                   
+                  </div>
+                </div>
+             </div>
+             <div class="col-lg-6">
+               <div class="card mb-4">
+                <div class="card-header">
+                    상품 이미지 등록
+                </div>
+                <div class="card-body">
+                    
+                </div>
+              </div>
+             </div>
+           </div>
+         </form>
+                        
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
         </div>
         <!-- /.container-fluid -->
 

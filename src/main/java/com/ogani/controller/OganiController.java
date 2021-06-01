@@ -15,11 +15,11 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.ogani.domain.CustomerDTO;
+import com.ogani.service.AdminService;
 import com.ogani.service.MemberService;
 
 import lombok.RequiredArgsConstructor;
@@ -28,9 +28,10 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 @Controller
 @RequiredArgsConstructor
-public class CommonController {
+public class OganiController {
 
 	private final MemberService memberService;
+	private final AdminService adminService;
 	private final PasswordEncoder passwordEncoder;
 	
 	// INDEX PAGE
@@ -97,7 +98,8 @@ public class CommonController {
 		log.trace("validateDuplicateMember(id) POST");
 		log.debug("validateDuplicateMember( id = {} )", id);
 		
-		int result = memberService.getMemberById(id) == null ? 0 : 1;
+					 int result = memberService.getMemberById(id) == null ? 0 : 1;
+		if (result == 0) result = adminService.getAdminById(id)   == null ? 0 : 1;
 		log.debug("result = {}", result);
 		
 		return Collections.singletonMap("checkResult", result);
