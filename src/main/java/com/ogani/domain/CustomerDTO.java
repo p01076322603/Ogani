@@ -4,15 +4,12 @@ import java.util.Date;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
-import lombok.Getter;
+import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
-import lombok.ToString;
 
-@Getter @Setter @ToString
+@Data @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@Builder
 public class CustomerDTO {
 	
 	private int cust_no;

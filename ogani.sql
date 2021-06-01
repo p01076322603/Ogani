@@ -107,6 +107,6 @@ INCREMENT BY 1
 NOCYCLE;
 
 INSERT INTO admin_info(admin_no, admin_id, admin_password, admin_name, admin_phone, admin_email)
-VALUES(seq_admin_info.NEXTVAL, 'admin', '$2a$10$vPHJ0Kim4CoAVY3GZ0VpauIByaQVnrxtErT.Hxlyymwuy0VQvPkEy', '¾îµå¹Î', '010-1234-5678', 'admin@email.com');
+VALUES(seq_admin_info.NEXTVAL, 'admin', '$2a$10$vPHJ0Kim4CoAVY3GZ0VpauIByaQVnrxtErT.Hxlyymwuy0VQvPkEy', 'í…ŒìŠ¤íŠ¸', '010-1234-5678', 'admin@email.com');
 
 commit;

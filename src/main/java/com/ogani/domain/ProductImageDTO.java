@@ -1,15 +1,18 @@
 package com.ogani.domain;
 
-import lombok.Getter;
-import lombok.Setter;
-import lombok.ToString;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
-@Getter @Setter @ToString
+@Data @Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class ProductImageDTO {
 
-	private String fileName;
-	private String uploadPath;
-	private String uuid;
-	private boolean image;
+	private String prod_image_uuid;
+	private int prod_no;
+	private String prod_image_url;
+	private String prod_image_name;
 }
 

@@ -14,12 +14,12 @@ var maxSize = 10 * 1024 * 1024; // 10MB
 function checkExtension(fileName, fileSize) {
 
 	if (fileSize >= maxSize) {
-		alert("파일 사이즈는 10MB를 넘을 수 없습니다.");
+		alert("이미지 사이즈는 10MB를 넘을 수 없습니다.");
 		return false;
 	}
 
 	if (!checkImage.test(fileName)) {
-		alert("이미지 파일만 첨부하실 수 있습니다.");
+		alert("이미지 파일만 등록할 수 있습니다.");
 		return false;
 	}
 	
@@ -31,7 +31,6 @@ $("#uploadBtn").click( () => {
 	var formData = new FormData();
 	var inputImage = $("input[name='uploadImage']");
 	var images = inputImage[0].files;
-	console.log(images);
 	
 	for (var i = 0; i < images.length; i++) {
 		if (!checkExtension(images[i].name, images[i].size)) {
@@ -40,45 +39,69 @@ $("#uploadBtn").click( () => {
 			
 		formData.append("uploadedImage", images[i]);
 	}
-
+	
 	$.ajax({
 		url: "/admin/product/uploadProductImage",
+		type: "POST",
 		processData: false,
 		contentType: false,
 		beforeSend : (xhr) => xhr.setRequestHeader(CSRFheader, CSRFtoken),
 		data: formData,
-		type: "POST",
 		dataType: "json",
-		success: (result) => {
-			console.log(result);
-			showUploadedImage(result);
+		success: (ajaxResult) => {
+			showUploadedImage(ajaxResult);
 		}
 	});
+	
+	$("input[name='uploadImage']").val("");
 });
 
-var uploadResult = $(".uploadResult ul");
-function showUploadedImage(uploadResultArr) {
+var uploadResultDiv = $(".uploadResult");
+function showUploadedImage(uploadResult) {
 	
-	let str = '';
-	$(uploadResultArr).each( (result) => {
+	let imageDiv = '';
+	uploadResult.forEach((result) => {
 
-		var fileCallPath = encodeURIComponent(result.uploadPath + "/s_" + result.uuid + "_" + result.fileName);
-		var originPath = encodeURIComponent(result.uploadPath + "/" + result.uuid + "_" + result.fileName);
+		var fileCallPath = result.prod_image_url + "/thumb_" + result.prod_image_uuid + "_" + result.prod_image_name;
+		var originPath   = result.prod_image_url + "/"       + result.prod_image_uuid + "_" + result.prod_image_name;
 		
-		str =
+		imageDiv =
 		`
-		<li>
-		  <a href="javascript:showImage('\${originPath}')" style="text-decoration: none;">
-		    <img src="/display?fileName=\${fileCallPath}"/><br>
-		    \${result.fileName}
+		<div class="m-2">
+		  <a href="javascript:showImage('${originPath}')" style="text-decoration: none;">
+		    <img src="/admin/product/displayImage?imageName=${fileCallPath}"/><br>
+		    ${result.prod_image_name}
 		  </a>
-		  <span data-file="\${fileCallPath}" data-type="image" style="color: #CA010B;">
-		    <i class='far fa-minus-square' style='cursor: pointer;'></i>
+		  <span data-image="${fileCallPath}" style="color: #CA010B;">
+		    <i class='far fa-minus-square' style='position: relative; top: 2px; cursor: pointer;'></i>
 		  </span>
-		</li>
+		</div>
 		`;
 
-	uploadResult.append(str);
-
+		uploadResultDiv.append(imageDiv);
 	});
 }
+
+function showImage(originPath) {
+	let imgCallPath = `"<img src='/admin/product/displayImage?imageName=${originPath}'>"`;
+	$(".bigImageWrapper").css("display", "block");
+	$(".bigImage").html(imgCallPath);
+}
+
+$(".bigImageWrapper").click(() => {
+	$(".bigImageWrapper").css("display", "none");
+	$(".bigImage").html("");
+});
+  		
+$(".uploadResult").on("click", "span", function() {
+	
+	$.ajax({
+		url: "/admin/product/deleteImage",
+		type: "POST",
+		beforeSend : (xhr) => xhr.setRequestHeader(CSRFheader, CSRFtoken),
+		data: $(this).data("image"),
+		contentType: "text/plain",
+		dataType: "text",
+		success: () => $(this).closest("div").remove()
+	});
+});

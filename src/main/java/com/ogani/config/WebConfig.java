@@ -32,4 +32,5 @@ extends AbstractAnnotationConfigDispatcherServletInitializer {
 
         return new Filter[]{encodingFilter};
     }
+
 }

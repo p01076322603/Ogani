@@ -110,32 +110,22 @@
                     상품 이미지 등록
                 </div>
                 <div class="card-body">
+                  <div class="bigImageWrapper">
+                    <div class="bigImage"></div>
+                  </div>
                   <div class="fileUpload p-2">
-                    <input name="uploadImage" type="file" multiple="multiple">
+                    <input name="uploadImage" type="file" multiple="multiple"><br>
+                    <div class="mt-3"><small>파일을 선택 후 업로드 버튼을 눌러주세요</small></div>
                   </div>
-                  <div class="uploadResult">
-                    <ul>
+                  <hr class="mx-2">
+                  <div class="uploadResult d-flex flex-wrap">
                        
-                    </ul>
                   </div>
-                  <button id="uploadBtn" class="btn btn-primary float-right mt-3">업로드</button>
+                  <button id="uploadBtn" class="btn btn-primary float-right mt-5">업로드</button>
                 </div>
               </div>
              </div>
-           </div>
-                        
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
+           </div>    
         </div>
         <!-- /.container-fluid -->
 

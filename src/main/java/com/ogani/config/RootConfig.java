@@ -56,12 +56,11 @@ public class RootConfig {
 				
 	}
 	
-	@Bean
-	public MultipartResolver filterMultipartResolver() {
-		CommonsMultipartResolver multipartResolver = new CommonsMultipartResolver();
-		multipartResolver.setDefaultEncoding("UTF-8");
-		multipartResolver.setMaxUploadSize(10 * 1024 * 1024); //Max size in bytes
-
-		return multipartResolver;
+	@Bean(name = "filterMultipartResolver")
+	public MultipartResolver multiPartResolver(){
+	    CommonsMultipartResolver resolver = new CommonsMultipartResolver();
+	    resolver.setMaxUploadSize(10 * 1024 * 1024);
+	    return resolver;
 	}
+	
 }
