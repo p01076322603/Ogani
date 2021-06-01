@@ -1,3 +1,5 @@
+/* 상품 등록 페이지 */
+
 .productRegister input[type=number]::-webkit-inner-spin-button, 
 .productRegister input[type=number]::-webkit-outer-spin-button { 
   -webkit-appearance: none; 
@@ -6,3 +8,8 @@
 .productRegister input[type=radio] {
   transform: scale(1.5);	
 }
+
+.productRegister .uploadResult { width: 90%; background-color: #eee; border-radius: 5px; margin: auto; }
+.productRegister .uploadResult ul { display: flex; flex-flow: row; justify-content: center; align-items: center; }
+.productRegister .uploadResult ul li { list-style: none; padding: 10px; text-align: center; }
+.productRegister .uploadResult ul li img { width: 100px; }

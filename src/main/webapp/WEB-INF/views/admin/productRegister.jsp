@@ -1,4 +1,5 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ taglib prefix="s" uri="http://www.springframework.org/security/tags" %>
 <!DOCTYPE html>
 <html lang="en">
 
@@ -8,8 +9,9 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 <meta name="description" content="">
 <meta name="author" content="">
+<s:csrfMetaTags/>
 
-<title>Ogani | Admin Blank Page</title>
+<title>Ogani Admin | Product Register</title>
 
 <!-- Custom fonts for this template-->
 <link href="/resources/admin/vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
@@ -28,6 +30,7 @@
 
 <!-- Custom scripts for all pages-->
 <script defer src="/resources/admin/js/sb-admin-2.min.js"></script>
+<script defer src="/resources/admin/js/main.js"></script>
 </head>
 
 <body id="page-top" class="productRegister">
@@ -58,47 +61,48 @@
             
          <p class="lead text-dark">상품 등록 페이지</p>
          
-         <form action="#" method="POST">
            <div class="row">
              <div class="col-lg-6">
-                <div class="card mb-4">
-                  <div class="card-header">
-                     상품 정보 입력
-                  </div>
-                  <div class="card-body">
-                    <div class="col-lg-12 col-xl-4 offset-xl-2 mb-3">
-                      <p class="lead">상품 카테고리</p>
-                      <select class="form-control">
-                        <option>테스트</option>
-                        <option>테스트</option>
-                        <option>테스트</option>
-                      </select>
+               <form action="#" method="POST">
+                  <div class="card mb-4">
+                    <div class="card-header">
+                       상품 정보 입력
                     </div>
-                    <div class="col-lg-12 col-xl-8 offset-xl-2 mb-3">
-                      <p class="lead">상품 이름</p>
-                      <input class="form-control" type="text">
-                    </div>
-                    <div class="col-lg-12 col-xl-8 offset-xl-2 mb-3">
-                      <p class="lead">상품 가격</p>
-                      <input class="form-control" type="number">
-                    </div>
-                    <div class="col-lg-12 col-xl-8 offset-xl-2 mb-3">
-                      <p class="lead">상품 내용</p>
-                      <textarea class="form-control" rows="10"></textarea>
-                    </div>                                   
-                    <div class="col-lg-12 col-xl-8 offset-xl-2 mb-3">
-                      <p class="lead">상품 재고</p>
-                      <input class="form-control" type="number" placeholder="기본값 : 0">
-                    </div>
-                    <div class="col-lg-12 col-xl-8 offset-xl-2">
-                      <p class="lead">상품 진열 여부</p>
-                      <div class="d-flex">
-                        <label><input type="radio" name="prod_display" checked> 진열</label>
-                        <label class="ml-3"><input type="radio" name="prod_display"> 미진열</label>
+                    <div class="card-body">
+                      <div class="col-lg-12 col-xl-4 offset-xl-2 mb-3">
+                        <p class="lead">상품 카테고리</p>
+                        <select class="form-control">
+                          <option>테스트</option>
+                          <option>테스트</option>
+                          <option>테스트</option>
+                        </select>
                       </div>
-                    </div>                                   
+                      <div class="col-lg-12 col-xl-8 offset-xl-2 mb-3">
+                        <p class="lead">상품 이름</p>
+                        <input class="form-control" type="text">
+                      </div>
+                      <div class="col-lg-12 col-xl-8 offset-xl-2 mb-3">
+                        <p class="lead">상품 가격</p>
+                        <input class="form-control" type="number">
+                      </div>
+                      <div class="col-lg-12 col-xl-8 offset-xl-2 mb-3">
+                        <p class="lead">상품 내용</p>
+                        <textarea class="form-control" rows="10"></textarea>
+                      </div>                                   
+                      <div class="col-lg-12 col-xl-8 offset-xl-2 mb-3">
+                        <p class="lead">상품 재고</p>
+                        <input class="form-control" type="number" placeholder="기본값 : 0">
+                      </div>
+                      <div class="col-lg-12 col-xl-8 offset-xl-2">
+                        <p class="lead">상품 진열 여부</p>
+                        <div class="d-flex">
+                          <label><input type="radio" name="prod_display" checked> 진열</label>
+                          <label class="ml-3"><input type="radio" name="prod_display"> 미진열</label>
+                        </div>
+                      </div>                                   
+                    </div>
                   </div>
-                </div>
+               </form>
              </div>
              <div class="col-lg-6">
                <div class="card mb-4">
@@ -106,12 +110,19 @@
                     상품 이미지 등록
                 </div>
                 <div class="card-body">
-                    
+                  <div class="fileUpload p-2">
+                    <input name="uploadImage" type="file" multiple="multiple">
+                  </div>
+                  <div class="uploadResult">
+                    <ul>
+                       
+                    </ul>
+                  </div>
+                  <button id="uploadBtn" class="btn btn-primary float-right mt-3">업로드</button>
                 </div>
               </div>
              </div>
            </div>
-         </form>
                         
             
             
