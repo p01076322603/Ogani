@@ -59,9 +59,18 @@
             </div>
           </c:if>
 
+          <c:if test="${productRemoveResult}">
+            <div class="alert alert-success alert-dismissible fade show" role="alert">
+              상품이 삭제되었습니다.
+              <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+          </c:if>
+
           <nav aria-label="breadcrumb">
             <ol class="breadcrumb">
-              <li class="breadcrumb-item"><a href="#">Home</a></li>
+              <li class="breadcrumb-item"><a href="/admin">Home</a></li>
               <li class="breadcrumb-item active" aria-current="page">상품 목록</li>
             </ol>
           </nav>
@@ -70,65 +79,80 @@
 
           <!-- DataTales Example -->
           <div class="card shadow mb-4">
-            <div class="card-header py-3">
-              <h6 class="m-0 text-primary">상품 목록</h6>
-            </div>
+              <div class="card-header py-3">
+                <div class="row">
+                  <h6 class="col-sm-3 mt-2 text-dark" style="position: relative; top: 4px;">상품 목록</h6>
+                  <div class="col-xl-3 col-md-6 col-sm-9 ml-auto input-group">
+                    <input type="text" class="form-control" aria-label="Text input with segmented dropdown button">
+                    <div class="input-group-append">
+                      <button type="button" class="btn btn-outline-secondary"><i class="fas fa-search"></i></button>
+                      <button type="button" class="btn btn-outline-secondary dropdown-toggle dropdown-toggle-split" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        <span class="sr-only">Toggle Dropdown</span>
+                      </button>
+                      <div class="dropdown-menu">
+                        <a class="dropdown-item" href="#">Search</a>
+                        <a class="dropdown-item" href="#">Another action</a>
+                        <a class="dropdown-item" href="#">Something else here</a>
+                        <div role="separator" class="dropdown-divider"></div>
+                        <a class="dropdown-item" href="#">Separated link</a>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
             <div class="card-body">
               <div class="table-responsive table-wrap">
-                <table class="table">
+                <table class="table table-striped">
                   <thead>
                     <tr>
                       <th>상품 번호</th>
                       <th>상품 이름</th>
                       <th>상품 가격</th>
                       <th>상품 재고</th>
-                      <th>상품 총 판매수</th>
-                      <th>상품 진열 여부</th>
+                      <th>총 판매량</th>
+                      <th>진열 여부</th>
                     </tr>
                   </thead>
 
                   <tbody>
-                    <tr>
-                      <td>Tiger Nixon</td>
-                      <td>System Architect</td>
-                      <td>Edinburgh</td>
-                      <td>61</td>
-                      <td>2011/04/25</td>
-                      <td>$320,800</td>
-                    </tr>
-                    <tr>
-                      <td>Shad Decker</td>
-                      <td>Regional Director</td>
-                      <td>Edinburgh</td>
-                      <td>51</td>
-                      <td>2008/11/13</td>
-                      <td>$183,000</td>
-                    </tr>
-                    <tr>
-                      <td>Michael Bruce</td>
-                      <td>Javascript Developer</td>
-                      <td>Singapore</td>
-                      <td>29</td>
-                      <td>2011/06/27</td>
-                      <td>$183,000</td>
-                    </tr>
-                    <tr>
-                      <td>Donna Snider</td>
-                      <td>Customer Support</td>
-                      <td>New York</td>
-                      <td>27</td>
-                      <td>2011/01/25</td>
-                      <td>$112,000</td>
-                    </tr>
+                    <c:forEach var="product" items="${productList}">
+                      <tr>
+                        <td><a href="/admin/product/${product.prod_no}">${product.prod_no}</a></td>
+                        <td class="long-width"><a href="/admin/product/${product.prod_no}"><c:out value="${product.prod_name}"/></a></td>
+                        <td><a href="/admin/product/${product.prod_no}">${product.prod_price}</a></td>
+                        <td><a href="/admin/product/${product.prod_no}">${product.prod_stock}</a></td>
+                        <td><a href="/admin/product/${product.prod_no}">${product.prod_salecount}</a></td>
+                        <td><a href="/admin/product/${product.prod_no}">${product.prod_display == 1 ? 'O' : 'X'}</a></td>
+                      </tr>
+                    </c:forEach>
                   </tbody>
+                  
                 </table>
+                <div class="d-flex flex-wrap justify-content-between">
+                  <nav aria-label="Page navigation example">
+                    <ul class="pagination">
+                      <li class="page-item">
+                        <a class="page-link" href="#" aria-label="Previous">
+                          <span aria-hidden="true">&laquo;</span>
+                          <span class="sr-only">Previous</span>
+                        </a>
+                      </li>
+                      <li class="page-item"><a class="page-link" href="#">1</a></li>
+                      <li class="page-item"><a class="page-link" href="#">2</a></li>
+                      <li class="page-item"><a class="page-link" href="#">3</a></li>
+                      <li class="page-item">
+                        <a class="page-link" href="#" aria-label="Next">
+                          <span aria-hidden="true">&raquo;</span>
+                          <span class="sr-only">Next</span>
+                        </a>
+                      </li>
+                    </ul>
+                  </nav>
+                  <a href="/admin/product/register"><button class="btn btn-primary float-right">상품 / 카테고리 등록</button></a>
+                </div>
               </div>
             </div>
           </div>
-
-          <a href="/admin/product/register"><button class="btn btn-primary">상품 / 카테고리 등록</button></a> 
-          <a href="/admin/product/modify"><button class="btn btn-primary">상품 / 카테고리 수정 &amp; 삭제</button></a>
-
         </div>
         <!-- /.container-fluid -->
 

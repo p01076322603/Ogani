@@ -1,13 +1,13 @@
 /*-------------------
-    CSRF Header
+     CSRF Header
 -------------------- */
 
 var CSRFheader = $("meta[name='_csrf_header']").attr('content');
 var CSRFtoken  = $("meta[name='_csrf']").attr('content');
 
-/* ------------------ 
-  product Register
-------------------- */
+/* --------------------------- 
+  product Register & Modify
+--------------------------- */
 
 var checkImage = RegExp(/\.(bmp|gif|jpg|jpeg|png)$/);
 var maxSize = 10 * 1024 * 1024; // 10MB
@@ -99,7 +99,8 @@ $(".bigImageWrapper").click(() => {
 	$(".bigImageWrapper").css("display", "none");
 	$(".bigImage").html("");
 });
-  		
+
+// DELETE IMAGE
 $(".uploadResult").on("click", "span", function() {
 	
 	$.ajax({
@@ -113,9 +114,7 @@ $(".uploadResult").on("click", "span", function() {
 	});
 });
 
-function productRegister() {
-
-	var registerForm = $("form[role='productRegister']");
+function getProductImageData() {
 	let imageData = '';
 	
 	$(".image-data").each(function(i) {
@@ -133,6 +132,30 @@ function productRegister() {
 			`;
 	});
 	
+	return imageData;
+}
+
+function productRegister() {
+
+	var registerForm = $("form[role='product']");
+	let imageData = getProductImageData();
 	
 	registerForm.append(imageData).submit();
+}
+
+function productRemove() {
+	const prod_no = $("input[name='prod_no']").data("prod_no");
+	let removeForm = $("<form></form>");
+
+	removeForm.attr("method", "POST");
+	removeForm.attr("action", "/admin/product/remove");
+
+	removeForm.append($("<input/>", { type: "hidden", name: "_csrf", value: CSRFtoken}));
+	removeForm.append($("<input/>", { type: "hidden", name: "prod_no", value: prod_no}));
+	
+	let imageData = getProductImageData();
+
+	removeForm.append(imageData);
+	removeForm.appendTo("body");
+	removeForm.submit();
 }

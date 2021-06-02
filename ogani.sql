@@ -65,8 +65,8 @@ NOCYCLE;
 CREATE TABLE product_image (
 	prod_image_uuid	VARCHAR2(40)		NOT NULL,
 	prod_no	        NUMBER(10)  		NOT NULL,
-	prod_image_url	VARCHAR(255)		UNIQUE NOT NULL,
-	prod_image_name	VARCHAR(255)		NULL
+	prod_image_url	VARCHAR(255)		NOT NULL,
+	prod_image_name	VARCHAR(255)		NOT NULL
 );
 
 ALTER TABLE product_image ADD CONSTRAINT prod_image_uuid_PK 
@@ -109,6 +109,6 @@ INCREMENT BY 1
 NOCYCLE;
 
 INSERT INTO admin_info(admin_no, admin_id, admin_password, admin_name, admin_phone, admin_email)
-VALUES(seq_admin_info.NEXTVAL, 'admin', '$2a$10$vPHJ0Kim4CoAVY3GZ0VpauIByaQVnrxtErT.Hxlyymwuy0VQvPkEy', '?…Œ?Š¤?Š¸', '010-1234-5678', 'admin@email.com');
+VALUES(seq_admin_info.NEXTVAL, 'admin', '$2a$10$vPHJ0Kim4CoAVY3GZ0VpauIByaQVnrxtErT.Hxlyymwuy0VQvPkEy', '?ï¿½ï¿½?ï¿½ï¿½?ï¿½ï¿½', '010-1234-5678', 'admin@email.com');
 
 commit;

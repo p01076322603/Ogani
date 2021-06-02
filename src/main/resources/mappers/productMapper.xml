@@ -26,5 +26,39 @@
     SELECT *
     FROM product_category
   </select>
+
+  <select id="selectProductList" resultType="com.ogani.domain.ProductDTO">
+  	SELECT *
+  	FROM product
+  </select>
+  
+  <select id="selectProductImage" resultType="com.ogani.domain.ProductImageDTO">
+  	SELECT *
+  	FROM product_image
+  	WHERE prod_no = #{prod_no}
+  </select>
+  
+  <select id="selectProduct" resultType="com.ogani.domain.ProductDTO">
+  	SELECT *
+  	FROM product
+  	WHERE prod_no = #{prod_no}
+  </select>
+  
+  <update id="updateProduct" parameterType="com.ogani.domain.ProductDTO">
+	UPDATE product
+	SET cate_no = #{cate_no}, prod_name = #{prod_name}, prod_price = #{prod_price}, 
+		prod_content = #{prod_content}, prod_stock = #{prod_stock}, prod_display = #{prod_display}
+	WHERE prod_no = #{prod_no}
+  </update>
+
+  <delete id="deleteImage">
+  	DELETE FROM product_image
+  	WHERE prod_no = #{prod_no}
+  </delete>
+
+  <delete id="deleteProduct">
+  	DELETE FROM product
+  	WHERE prod_no = #{prod_no}
+  </delete>
   
 </mapper>

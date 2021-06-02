@@ -3,7 +3,6 @@ package com.ogani.controller;
 import java.io.File;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
-import java.lang.ProcessBuilder.Redirect;
 import java.net.URLDecoder;
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -19,10 +18,12 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.stereotype.Controller;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
 import org.springframework.util.FileCopyUtils;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -54,10 +55,26 @@ public class ProductController {
 			+ Paths.get("Ogani", "src", "main", "webapp", "resources", "upload").toString();
 	
 	@GetMapping
-	public String product() {
-		log.trace("product() GET");
+	public String productList(Model model) {
+		log.trace("productList() GET");
+
+		List<ProductDTO> productList = productService.getProductList();
+		model.addAttribute("productList", productList);
 		
 		return "admin/product";
+	}
+	
+	@GetMapping("/{prod_no}")
+	public String product(@PathVariable int prod_no, Model model) {
+		log.debug("product( prod_no = {} ) GET", prod_no);
+
+		List<ProductCategoryDTO> categoryList = productService.getAllCategory();
+		model.addAttribute("categoryList", categoryList);
+		
+		ProductDTO product = productService.getProduct(prod_no);
+		model.addAttribute("product", product);
+		
+		return "admin/productInfo";
 	}
 
 	@GetMapping("/register")
@@ -77,6 +94,37 @@ public class ProductController {
 		boolean result = productService.registerProduct(product);
 		
 		redirectAttr.addFlashAttribute("productRegisterResult", result);
+		return "redirect:/admin/product";
+	}
+	
+	@PostMapping("/modify")
+	public String productModify(@ModelAttribute ProductDTO product, RedirectAttributes redirectAttr) {
+		log.debug("productModify( {} ) POST", product);
+
+		boolean result = productService.modifyProduct(product);
+		
+		redirectAttr.addFlashAttribute("productModifyResult", result);
+		return "redirect:/admin/product";
+	}
+	
+	@PostMapping("/remove")
+	@Transactional
+	public String productRemove(@RequestParam int prod_no, RedirectAttributes redirectAttr, 
+								@ModelAttribute ProductDTO product) {
+		log.debug("productRemove( prod_no = {}, {} ) POST", prod_no, product);
+
+		List<ProductImageDTO> prod_imagelist = product.getProd_imagelist();
+		prod_imagelist.forEach(imageData -> {
+			String imageName = imageData.getProd_image_url() 
+				 + "/thumb_" + imageData.getProd_image_uuid() 
+			     + "_"       + imageData.getProd_image_name(); 
+			
+			deleteUploadedImage(imageName);
+		});
+		
+		boolean result = productService.removeProduct(prod_no);
+		
+		redirectAttr.addFlashAttribute("productRemoveResult", result);
 		return "redirect:/admin/product";
 	}
 	
@@ -159,24 +207,29 @@ public class ProductController {
 	@PostMapping("/deleteImage")
 	public ResponseEntity<String> deleteImage(@RequestBody String imageName) {
 		log.debug("deleteImage( imageName = {} )", imageName);
+
+		boolean result = deleteUploadedImage(imageName);
 		
+		HttpHeaders headers = new HttpHeaders();
+		headers.add("Content-Type", "text/html; charset=UTF-8");
+		
+		return result ? new ResponseEntity<>("삭제 되었습니다.", headers, HttpStatus.OK) 
+					  : new ResponseEntity<>("삭제에 실패하였습니다.", headers, HttpStatus.INTERNAL_SERVER_ERROR);
+	}
+	
+	private boolean deleteUploadedImage(String imageName) {
 		
 		File file;
 		try {
 			file = new File(uploadPath + File.separator + URLDecoder.decode(imageName, "UTF-8"));
 			file.delete();
 
-		} catch (UnsupportedEncodingException e) {
-			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-		}
+		} catch (UnsupportedEncodingException e) { e.printStackTrace(); return false; }
 
 		String largeFileName = file.getAbsolutePath().replace("\\thumb_", "\\");
-		new File(largeFileName).delete();
-
-		HttpHeaders headers = new HttpHeaders();
-		headers.add("Content-Type", "text/html; charset=UTF-8");
+		boolean result = new File(largeFileName).delete();
 		
-		return new ResponseEntity<>("삭제 되었습니다", headers, HttpStatus.OK);
+		return result;
 	}
 	
 	private String getDateFolder() {
