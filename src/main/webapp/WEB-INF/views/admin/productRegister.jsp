@@ -1,10 +1,11 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib prefix="s" uri="http://www.springframework.org/security/tags" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ko">
 
 <head>
-<meta charset="utf-8">
+<meta charset="UTF-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 <meta name="description" content="">
@@ -30,7 +31,7 @@
 
 <!-- Custom scripts for all pages-->
 <script defer src="/resources/admin/js/sb-admin-2.min.js"></script>
-<script defer src="/resources/admin/js/main.js"></script>
+<script defer src="/resources/admin/js/main.js" charset="UTF-8"></script>
 </head>
 
 <body id="page-top" class="productRegister">
@@ -51,19 +52,28 @@
         <!-- Begin Page Content -->
         <div class="container-fluid">
         
+        <c:if test="${categoryRegisterResult}">
+          <div class="alert alert-success alert-dismissible fade show" role="alert">
+            카테고리가 등록되었습니다.
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+        </c:if>
+        
           <nav aria-label="breadcrumb">
             <ol class="breadcrumb">
               <li class="breadcrumb-item"><a href="#">Home</a></li>
-              <li class="breadcrumb-item"><a href="#">상품</a></li>
-              <li class="breadcrumb-item active" aria-current="page">상품 등록</li>
+              <li class="breadcrumb-item"><a href="/admin/product">상품 목록</a></li>
+              <li class="breadcrumb-item active" aria-current="page">상품 &amp; 카테고리 등록</li>
             </ol>
           </nav>
             
-         <p class="lead text-dark">상품 등록 페이지</p>
+         <p class="lead text-dark">상품 &amp; 카테고리 등록 페이지</p>
          
            <div class="row">
              <div class="col-lg-6">
-               <form action="#" method="POST">
+               <form role="productRegister" action="/admin/product/register" method="POST">
                   <div class="card mb-4">
                     <div class="card-header">
                        상품 정보 입력
@@ -71,35 +81,38 @@
                     <div class="card-body">
                       <div class="col-lg-12 col-xl-4 offset-xl-2 mb-3">
                         <p class="lead">상품 카테고리</p>
-                        <select class="form-control">
-                          <option>테스트</option>
-                          <option>테스트</option>
-                          <option>테스트</option>
+                        <select class="form-control" name="cate_no">
+                          <option value="0">선택하세요</option>
+                          <c:forEach var="category" items="${categoryList}">
+                            <option value="${category.cate_no}">${category.cate_name}</option>
+                          </c:forEach>
                         </select>
                       </div>
                       <div class="col-lg-12 col-xl-8 offset-xl-2 mb-3">
                         <p class="lead">상품 이름</p>
-                        <input class="form-control" type="text">
+                        <input class="form-control" type="text" name="prod_name">
                       </div>
                       <div class="col-lg-12 col-xl-8 offset-xl-2 mb-3">
                         <p class="lead">상품 가격</p>
-                        <input class="form-control" type="number">
+                        <input class="form-control" type="number" name="prod_price">
                       </div>
                       <div class="col-lg-12 col-xl-8 offset-xl-2 mb-3">
                         <p class="lead">상품 내용</p>
-                        <textarea class="form-control" rows="10"></textarea>
+                        <textarea class="form-control" rows="10" name="prod_content"></textarea>
                       </div>                                   
                       <div class="col-lg-12 col-xl-8 offset-xl-2 mb-3">
                         <p class="lead">상품 재고</p>
-                        <input class="form-control" type="number" placeholder="기본값 : 0">
+                        <input class="form-control" type="number" name="prod_stock" value="0">
                       </div>
                       <div class="col-lg-12 col-xl-8 offset-xl-2">
                         <p class="lead">상품 진열 여부</p>
                         <div class="d-flex">
-                          <label><input type="radio" name="prod_display" checked> 진열</label>
-                          <label class="ml-3"><input type="radio" name="prod_display"> 미진열</label>
+                          <label><input type="radio" name="prod_display" value="1" checked> 진열</label>
+                          <label class="ml-3"><input type="radio" name="prod_display" value="0"> 미진열</label>
                         </div>
-                      </div>                                   
+                        <s:csrfInput/>
+                      </div>          
+                      <button type="button" class="btn btn-primary float-right mt-5" onclick="productRegister();">상품 등록</button>                         
                     </div>
                   </div>
                </form>
@@ -119,11 +132,35 @@
                   </div>
                   <hr class="mx-2">
                   <div class="uploadResult d-flex flex-wrap">
-                       
+                    
                   </div>
-                  <button id="uploadBtn" class="btn btn-primary float-right mt-5">업로드</button>
+                  <button id="uploadBtn" class="btn btn-primary float-right mt-5">상품 이미지 업로드</button>
                 </div>
               </div>
+              <form action="/admin/product/registerCategory" method="POST">
+               <div class="card mb-4">
+                 <div class="card-header">
+                   상품 카테고리 등록
+                 </div>
+                 <div class="card-body">
+                   <div class="col-lg-12 col-xl-4 offset-xl-2 mb-3">
+                     <p class="lead">상위 카테고리</p>
+                     <select class="form-control" name="cate_parentno">
+                       <option value="0">(없음)</option>
+                       <c:forEach var="category" items="${categoryList}">
+                         <option value="${category.cate_no}">${category.cate_name}</option>
+                       </c:forEach>
+                     </select>
+                   </div>
+                   <div class="col-lg-12 col-xl-8 offset-xl-2 mb-3">
+                     <p class="lead">카테고리 이름</p>
+                     <input class="form-control" type="text" name="cate_name">
+                   </div>
+                   <button type="submit" class="btn btn-primary float-right mt-5">카테고리 등록</button>
+                   <s:csrfInput/> 
+                 </div>
+               </div>
+               </form>
              </div>
            </div>    
         </div>

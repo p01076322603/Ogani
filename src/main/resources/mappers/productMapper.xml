@@ -3,5 +3,28 @@
   PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
   "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.ogani.mapper.ProductMapper">
+    
+  <insert id="insertCategory" parameterType="com.ogani.domain.ProductCategoryDTO">
+    INSERT INTO product_category(cate_no, cate_name<if test="cate_parentno != 0">, cate_parentno</if>)
+    VALUES(seq_product_category.NEXTVAL, #{cate_name}<if test="cate_parentno != 0">, #{cate_parento}</if>)
+  </insert>
+  
+  <insert id="insertProduct" parameterType="com.ogani.domain.ProductDTO">
+    INSERT INTO product(prod_no, cate_no, prod_name, prod_price, prod_content, prod_regdate, prod_stock, prod_display)
+    VALUES(seq_product.NEXTVAL, #{cate_no}, #{prod_name}, #{prod_price}, #{prod_content}, SYSDATE, #{prod_stock}, #{prod_display})
+     <selectKey resultType="int" keyProperty="prod_no" order="AFTER">
+        SELECT seq_product.CURRVAL FROM DUAL
+     </selectKey>
+  </insert>
+
+  <insert id="insertImage" parameterType="com.ogani.domain.ProductImageDTO">
+    INSERT INTO product_image
+    VALUES(#{prod_image_uuid}, #{prod_no}, #{prod_image_url}, #{prod_image_name})
+  </insert>
+
+  <select id="selectAllCategory" resultType="com.ogani.domain.ProductCategoryDTO">
+    SELECT *
+    FROM product_category
+  </select>
   
 </mapper>

@@ -44,9 +44,11 @@ START WITH 1
 INCREMENT BY 1
 NOCYCLE;
 
+DROP SEQUENCE seq_product;
+
 CREATE TABLE product_category (
 	cate_no	        NUMBER(5)	    NOT NULL,
-	cate_parentno	NUMBER(5)		NOT NULL,
+	cate_parentno	NUMBER(5)		NULL,
 	cate_name	    VARCHAR2(50)	UNIQUE NOT NULL
 );
 
@@ -107,6 +109,6 @@ INCREMENT BY 1
 NOCYCLE;
 
 INSERT INTO admin_info(admin_no, admin_id, admin_password, admin_name, admin_phone, admin_email)
-VALUES(seq_admin_info.NEXTVAL, 'admin', '$2a$10$vPHJ0Kim4CoAVY3GZ0VpauIByaQVnrxtErT.Hxlyymwuy0VQvPkEy', 'í…ŒìŠ¤íŠ¸', '010-1234-5678', 'admin@email.com');
+VALUES(seq_admin_info.NEXTVAL, 'admin', '$2a$10$vPHJ0Kim4CoAVY3GZ0VpauIByaQVnrxtErT.Hxlyymwuy0VQvPkEy', '?…Œ?Š¤?Š¸', '010-1234-5678', 'admin@email.com');
 
 commit;

@@ -1,6 +1,7 @@
 package com.ogani.domain;
 
 import java.util.Date;
+import java.util.List;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -18,4 +19,6 @@ public class ProductDTO {
 	private int prod_stock;
 	private int prod_salecount;
 	private int prod_display;
+	
+	private List<ProductImageDTO> prod_imagelist;
 }

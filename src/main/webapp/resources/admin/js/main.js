@@ -26,13 +26,14 @@ function checkExtension(fileName, fileSize) {
 	return true;
 }
 
-$("#uploadBtn").click( () => {
+$("#uploadBtn").click(function() {
 	
 	var formData = new FormData();
 	var inputImage = $("input[name='uploadImage']");
 	var images = inputImage[0].files;
 	
 	for (var i = 0; i < images.length; i++) {
+		
 		if (!checkExtension(images[i].name, images[i].size)) {
 			return false;
 		}
@@ -66,23 +67,29 @@ function showUploadedImage(uploadResult) {
 		var originPath   = result.prod_image_url + "/"       + result.prod_image_uuid + "_" + result.prod_image_name;
 		
 		imageDiv =
-		`
-		<div class="m-2">
-		  <a href="javascript:showImage('${originPath}')" style="text-decoration: none;">
-		    <img src="/admin/product/displayImage?imageName=${fileCallPath}"/><br>
-		    ${result.prod_image_name}
-		  </a>
-		  <span data-image="${fileCallPath}" style="color: #CA010B;">
-		    <i class='far fa-minus-square' style='position: relative; top: 2px; cursor: pointer;'></i>
-		  </span>
-		</div>
-		`;
+			`
+			<div class="m-2">
+			  <a href="javascript:showImage('${originPath}')" style="text-decoration: none;">
+			    <img src="/admin/product/displayImage?imageName=${fileCallPath}"/><br>
+			    ${result.prod_image_name}
+			  </a>
+			  <span data-image="${fileCallPath}" style="color: #CA010B;">
+			    <i class='far fa-minus-square' style='position: relative; top: 2px; cursor: pointer;'></i>
+			  </span>
+			  <div class="image-data">
+			  	<input type="hidden" value="${result.prod_image_name}" name="prod_image_name[]">
+			  	<input type="hidden" value="${result.prod_image_url}"  name="prod_image_url[]">
+			  	<input type="hidden" value="${result.prod_image_uuid}" name="prod_iage_uuid[]">
+			  </div>
+			</div>
+			`;
 
 		uploadResultDiv.append(imageDiv);
 	});
 }
 
 function showImage(originPath) {
+	
 	let imgCallPath = `"<img src='/admin/product/displayImage?imageName=${originPath}'>"`;
 	$(".bigImageWrapper").css("display", "block");
 	$(".bigImage").html(imgCallPath);
@@ -105,3 +112,27 @@ $(".uploadResult").on("click", "span", function() {
 		success: () => $(this).closest("div").remove()
 	});
 });
+
+function productRegister() {
+
+	var registerForm = $("form[role='productRegister']");
+	let imageData = '';
+	
+	$(".image-data").each(function(i) {
+		
+		var index = i;
+		var prod_image_name  = $(this).children(":eq(0)").val();
+		var prod_image_url   = $(this).children(":eq(1)").val();
+		var prod_image_uuid  = $(this).children(":eq(2)").val();
+		
+		imageData += 
+			`
+			<input type='hidden' name='prod_imagelist[${index}].prod_image_name' value='${prod_image_name}'>
+			<input type='hidden' name='prod_imagelist[${index}].prod_image_url'  value='${prod_image_url}'>
+			<input type='hidden' name='prod_imagelist[${index}].prod_image_uuid' value='${prod_image_uuid}'>
+			`;
+	});
+	
+	
+	registerForm.append(imageData).submit();
+}

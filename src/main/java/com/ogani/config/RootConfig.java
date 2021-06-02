@@ -60,6 +60,7 @@ public class RootConfig {
 	public MultipartResolver multiPartResolver(){
 	    CommonsMultipartResolver resolver = new CommonsMultipartResolver();
 	    resolver.setMaxUploadSize(10 * 1024 * 1024);
+	    resolver.setDefaultEncoding("UTF-8");
 	    return resolver;
 	}
 	

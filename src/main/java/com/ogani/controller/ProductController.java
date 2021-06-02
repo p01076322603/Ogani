@@ -3,6 +3,7 @@ package com.ogani.controller;
 import java.io.File;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
+import java.lang.ProcessBuilder.Redirect;
 import java.net.URLDecoder;
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -18,27 +19,37 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.util.FileCopyUtils;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.ogani.config.PathCollections;
+import com.ogani.domain.ProductCategoryDTO;
+import com.ogani.domain.ProductDTO;
 import com.ogani.domain.ProductImageDTO;
+import com.ogani.service.ProductService;
 
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import net.coobird.thumbnailator.Thumbnails;
 
 @Slf4j
 @Controller
 @Secured("ROLE_ADMIN")
+@RequiredArgsConstructor
 @RequestMapping("/admin/product")
 public class ProductController {
 
+	private final ProductService productService;
+	
 	private String uploadPath = PathCollections.LOCAL_PATH + File.separator 
 			+ Paths.get("Ogani", "src", "main", "webapp", "resources", "upload").toString();
 	
@@ -50,10 +61,33 @@ public class ProductController {
 	}
 
 	@GetMapping("/register")
-	public String productRegister() {
-		log.trace("productRegister() GET");
+	public String productRegisterForm(Model model) {
+		log.trace("productRegisterForm() GET");
+		
+		List<ProductCategoryDTO> categoryList = productService.getAllCategory();
+		model.addAttribute("categoryList", categoryList);
 		
 		return "admin/productRegister";
+	}
+	
+	@PostMapping("/register")
+	public String productRegister(@ModelAttribute ProductDTO product, RedirectAttributes redirectAttr) {
+		log.debug("productRegister( {} ) POST", product);
+
+		boolean result = productService.registerProduct(product);
+		
+		redirectAttr.addFlashAttribute("productRegisterResult", result);
+		return "redirect:/admin/product";
+	}
+	
+	@PostMapping("/registerCategory")
+	public String registerCategory(@ModelAttribute ProductCategoryDTO category, RedirectAttributes redirectAttr) {
+		log.debug("productRegister( {} ) POST", category);
+		
+		boolean result = productService.registerCategory(category);
+
+		redirectAttr.addFlashAttribute("categoryRegisterResult", result);
+		return "redirect:/admin/product/register";
 	}
 	
 	@ResponseBody
@@ -130,8 +164,6 @@ public class ProductController {
 		File file;
 		try {
 			file = new File(uploadPath + File.separator + URLDecoder.decode(imageName, "UTF-8"));
-			boolean exists = file.exists();
-			log.debug("exists = {}", exists);
 			file.delete();
 
 		} catch (UnsupportedEncodingException e) {
@@ -139,8 +171,6 @@ public class ProductController {
 		}
 
 		String largeFileName = file.getAbsolutePath().replace("\\thumb_", "\\");
-		log.info("largeFileName = {}", largeFileName);
-
 		new File(largeFileName).delete();
 
 		HttpHeaders headers = new HttpHeaders();
