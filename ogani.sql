@@ -88,6 +88,11 @@ FOREIGN KEY(cust_no) REFERENCES customer(cust_no);
 ALTER TABLE cart ADD CONSTRAINT cart_prod_no_FK
 FOREIGN KEY(prod_no) REFERENCES product(prod_no);
 
+CREATE SEQUENCE seq_cart
+START WITH 1
+INCREMENT BY 1
+NOCYCLE;
+
 CREATE TABLE admin_info (
     admin_no        NUMBER(10)          NOT NULL,
 	admin_id	    VARCHAR2(20)		UNIQUE NOT NULL,

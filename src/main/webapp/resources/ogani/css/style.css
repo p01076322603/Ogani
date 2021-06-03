@@ -170,11 +170,22 @@ ol {
 .primary-btn {
 	display: inline-block;
 	font-size: 14px;
-	padding: 10px 28px 10px;
+	padding: 16px 28px 13px;
 	color: #ffffff;
 	text-transform: uppercase;
 	font-weight: 700;
 	background: #7fad39;
+	letter-spacing: 2px;
+}
+
+.secondary-btn {
+	display: inline-block;
+	font-size: 14px;
+	padding: 16px 28px 13px;
+	color: #ffffff;
+	text-transform: uppercase;
+	font-weight: 700;
+	background: #bbb;
 	letter-spacing: 2px;
 }
 
@@ -1666,6 +1677,57 @@ ol {
   Shop Details
 -----------------------*/
 
+.product-details .image-wrap,
+.product-details .bigImage-wrap {
+	object-fit: cover;
+}
+
+.product-details .bigImage-wrap {
+	height: 250px;
+}
+
+.product-details .image-wrap {
+	height: 75px;
+}
+
+@media only screen and (min-width: 576px) {
+	.product-details .bigImage-wrap {
+		height: 300px;
+	}
+	
+	.product-details .image-wrap {
+		height: 90px;
+	}
+}
+
+@media only screen and (min-width: 768px) {
+	.product-details .bigImage-wrap {
+		height: 350px;
+	}
+	
+	.product-details .image-wrap {
+		height: 70px;
+	}
+}
+
+@media only screen and (min-width: 992px) {
+	 
+	.product-details .image-wrap {
+		height: 90px;
+	}
+}
+
+
+@media only screen and (min-width: 1200px) {
+	.product-details .bigImage-wrap {
+		height: 400px;
+	}
+	
+	.product-details .image-wrap {
+		height: 100px;
+	}
+}
+
 .product-details {
 	padding-top: 80px;
 }
@@ -1719,7 +1781,6 @@ ol {
 }
 
 .product__details__text .primary-btn {
-	padding: 16px 28px 14px;
 	margin-right: 6px;
 	margin-bottom: 5px;
 }
@@ -3243,6 +3304,7 @@ ol {
     margin: 5px 0 !important;
   }
 }
+
 /*--------------------------------- Responsive Media Quaries -----------------------------*/
 
 @media only screen and (min-width: 1200px) {

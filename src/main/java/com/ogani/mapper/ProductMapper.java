@@ -27,4 +27,5 @@ public interface ProductMapper {
 	public List<ProductImageDTO> selectProductImage(int prod_no);
 	
 	public List<ProductCategoryDTO> selectAllCategory();
+	
 }

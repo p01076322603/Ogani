@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ogani.mapper.CartMapper">
+  
+  <insert id="insertCart">
+    INSERT INTO cart
+    VALUES(seq_cart.NEXTVAL, #{cust_no}, #{prod_no}, #{cart_quantity})
+  </insert>
+  
+  <select id="selectCartList" resultType="com.ogani.domain.CartDTO">
+    SELECT *
+    FROM cart
+    WHERE cust_no = #{cust_no}
+  </select>
+  
+  <delete id="deleteCart">
+    DELETE FROM cart
+    WHERE cart_no = #{cart_no}
+  </delete>
+  
+</mapper>

@@ -196,7 +196,9 @@ public class ProductController {
 		HttpHeaders header = new HttpHeaders();
 		try {
 			header.add("Content-Type", Files.probeContentType(image.toPath()));
-			result = new ResponseEntity<>(FileCopyUtils.copyToByteArray(image), header, HttpStatus.OK);
+			if (image.exists()) {
+				result = new ResponseEntity<>(FileCopyUtils.copyToByteArray(image), header, HttpStatus.OK);
+			}
 
 		} catch (IOException e) { e.printStackTrace(); }
 

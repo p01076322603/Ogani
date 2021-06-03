@@ -44,7 +44,6 @@ public class CustomSuccessHandler implements AuthenticationSuccessHandler {
 		for (String auth : authArray) {
 			if (auth.contains("ROLE_USER")) { isCustomer = true; }
 		}
-		
 		RequestCache requestCache = new HttpSessionRequestCache();
 		SavedRequest savedRequest = requestCache.getRequest(request, response);
 		String indexPage = request.getRequestURL().toString().replace(request.getRequestURI(), "");
@@ -87,7 +86,7 @@ public class CustomSuccessHandler implements AuthenticationSuccessHandler {
 			targetUrl = savedRequest == null ? adminIndexPage : savedRequest.getRedirectUrl();
 		}
 
-		else { throw new IllegalStateException("권한을 충족하는 Adapter를 찾지 못하였습니다."); }
+		else { throw new IllegalStateException("조건을 충족하는 Table / Adapter를 찾지 못하였습니다."); }
 		
 		requestCache.removeRequest(request, response);
 		log.debug("targetUrl = {}", targetUrl);

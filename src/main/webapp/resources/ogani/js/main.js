@@ -594,3 +594,60 @@ $('[data-oper="leave"]').click( () => {
 	leaveForm.appendTo("body");
 	leaveForm.submit();
 });
+
+/*-------------------
+  		 Cart	
+--------------------- */
+
+function cartAddSuccessToast(prod_name, cart_quantity) {
+	$('.toast').toast('show');
+	// 상품 이름 : prod_name, 상품 개수 : cart_quantity
+}
+
+$("body").on("click", "#addCart", function() {
+	
+	var custNo = $("#cust_no").val();
+	var prodNo = $("#prod_no").val();
+	var cartQuantity = $("#cart_quantity").val();
+	
+	if (custNo === "0") {
+		location.href = "/login";
+	}
+	
+	$.ajax({
+		url: "/cart/add",
+		type : "POST",
+		data : JSON.stringify({
+			cust_no: custNo,
+			prod_no: prodNo,
+			cart_quantity: cartQuantity
+		}),
+		contentType: 'application/json',
+		dataType : "json",
+		beforeSend : (xhr) => xhr.setRequestHeader(CSRFheader, CSRFtoken),
+		success: (data) => {
+			if (data.addCartResult) {
+				cartAddSuccessToast(data.prod_name, data.cart_quantity);
+			}
+		},
+		fail: () =>	alert("서버로부터 응답이 없습니다. 관리자에게 문의 해주세요")
+	});
+	
+});	
+
+$("body").on("click", ".icon_close", function() {
+	
+	var cartNo = $(this).data("cart");
+	
+	$.ajax({
+		url: "/cart/remove",
+		type: "POST",
+		beforeSend : (xhr) => xhr.setRequestHeader(CSRFheader, CSRFtoken),
+		data: JSON.stringify({
+			cart_no: cartNo
+		}),
+		contentType: "application/json",
+		dataType: "text",
+		success: () => $(this).closest("tr").remove()
+	});
+});
