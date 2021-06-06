@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
@@ -44,8 +45,10 @@ public class OganiController {
 	
 	// LOGIN
 	@GetMapping("/login")
-	public String loginForm() {
-		log.trace("loginForm() GET");
+	public String loginForm(@RequestParam(required = false) Integer prod_no, HttpServletRequest request) {
+		log.debug("loginForm( prod_no = {} ) GET", prod_no);
+
+		if (prod_no != null) request.getSession().setAttribute("return-to", prod_no);
 		
 		return "ogani/login";
 	}

@@ -42,13 +42,13 @@
       	  cust_phone = #{cust_phone}, 
       	  cust_mailing = #{cust_mailing}
           <trim prefix="," suffixOverrides=",">
-            <if test="cust_password != ''">
+            <if test="cust_password != '' and cust_password != null">
           	  cust_password = #{cust_password}, 
             </if>
-            <if test="cust_name != ''">
+            <if test="cust_name != '' and cust_name != null">
               cust_name = #{cust_name}, 
             </if>
-            <if test="cust_address != ''">
+            <if test="cust_address != '' and cust_address != null">
           	  cust_address = #{cust_address}, 
             </if>
           </trim>

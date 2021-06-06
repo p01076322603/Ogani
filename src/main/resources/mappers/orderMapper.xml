@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ogani.mapper.OrderMapper">
+  
+  <insert id="insertOrder" parameterType="com.ogani.domain.OrderDTO">
+    INSERT INTO order_info(order_uid, cust_no, order_imp_uid, order_name, 
+    					   order_regdate, order_price, order_card_approval, 
+    					   order_buyer, order_email, order_postcode, order_address, 
+    					   order_phone<if test="order_request != ''">, order_request</if>)
+    VALUES(#{order_uid}, #{cust_no}, #{order_imp_uid}, #{order_name},
+    	   SYSDATE, #{order_price}, #{order_card_approval},
+    	   #{order_buyer}, #{order_email}, #{order_postcode}, #{order_address},
+    	   #{order_phone}<if test="order_request != ''">, #{order_request}</if>)
+  </insert>
+  
+  <insert id="insertOrderDetail" parameterType="com.ogani.domain.OrderDetailDTO">
+  	INSERT INTO order_detail
+  	VALUES(seq_order_detail.NEXTVAL, #{prod_no}, #{order_uid}, #{order_detail_quantity})
+  </insert>
+
+  <select id="selectOrderByUid" resultType="com.ogani.domain.OrderDTO">
+  	SELECT *
+  	FROM order_info
+  	WHERE order_uid = #{order_uid}
+  </select>
+  
+  <select id="selectOrderDetailByUid" resultType="com.ogani.domain.OrderDetailDTO">
+  	SELECT *
+  	FROM order_detail
+  	WHERE order_uid = #{order_uid}
+  </select>
+  
+</mapper>

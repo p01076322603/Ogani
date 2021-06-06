@@ -4,10 +4,22 @@
   "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.ogani.mapper.CartMapper">
   
+  <select id="selectCart" resultType="com.ogani.domain.CartDTO">
+  	SELECT *
+  	FROM cart
+  	WHERE cart_no = #{cart_no}
+  </select>
+  
   <insert id="insertCart">
     INSERT INTO cart
     VALUES(seq_cart.NEXTVAL, #{cust_no}, #{prod_no}, #{cart_quantity})
   </insert>
+  
+  <update id="updateCart" parameterType="Map">
+  	UPDATE cart
+  	SET cart_quantity = #{cart_quantity}
+  	WHERE cart_no = #{cart_no}
+  </update>
   
   <select id="selectCartList" resultType="com.ogani.domain.CartDTO">
     SELECT *

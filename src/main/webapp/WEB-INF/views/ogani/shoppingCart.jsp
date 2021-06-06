@@ -33,6 +33,7 @@
 <script defer src="/resources/ogani/js/jquery.nice-select.min.js"></script>
 <script defer src="/resources/ogani/js/jquery-ui.min.js"></script>
 <script defer src="/resources/ogani/js/jquery.slicknav.js"></script>
+<script defer src="/resources/ogani/js/jquery.number.min.js"></script>
 <script defer src="/resources/ogani/js/mixitup.min.js"></script>
 <script defer src="/resources/ogani/js/owl.carousel.min.js"></script>
 <script defer src="/resources/ogani/js/main.js"></script>
@@ -75,21 +76,20 @@
               </thead>
               <tbody>
                 <c:forEach var="cart" items="${cartDetailList}">
-                  <tr>
+                  <tr class="cartDetails">
                     <td class="shoping__cart__item">
-                      <img class="rounded" width="100px" height="80px" src="${uploadLoc}${cart.imagePath}" alt=""
-                           style="object-fit: cover;">
-                      <h5>${cart.prod_name}</h5>
+                      <img class="rounded" width="100px" height="80px" src="${uploadLoc}${cart.imagePath}" alt="" style="object-fit: cover;">
+                      <h5 class="cart-prod_name"><c:out value="${cart.prod_name}"/></h5>
                     </td>
-                    <td class="shoping__cart__price"><fmt:formatNumber value="${cart.prod_price}" type="currency"/></td>
+                    <td class="shoping__cart__price" data-cart="${cart.prod_price}"><fmt:formatNumber value="${cart.prod_price}" type="currency"/></td>
                     <td class="shoping__cart__quantity">
                       <div class="quantity">
-                        <div class="pro-qty">
-                          <input type="text" value="${cart.cart_quantity}">
+                        <div class="pro-qty" data-cart="${cart.cart_no}">
+                          <input type="text" value="${cart.cart_quantity}" name="cart_quantity" readonly>
                         </div>
                       </div>
                     </td>
-                    <td class="shoping__cart__total"><fmt:formatNumber value="${cart.cart_quantity * cart.prod_price}" type="currency"/></td>
+                    <td class="shoping__cart__total" style="position: relative; bottom: 3px; right: 5px;"><fmt:formatNumber value="${cart.prod_price * cart.cart_quantity}" type="currency"/></td>
                     <td class="shoping__cart__item__close"><span class="icon_close" data-cart="${cart.cart_no}"></span></td>
                   </tr>
                 </c:forEach>
@@ -98,14 +98,28 @@
           </div>
         </div>
       </div>
+      <c:if test="${empty cartDetailList}">
+        <p class="text-center lead">장바구니가 비어있습니다.</p>
+      </c:if>
+        <p class="cart-empty text-center lead"></p>
       <div class="row">
         <div class="col-lg-6 offset-lg-6">
           <div class="shoping__checkout">
             <h5>Cart Total</h5>
             <ul>
-              <li>Total <span></span></li>
+              <li>
+                Total 
+                <span class="cart_total">
+                  <c:set var="totalPrice"/>
+                  <c:forEach var="cart" items="${cartDetailList}">
+                    <c:set var="cartPrice" value="${cart.prod_price * cart.cart_quantity}"/>
+                    <c:set var="totalPrice" value="${totalPrice + cartPrice}"/>
+                  </c:forEach>
+                  <fmt:formatNumber value="${totalPrice}" type="currency"/>
+                </span>
+              </li>
             </ul>
-            <a href="#" class="primary-btn">PROCEED TO CHECKOUT</a>
+            <a href="javascript:void(0);" class="checkout-submit primary-btn lead">장바구니 구매</a>
           </div>
         </div>
       </div>

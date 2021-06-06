@@ -8,6 +8,8 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Data @Builder
+@AllArgsConstructor
+@NoArgsConstructor
 public class CustomerDTO {
 	
 	private int cust_no;

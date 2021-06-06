@@ -60,7 +60,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 		
         // AUTHORIZE PAGES
         http.authorizeRequests()
-				.antMatchers("/blog").access("hasRole('USER OR ADMIN')")
         		.antMatchers("/admin/**").access("hasRole('ADMIN')");
 		
         // EXCEPTION HANDLER

@@ -340,7 +340,7 @@ $("#signup-cust_id").blur(function() {
 			data: id,
 			contentType: "text/plain",
 			dataType: "json",
-			beforeSend : (xhr) => xhr.setRequestHeader(CSRFheader, CSRFtoken),
+			beforeSend: (xhr) => xhr.setRequestHeader(CSRFheader, CSRFtoken),
 			success: (data) => {
 				if (data.checkResult == "1") {
 					$("#vr-cust_idcheck").text("이미 존재하거나 사용이 불가능한 아이디 입니다");
@@ -349,9 +349,7 @@ $("#signup-cust_id").blur(function() {
 				} else {
 					$("#vr-cust_idcheck").text("");
 				}
-			},
-			
-			fail: () =>	alert("서버로부터 응답이 없습니다. 관리자에게 문의 해주세요")
+			}
 		});
 	}
 });
@@ -433,13 +431,13 @@ function loginCheck() {
 	var loginPassword = $("#password").val();
 	$.ajax({
 		url: "/login",
-		type : "POST",
-		data : {
+		type: "POST",
+		data: {
 			username: loginUsername,
 			password: loginPassword
 		},
-		dataType : "json",
-		beforeSend : (xhr) => xhr.setRequestHeader(CSRFheader, CSRFtoken),
+		dataType: "json",
+		beforeSend: (xhr) => xhr.setRequestHeader(CSRFheader, CSRFtoken),
 		success: (data) => {
 			if (data.loginResult == 0) {
 				$("#login-result").text("아이디 혹은 비밀번호가 일치하지 않습니다").shake();	
@@ -450,9 +448,7 @@ function loginCheck() {
     			     window.location.assign(data.targetUrl);
 				 });
 			}				
-		},
-		
-		fail: () =>	alert("로그인에 실패하였습니다. 관리자에게 문의 해주세요")
+		}
 	});
 }
 
@@ -533,12 +529,12 @@ function modifyCheck() {
 	}
 	
 	if ($("#sample3_postcode").val() == "" &&
-		$("#sample3_detailAddress").val() != "") {
+		$.trim($("#sample3_detailAddress").val()) != "") {
 		$("#vm-cust_address").text("우편번호 찾기를 눌러 주소를 입력해주세요").shake();
 		return false;
 	}
 	if ($("#sample3_postcode").val() != "" &&
-		$("#sample3_detailAddress").val() == "") {
+		$.trim($("#sample3_detailAddress").val()) == "") {
 		$("#vm-cust_address").text("상세 주소를 입력해주세요").shake();
 		$("#sample3-detailAddress").focus();
 		return false;
@@ -556,8 +552,8 @@ function modifyCheck() {
 			cust_no: customerNo
 		}),
 		contentType: 'application/json',
-		dataType : "json",
-		beforeSend : (xhr) => xhr.setRequestHeader(CSRFheader, CSRFtoken),
+		dataType: "json",
+		beforeSend: (xhr) => xhr.setRequestHeader(CSRFheader, CSRFtoken),
 		success: (data) => {
 			if (data.checkResult === 0) {
 				$("#modify-cust_password").focus();
@@ -566,9 +562,7 @@ function modifyCheck() {
 			if (data.checkResult === 1) {
 				passwordCheckResult = true;
 			}
-		},
-		
-		fail: () =>	alert("서버로부터 응답이 없습니다. 관리자에게 문의 해주세요")
+		}
 	});
 	
 	if (passwordCheckResult === false) { return false; }
@@ -599,9 +593,8 @@ $('[data-oper="leave"]').click( () => {
   		 Cart	
 --------------------- */
 
-function cartAddSuccessToast(prod_name, cart_quantity) {
+function cartAddSuccessToast() {
 	$('.toast').toast('show');
-	// 상품 이름 : prod_name, 상품 개수 : cart_quantity
 }
 
 $("body").on("click", "#addCart", function() {
@@ -611,7 +604,8 @@ $("body").on("click", "#addCart", function() {
 	var cartQuantity = $("#cart_quantity").val();
 	
 	if (custNo === "0") {
-		location.href = "/login";
+		location.href = "/login?prod_no=" + prodNo;
+		return;
 	}
 	
 	$.ajax({
@@ -623,31 +617,308 @@ $("body").on("click", "#addCart", function() {
 			cart_quantity: cartQuantity
 		}),
 		contentType: 'application/json',
-		dataType : "json",
+		dataType: "json",
 		beforeSend : (xhr) => xhr.setRequestHeader(CSRFheader, CSRFtoken),
 		success: (data) => {
-			if (data.addCartResult) {
-				cartAddSuccessToast(data.prod_name, data.cart_quantity);
+			if (data.addCartResult || data.addCartResult === "modified") {
+				cartAddSuccessToast();
 			}
-		},
-		fail: () =>	alert("서버로부터 응답이 없습니다. 관리자에게 문의 해주세요")
+		}
 	});
-	
 });	
 
-$("body").on("click", ".icon_close", function() {
+$(".cartDetails").on("click", ".icon_close", function() {
 	
 	var cartNo = $(this).data("cart");
+	var price = parseInt($(this).parent().prev().text().replace(/(￦|,)/g, ""));
 	
 	$.ajax({
 		url: "/cart/remove",
 		type: "POST",
 		beforeSend : (xhr) => xhr.setRequestHeader(CSRFheader, CSRFtoken),
-		data: JSON.stringify({
-			cart_no: cartNo
-		}),
+		data: JSON.stringify({ cart_no: cartNo }),
 		contentType: "application/json",
-		dataType: "text",
-		success: () => $(this).closest("tr").remove()
+		success: () => {
+			$(this).closest("tr").remove();
+			
+			var totalPrice = parseInt($(".cart_total").text().replace(/(￦|,)/g, ""));
+			$(".cart_total").text("￦" + $.number(totalPrice - price));
+			
+			if (totalPrice - price === 0) $(".cart-empty").text("장바구니가 비어있습니다.");
+		}
 	});
+});
+
+$(".cartDetails").each(function() {
+	
+	var cartDetails = $(this);
+	var thisCartProductPrice = parseInt($(this).children(".shoping__cart__price").data("cart"));
+
+	$(this).find(".dec.qtybtn").click(function() {
+	
+		var currentQty = parseInt($(this).siblings("input").val()) - 1;
+
+		if (currentQty >= 0) {
+			var price = thisCartProductPrice * currentQty;
+			cartDetails.children(".shoping__cart__total").text("￦" + $.number(price));
+		}
+		
+	});
+
+	$(this).find(".inc.qtybtn").click(function() {
+	
+		var currentQty = parseInt($(this).siblings("input").val()) + 1;
+		var price = thisCartProductPrice * currentQty;
+		
+		cartDetails.children(".shoping__cart__total").text("￦" + $.number(price));
+		
+	});
+});
+
+var cartTimer;
+var cartParam = [];
+$('.cartDetails').on('click', '.qtybtn', function() {
+    
+	if (cartTimer) { clearTimeout(cartTimer); }
+
+	var cartNo = $(this).parent(".pro-qty").data("cart");
+	
+	var dupeParam = cartParam.findIndex(param => param.cart_no === cartNo);
+	if (dupeParam !== -1) {
+		cartParam.splice(dupeParam, 1);
+	}
+
+	var cartData = { 
+		cart_no: cartNo, 
+		cart_quantity: $(this).siblings("input[type='text']").val() 
+	};
+	cartParam.push(cartData);
+
+	cartTimer = setTimeout(function() {
+		$.ajax({
+			url: "/cart/modify",
+			type: "POST",
+			beforeSend : (xhr) => xhr.setRequestHeader(CSRFheader, CSRFtoken),
+			traditional: true,
+			data: JSON.stringify(cartParam),
+			contentType: "application/json",
+			success: () => cartParam = []
+		});
+	}, 500);
+	
+	var totalPrice = 0;
+	$(".shoping__cart__total").each(function() {
+		var eachPrice = parseInt($(this).text().replace(/(￦|,)/g, ""));
+		totalPrice += eachPrice;
+	});
+	
+	$(".cart_total").text("￦" + $.number(totalPrice));
+	
+});
+
+$(".checkout-submit").click(function() {
+	if (cartParam.length !== 0) { return false; }
+
+	var checkoutArray = [];
+	$(".cartDetails").each(function() {
+		var checkout = $(this).find(".pro-qty").data("cart");
+		checkoutArray.push(checkout);
+	});
+	JSON.stringify(checkoutArray);
+	
+	var checkoutForm = $("<form></form>");
+	checkoutForm.attr("method", "POST");
+	checkoutForm.attr("action", "/checkout");
+
+	checkoutForm.append($("<input/>", { type: "hidden", name: "_csrf", value: CSRFtoken}));
+	checkoutForm.append($("<input/>", { type: "hidden", name: "cartList", value: checkoutArray}));
+	
+	checkoutForm.appendTo("body").submit();
+});
+
+/*-------------------
+ Checkout validation
+--------------------- */
+$("#checkout-cust_name").blur(function() {
+	$("#checkout-cust_name").val($.trim($("#checkout-cust_name").val()));
+	$("#vc-cust_name").text("");
+});
+$("#sample3_postcode, #sample3_address, #sample3_detailAddress, #sample3_extraAddress").blur(function() {
+	$("#vc-cust_address").text("");
+});
+$("#checkout-cust_phone").blur(function() {
+	$("#vc-cust_phone").text("");
+	$(this).val( $(this).val().replace(/[^0-9]/g, "").replace(/(^01[016789]{1})(\d{3,4})(\d{4})$/,"$1-$2-$3").replace("--", "-") );
+});
+$("#checkout-cust_email").blur(function() {
+	$("#vc-cust_email").text("");
+});
+$("#checkout-cust_password").blur(function() {
+	$("#vc-cust_password").text("");
+});
+
+$(".place-order").click(function() {
+
+	if ($.trim($("#checkout-cust_name").val()).length < 2 ||
+		$.trim($("#checkout-cust_name").val()).length > 20) {
+		$("#vc-cust_name").text("이름은 2글자 이상 20글자 이하 한글로 작성 해주세요.").shake();
+		$("#checkout-cust_name").focus();
+		return false;
+	}	
+	if (!getName.test($.trim($("#checkout-cust_name").val()))) {
+		$("#vc-cust_name").text("이름은 2글자 이상 20글자 이하로 한글로 작성 해주세요.").shake();
+		$("#checkout-cust_name").focus();
+		return false;
+	}
+	if ($("#sample3_postcode").val() == "") {
+		$("#vc-cust_address").text("우편번호 찾기를 눌러 주소를 입력해주세요.").shake();
+		return false;
+	}
+	if ($.trim($("#sample3_detailAddress").val()) == "") {
+		$("#vc-cust_address").text("상세 주소를 입력해주세요.").shake();
+		$("#sample3-detailAddress").focus();
+		return false;
+	}
+	if (!getPhone.test($("#checkout-cust_phone").val())) {
+		$("#vc-cust_phone").text("올바르지 않은 전화번호입니다").shake();
+		$("#checkout-cust_phone").focus();
+		return false;
+	}
+	if (!getEmail.test($("#checkout-cust_email").val())) {
+		$("#vc-cust_email").text("올바르지 않은 이메일입니다").shake();
+		$("#checkout-cust_email").focus();
+		return false;
+	}
+
+	var currentPassword = $("#checkout-cust_password").val();
+	var customerNo      = $("#checkout-cust_no").val();
+	var passwordCheckResult = false;
+	$.ajax({
+		url: "/member/modify/passwordcheck",
+		type : "POST",
+		async: false,
+		data : JSON.stringify({
+			cust_password: currentPassword,
+			cust_no: customerNo
+		}),
+		contentType: 'application/json',
+		dataType: "json",
+		beforeSend : (xhr) => xhr.setRequestHeader(CSRFheader, CSRFtoken),
+		success: (data) => {
+			if (data.checkResult === 0) {
+				$("#vc-cust_password").text("계정의 비밀번호가 일치하지 않습니다.").shake();
+				$("#checkout-cust_password").focus().val("");
+			}
+			if (data.checkResult === 1) {
+				passwordCheckResult = true;
+			}
+		}
+	});
+	
+	if (passwordCheckResult === false) { return false; }
+
+	/*-------------------------
+	 After checkout validation
+	------------------------ */
+	
+	var checkoutLength = $(".checkout-list").data("checkout");
+	var checkoutName = checkoutLength == 1 
+			? $(".checkout-list").children(":first").data("checkout")
+			: $(".checkout-list").children(":first").data("checkout") + " 외 " + (checkoutLength - 1);
+	
+	var cartArray = [];
+	$("input[name='cart_no']").each(function() {
+		var cartNo = $(this).val();
+		cartArray.push(cartNo);
+	});
+	var checkoutAmount = 0;
+	$.ajax({
+		url: "/checkout/validatePrice",
+		type : "POST",
+		async: false,
+		data : JSON.stringify(cartArray),
+		contentType: 'text/plain',
+		dataType: "json",
+		beforeSend: (xhr) => xhr.setRequestHeader(CSRFheader, CSRFtoken),
+		success: (result) => {
+			if (result == 0) alert("잘못된 접근입니다.")
+			else checkoutAmount = result;
+		}
+	});
+	
+	if (checkoutAmount === 0) return false;
+	
+	var buyerEmail = $("#checkout-cust_email").val();
+	var buyerName = $("#checkout-cust_name").val();
+	var buyerTel = $("#checkout-cust_phone").val();
+	var buyerPostcode = $("input[name='cust_address1']").val();
+	var buyerAddr     = $("input[name='cust_address2']").val() + "，"
+	    	          + $("input[name='cust_address3']").val() + ($("input[name='cust_address4']").val().length > 0 ? "，" : "")
+				      + $("input[name='cust_address4']").val();
+	
+	IMP.init('imp57705805');
+
+	IMP.request_pay({
+	    pg : 'html5_inicis',
+	    pay_method: 'card',
+	    merchant_uid: 'order_' + new Date().getTime(),
+	    buyer_name: buyerName,
+	    buyer_postcode: buyerPostcode,
+	    buyer_addr: buyerAddr,
+	    buyer_tel: buyerTel,
+	    buyer_email: buyerEmail,
+	    name: checkoutName,
+	    amount: checkoutAmount
+	}, 
+	function(rsp) {
+		
+		$.ajax({
+			url: "/checkout/verifyCheckout/" + rsp.imp_uid,
+			type : "POST",
+			async: false,
+			beforeSend : (xhr) => xhr.setRequestHeader(CSRFheader, CSRFtoken),
+		
+		}).done(function(data) {
+		/* 결제 종료 후 받은 결과의 금액과
+		 * 아임포트 서버에 imp_uid로 요청한 결제 결과의 금액을 비교 */
+
+			if (rsp.paid_amount == data.response.amount) {
+				/* 금액 일치 */
+				var successObj = {
+					order_uid: rsp.merchant_uid,
+					order_imp_uid: rsp.imp_uid,
+					order_price: rsp.paid_amount,
+					order_card_approval: rsp.apply_num,
+					order_name: checkoutName,
+					order_buyer: buyerName,
+					order_postcode: buyerPostcode,
+					order_address: buyerAddr,
+					order_phone: buyerTel,
+					order_email: buyerEmail,
+					order_request: $("#order_request").val(),
+					save_request: $("input[name='save-request']").is(":checked") ? 1 : 0,
+					cartList: cartArray
+				};
+				
+				$.ajax({
+					url: "/checkout/complete",
+					type: "POST",
+					async: false,
+					traditional: true,
+					data: successObj,
+					beforeSend: (xhr) => xhr.setRequestHeader(CSRFheader, CSRFtoken)
+				
+				}).always(function () {
+					window.location.assign("/checkout/complete?imp_uid=" + rsp.imp_uid + "&merchant_uid=" + rsp.merchant_uid);
+				});
+				
+			} else {
+				/* 금액 불일치 (결제 중단) */
+				$(".error_msg").text(rsp.error_msg);
+				$('#checkoutFailModal').modal();
+			}
+		});
+	});
+
+	return false;
 });

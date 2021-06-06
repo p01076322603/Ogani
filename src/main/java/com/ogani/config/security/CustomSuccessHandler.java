@@ -3,13 +3,16 @@ package com.ogani.config.security;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -24,12 +27,16 @@ import com.ogani.domain.AdminDTO;
 import com.ogani.domain.CustomerDTO;
 import com.ogani.domain.adapter.AdminAdapter;
 import com.ogani.domain.adapter.CustomerAdapter;
+import com.ogani.service.MemberService;
 
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 public class CustomSuccessHandler implements AuthenticationSuccessHandler {
 
+	@Autowired
+	private MemberService memberService;
+	
 	@Override
 	public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) 
 			throws IOException, ServletException {
@@ -59,13 +66,23 @@ public class CustomSuccessHandler implements AuthenticationSuccessHandler {
 			log.debug(customerAdapter.toString());
 			log.debug(customer.toString());
 			
+			log.debug("Customer 로그인에 성공하였습니다.");
+			
 			SecurityContextHolder.getContext().setAuthentication(new UsernamePasswordAuthenticationToken
 					(customer, customerAdapter.getPassword(), // Password == null;
 								Collections.singletonList(new SimpleGrantedAuthority("ROLE_USER"))));
 
-			log.debug("Customer 로그인에 성공하였습니다.");
+			Date loginDate = memberService.updateLastLogin(customer.getCust_id());
+			log.debug("loginDate = {}", loginDate);
 			
 			targetUrl = savedRequest == null ? indexPage : savedRequest.getRedirectUrl();
+
+			HttpSession session = request.getSession();
+			Integer prod_no = (Integer) session.getAttribute("return-to");
+			if (prod_no != null) {
+				targetUrl = indexPage + "/goods/" + prod_no;
+				session.removeAttribute("return-to");
+			}
 		}
 		
 		else if (principal instanceof AdminAdapter && !isCustomer) {

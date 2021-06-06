@@ -1,5 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <%@ taglib prefix="s" uri="http://www.springframework.org/security/tags" %>
 
 <!DOCTYPE html>
@@ -42,24 +43,14 @@
   <s:authentication var="principal" property="principal"/>
   
   <div class="container">
-    <c:choose>
-      <c:when test="${modifyResult eq true}">
-        <div class="alert alert-success alert-dismissible fade show" role="alert">
-          <strong>회원 정보가 수정되었습니다.</strong>
-          <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-            <span aria-hidden="true">&times;</span>
-          </button>
-        </div>
-      </c:when>
-      <c:when test="${modifyResult eq false}">
-        <div class="alert alert-danger alert-dismissible fade show" role="alert">
-          <strong>회원 정보 수정에 실패하였습니다.</strong>
-          <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-            <span aria-hidden="true">&times;</span>
-          </button>
-        </div>
-      </c:when>
-    </c:choose>
+    <c:if test="${modifyResult eq true}">
+      <div class="alert alert-success alert-dismissible fade show" role="alert">
+        회원 정보가 수정되었습니다.
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+    </c:if>
   </div>
   
   <div class="container">
@@ -70,51 +61,51 @@
       <div class="row">
         <div class="col-lg-6">
           <div class="form-group row">
-            <label class="col-form-label col-sm-4 col-12">Username</label>
+            <label class="col-form-label col-sm-4 col-12">아이디</label>
             <div class="col-sm-8 align-middle">
               <p><c:out value="${principal.cust_id}"/></p>
             </div>
           </div>
           <div class="form-group row">
-            <label class="col-form-label col-sm-4 col-12">Email</label>
+            <label class="col-form-label col-sm-4 col-12">이메일</label>
             <div class="col-sm-8 align-middle">
               <p><c:out value="${principal.cust_email}"/></p>
             </div>
           </div>
           <div class="form-group row">
-            <label class="col-form-label col-sm-4 col-12">Phone</label>
+            <label class="col-form-label col-sm-4 col-12">핸드폰 번호</label>
             <div class="col-sm-8 align-middle">
               <p><c:out value="${principal.cust_phone}"/></p>
             </div>
           </div>
           <div class="form-group row">
-            <label class="col-form-label col-sm-4 col-12">Registration Date</label>
+            <label class="col-form-label col-sm-4 col-12">가입일</label>
             <div class="col-sm-8 align-middle">
-              <p><c:out value="${principal.cust_regdate}"/></p>
+              <p><fmt:formatDate value="${principal.cust_regdate}" dateStyle="full"/></p>
             </div>
           </div>
           <div class="form-group row">
-            <label class="col-form-label col-sm-4 col-12">Last Login</label>
+            <label class="col-form-label col-sm-4 col-12">이전 로그인 시각</label>
             <div class="col-sm-8 align-middle">
-              <p><c:out value="${principal.cust_lastlogin}"/></p>
+              <p><fmt:formatDate value="${principal.cust_lastlogin}" pattern="yyyy-MM-dd HH:mm:ss"/></p>
             </div>
           </div>
         </div>
         <div class="col-lg-6">
           <div class="form-group row">
-            <label class="col-form-label col-sm-4 col-12">Name</label>
+            <label class="col-form-label col-sm-4 col-12">이름</label>
             <div class="col-sm-8 align-middle">
               <p><c:out value="${principal.cust_name}"/></p>
             </div>
           </div>
           <div class="form-group row">
-            <label class="col-form-label col-sm-4 col-12">Mailing</label>
+            <label class="col-form-label col-sm-4 col-12">메일링 동의 여부</label>
             <div class="col-sm-8 align-middle">
               <p><c:out value="${principal.cust_mailing == 1 ? '동의합니다.' : '동의하지 않습니다.'}"/></p>
             </div>
           </div>
           <div class="form-group row">
-            <label class="col-form-label col-sm-4 col-12">Address</label>
+            <label class="col-form-label col-sm-4 col-12">주소</label>
             <div class="col-sm-8 align-middle">
               <p><c:out value="${principal.cust_address}"/></p>
             </div>
@@ -122,8 +113,8 @@
         </div>
       </div>
       <div class="d-flex justify-content-center">
-        <a href="member/modify"><button class="btn text-white mx-2">Modify</button></a>
-        <a href="/"><button class="btn text-white mx-2">Home</button></a>
+        <a href="member/modify"><button class="btn text-white mx-2">수정하기</button></a>
+        <a href="/"><button class="btn text-white mx-2">메인으로</button></a>
       </div>
     </div>
   </div>

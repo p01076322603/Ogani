@@ -1,15 +1,14 @@
 package com.ogani.controller;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.annotation.Secured;
-import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -18,6 +17,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ogani.domain.CartDTO;
 import com.ogani.domain.CartDetailDTO;
 import com.ogani.domain.CustomerDTO;
@@ -32,6 +33,7 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 @Controller
 @RequestMapping("/cart")
+@Secured("ROLE_USER")
 @RequiredArgsConstructor
 public class CartController {
 
@@ -39,11 +41,9 @@ public class CartController {
 	private final ProductService productService;
 	
 	@GetMapping
-	@Secured("ROLE_USER")
-	public String cart(Model model) {
+	public String cart(Model model, @AuthenticationPrincipal CustomerDTO customer) {
 		log.trace("cart() GET");
 		
-		CustomerDTO customer = (CustomerDTO) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 		int cust_no = customer.getCust_no();
 		
 		List<CartDTO> cartList = cartService.getCustomerCartList(cust_no);
@@ -74,44 +74,68 @@ public class CartController {
 	
 	@ResponseBody
 	@PostMapping("/add")
-	public Map<String, Object> addCart(@RequestBody Map<String, String> cartMap) {
+	public Map<String, Object> addCart(@RequestBody Map<String, Integer> cartMap) {
 		log.debug("addCart( cartMap = {} ) POST", cartMap);
 
-		CartDTO cart = CartDTO.builder()
-				.cust_no(Integer.parseInt(cartMap.get("cust_no")))
-				.prod_no(Integer.parseInt(cartMap.get("prod_no")))
-				.cart_quantity(Integer.parseInt(cartMap.get("cart_quantity")))	
-				.build();
+		int cust_no = cartMap.get("cust_no");
+		int prod_no = cartMap.get("prod_no");
+		int cart_quantity = cartMap.get("cart_quantity");
 		
-		String prod_name = cartService.addCart(cart);
-		
-		Map<String, Object> resultMap = new HashMap<>();
-		
-		if (prod_name == null) {
-			resultMap.put("addCartResult", false);
+		List<CartDTO> cartList = cartService.getCustomerCartList(cust_no);
+		Optional<CartDTO> cartAlreadyExists = 
+				cartList.stream().filter(cart -> cart.getProd_no() == prod_no).findFirst();
 
+		Map<String, Object> resultMap = new HashMap<>();
+
+		if (cartAlreadyExists.isPresent()) {
+			CartDTO cart = cartAlreadyExists.get();
+			
+			Map<String, Integer> paramMap = new HashMap<>();
+			paramMap.put("cart_no", cart.getCart_no());
+			paramMap.put("cart_quantity", cart_quantity);
+			
+			boolean modifyResult = cartService.modifyCart(paramMap);
+			log.debug("cart modifyResult = {}", modifyResult);
+			
+			resultMap.put("addCartResult", "modified");
+		
 		} else {
-			resultMap.put("prod_name", prod_name);
-			resultMap.put("cart_quantity", cartMap.get("cart_quantity"));
+			CartDTO cart = CartDTO.builder()
+					.cust_no(cust_no)
+					.prod_no(prod_no)
+					.cart_quantity(cart_quantity)
+					.build();
+
+			cartService.addCart(cart);
+			
 			resultMap.put("addCartResult", true);
 		}
-		
+
 		return resultMap;
 	}
 	
 	@ResponseBody
 	@PostMapping("/remove")
-	public ResponseEntity<String> removeCart(@RequestBody Map<String, String> paramMap) {
+	public void removeCart(@RequestBody Map<String, Integer> paramMap) {
 		log.debug("removeCart( cart_no = {} )", paramMap);
 
-		boolean result = cartService.removeCart(Integer.parseInt(paramMap.get("cart_no")));
+		boolean result = cartService.removeCart(paramMap.get("cart_no"));
 		log.debug("removeCart result = {}", result);
+
+	}
+	
+	@ResponseBody
+	@PostMapping("/modify")
+	public void modifyCart(@RequestBody String cartParam) {
+		log.debug("modifyCart( {} )", cartParam);
+	
+		ObjectMapper mapper = new ObjectMapper();
+		List<Map<String, Integer>> cartList = Collections.emptyList();
+		try {
+			cartList = mapper.readValue(cartParam, new TypeReference<List<Map<String, Integer>>>(){});
+		} catch (Exception e) { e.printStackTrace(); }
 		
-		HttpHeaders headers = new HttpHeaders();
-		headers.add("Content-Type", "text/html; charset=UTF-8");
-		
-		return result ? new ResponseEntity<>("삭제 되었습니다.", headers, HttpStatus.OK) 
-					  : new ResponseEntity<>("삭제에 실패하였습니다.", headers, HttpStatus.INTERNAL_SERVER_ERROR);
+		cartList.forEach(cartMap -> cartService.modifyCart(cartMap));
 	}
 	
 }

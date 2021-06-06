@@ -17,7 +17,7 @@ CREATE TABLE customer (
 
 ALTER TABLE customer ADD CONSTRAINT customer_cust_no_PK PRIMARY KEY(cust_no);
 
-CREATE SEQUENCE seq_customer;
+CREATE SEQUENCE seq_customer
 START WITH 1
 INCREMENT BY 1
 NOCYCLE;
@@ -114,6 +114,44 @@ INCREMENT BY 1
 NOCYCLE;
 
 INSERT INTO admin_info(admin_no, admin_id, admin_password, admin_name, admin_phone, admin_email)
-VALUES(seq_admin_info.NEXTVAL, 'admin', '$2a$10$vPHJ0Kim4CoAVY3GZ0VpauIByaQVnrxtErT.Hxlyymwuy0VQvPkEy', '?��?��?��', '010-1234-5678', 'admin@email.com');
+VALUES(seq_admin_info.NEXTVAL, 'admin', '$2a$10$vPHJ0Kim4CoAVY3GZ0VpauIByaQVnrxtErT.Hxlyymwuy0VQvPkEy', 'admin', '010-1234-5678', 'admin@email.com');
 
-commit;
+CREATE TABLE order_info (
+	order_uid	            VARCHAR2(30)		NOT NULL,
+	cust_no 	            NUMBER(10)		    NOT NULL,
+    order_imp_uid           VARCHAR2(30)        UNIQUE NOT NULL,
+	order_name	            VARCHAR2(255)		NOT NULL,
+	order_regdate	        DATE		        DEFAULT SYSDATE NOT NULL,
+	order_price 	        NUMBER(10)		    NOT NULL,
+	order_card_approval 	NUMBER(10)		    NOT NULL,
+	order_buyer	            VARCHAR2(20 CHAR)	NOT NULL,
+	order_email	            VARCHAR2(255)		NOT NULL,
+	order_postcode	        NUMBER(10)		    NOT NULL,
+	order_address	        VARCHAR2(255)		NOT NULL,
+	order_phone	            VARCHAR2(13)		NOT NULL,
+	order_request	        VARCHAR2(4000)		NULL
+);
+
+ALTER TABLE order_info
+ADD CONSTRAINT order_uid_PK PRIMARY KEY(order_uid);
+ALTER TABLE order_info
+ADD CONSTRAINT order_cust_no_FK FOREIGN KEY(cust_no) REFERENCES customer(cust_no);
+
+CREATE TABLE order_detail (
+	order_detail_no	        NUMBER(10)		NOT NULL,
+	prod_no	                NUMBER(10)		NOT NULL,
+	order_uid	            VARCHAR2(30)	NOT NULL,
+	order_detail_quantity	NUMBER(10)		NOT NULL
+);
+
+ALTER TABLE order_detail
+ADD CONSTRAINT order_detail_no_PK PRIMARY KEY(order_detail_no);
+ALTER TABLE order_detail
+ADD CONSTRAINT order_detail_prod_no_FK FOREIGN KEY(prod_no) REFERENCES product(prod_no);
+ALTER TABLE order_detail
+ADD CONSTRAINT order_detail_order_uid_PK FOREIGN KEY(order_uid) REFERENCES order_info(order_uid);
+
+CREATE SEQUENCE seq_order_detail
+START WITH 1
+INCREMENT BY 1
+NOCYCLE;

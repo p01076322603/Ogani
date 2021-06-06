@@ -1,11 +1,11 @@
 package com.ogani.service.impl;
 
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.stereotype.Service;
 
 import com.ogani.domain.CartDTO;
-import com.ogani.domain.ProductDTO;
 import com.ogani.mapper.CartMapper;
 import com.ogani.mapper.ProductMapper;
 import com.ogani.service.CartService;
@@ -45,6 +45,20 @@ public class CartServiceImpl implements CartService {
 		log.trace("removeCart( cart_no = {} )", cart_no);
 		
 		return cartMapper.deleteCart(cart_no) == 1;
+	}
+
+	@Override
+	public boolean modifyCart(Map<String, Integer> cartNoQuantity) {
+		log.trace("removeCart( {} )", cartNoQuantity);
+		
+		return cartMapper.updateCart(cartNoQuantity) == 1;
+	}
+
+	@Override
+	public CartDTO getCart(int cart_no) {
+		log.trace("getCart( cart_no = {} )", cart_no);
+		
+		return cartMapper.selectCart(cart_no);
 	}
 	
 }

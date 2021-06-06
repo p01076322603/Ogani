@@ -264,6 +264,10 @@ ol {
 	}
 }
 
+.bg-ogani {
+  background-color: #7FAD39;
+}
+
 /*---------------------
   Header
 -----------------------*/
@@ -1956,6 +1960,7 @@ ol {
 .shoping__cart__table table {
 	width: 100%;
 	text-align: center;
+	min-width: 690px;
 }
 
 .shoping__cart__table table thead tr {
@@ -2189,10 +2194,10 @@ ol {
 .checkout__input input {
 	width: 100%;
 	height: 46px;
-	border: 1px solid #ebebeb;
+	border: 1px solid #ccc;
 	padding-left: 20px;
 	font-size: 16px;
-	color: #b2b2b2;
+	color: #666;
 	border-radius: 4px;
 }
 
@@ -2212,7 +2217,7 @@ ol {
 	position: relative;
 	font-size: 16px;
 	color: #1c1c1c;
-	padding-left: 40px;
+	padding-left: 20px;
 	cursor: pointer;
 }
 
@@ -2260,6 +2265,7 @@ ol {
 	background: #f5f5f5;
 	padding: 40px;
 	padding-top: 30px;
+	height: 100%;
 }
 
 .checkout__order h4 {
@@ -2335,6 +2341,12 @@ ol {
 	letter-spacing: 2px;
 	width: 100%;
 	margin-top: 10px;
+}
+
+._checkout small {
+  display: block;
+  color: red;
+  min-height: 35px;
 }
 
 /*---------------------
@@ -3303,6 +3315,25 @@ ol {
     min-width: 90px;
     margin: 5px 0 !important;
   }
+}
+
+/*--------------------------------- Checkout Page -----------------------------*/
+
+.checkout .btn.bg-ogani {
+  width: 100%;
+  padding: 10px 12px;
+}
+
+@media only screen and (max-width: 992px) {
+  .checkout .btn.bg-ogani {
+    margin-bottom: 20px;
+  }
+}
+
+@media only screen and (max-width: 768px) {
+	.checkout .checkout-textarea {
+	   margin-bottom: 30px;
+	}
 }
 
 /*--------------------------------- Responsive Media Quaries -----------------------------*/
