@@ -115,7 +115,7 @@
                     <c:set var="cartPrice" value="${cart.prod_price * cart.cart_quantity}"/>
                     <c:set var="totalPrice" value="${totalPrice + cartPrice}"/>
                   </c:forEach>
-                  <fmt:formatNumber value="${totalPrice}" type="currency"/>
+                  <fmt:formatNumber value="${totalPrice == 0 ? '0' : totalPrice}" type="currency"/>
                 </span>
               </li>
             </ul>

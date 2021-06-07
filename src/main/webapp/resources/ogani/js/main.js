@@ -212,10 +212,10 @@
             var newVal = parseFloat(oldValue) + 1;
         } else {
             // Don't allow decrementing below zero
-            if (oldValue > 0) {
+            if (oldValue > 1) {
                 var newVal = parseFloat(oldValue) - 1;
             } else {
-                newVal = 0;
+                newVal = 1;
             }
         }
         $button.parent().find('input').val(newVal);
@@ -319,6 +319,44 @@ const getPwd = RegExp(/^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{6,30}$/);
 const getEmail = RegExp(/^[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*@[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*.[a-zA-Z]{2,3}$/i);
 const getPhone = RegExp(/^(01[016789]{1})-(\d{3,4})-(\d{4})$/);
 const getName = RegExp(/^[가-힣]{2,20}$/);
+
+/*-------------------
+   	 Index page
+-------------------- */
+
+$(".featured__item").on("click", ".featured__item__pic", function() {
+	var prodNo = $(this).prev().val();
+	location.assign("/goods/" + prodNo);
+});
+
+$(".featured__item").on("click", ".featured__item__pic__hover__anchor", function(e) {
+	e.stopPropagation();
+	
+	var prodNo = $(this).data("cart");
+	var custNo = $("#cust_no").val();
+	
+	if (custNo === undefined) {
+		location.assign("/login?prod_no=" + prodNo);
+	}
+	
+	$.ajax({
+		url: "/cart/add",
+		type : "POST",
+		data : JSON.stringify({
+			cust_no: custNo,
+			prod_no: prodNo,
+			cart_quantity: 1
+		}),
+		contentType: 'application/json',
+		dataType: "json",
+		beforeSend : (xhr) => xhr.setRequestHeader(CSRFheader, CSRFtoken),
+		success: (data) => {
+			if (data.addCartResult || data.addCartResult === "modified") {
+				cartAddSuccessToast();
+			}
+		}
+	});
+});
 
 /*-------------------
   Register Validation	
@@ -658,7 +696,7 @@ $(".cartDetails").each(function() {
 	
 		var currentQty = parseInt($(this).siblings("input").val()) - 1;
 
-		if (currentQty >= 0) {
+		if (currentQty >= 1) {
 			var price = thisCartProductPrice * currentQty;
 			cartDetails.children(".shoping__cart__total").text("￦" + $.number(price));
 		}
@@ -717,7 +755,13 @@ $('.cartDetails').on('click', '.qtybtn', function() {
 });
 
 $(".checkout-submit").click(function() {
+
 	if (cartParam.length !== 0) { return false; }
+	
+	if (parseInt($(".cart_total").text().replace(/(￦|,)/g, "")) === 0) {
+		alert("장바구니가 비어있습니다.");
+		return false;
+	}
 
 	var checkoutArray = [];
 	$(".cartDetails").each(function() {
@@ -919,6 +963,4 @@ $(".place-order").click(function() {
 			}
 		});
 	});
-
-	return false;
 });

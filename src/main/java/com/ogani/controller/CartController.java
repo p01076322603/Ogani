@@ -72,6 +72,13 @@ public class CartController {
 		return "ogani/shoppingCart";
 	}
 	
+	@GetMapping("/add")
+	public String addCartGET() {
+		log.debug("addCartGET() GET");
+		
+		return "redirect:/cart";
+	}
+	
 	@ResponseBody
 	@PostMapping("/add")
 	public Map<String, Object> addCart(@RequestBody Map<String, Integer> cartMap) {

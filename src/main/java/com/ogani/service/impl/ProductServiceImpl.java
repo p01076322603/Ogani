@@ -3,7 +3,6 @@ package com.ogani.service.impl;
 import java.util.List;
 
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.EnableTransactionManagement;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.ogani.domain.ProductCategoryDTO;
@@ -16,7 +15,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
-@Service
+@Service(value = "ProductService")
 @RequiredArgsConstructor
 public class ProductServiceImpl implements ProductService {
 
@@ -98,6 +97,29 @@ public class ProductServiceImpl implements ProductService {
 			result = mapper.deleteProduct(prod_no);
 		
 		return result == 1;
+	}
+
+	@Override
+	@Transactional
+	public List<ProductDTO> getIndexLists() {
+		log.trace("getIndexLists()");
+		
+		List<ProductDTO> newProductList = mapper.selectNewProducts();
+		newProductList.forEach(product -> {
+			int prod_no = product.getProd_no();
+			
+			List<ProductImageDTO> productImageList = mapper.selectProductImage(prod_no);
+			product.setProd_imagelist(productImageList);
+		});
+		
+		return newProductList;
+	}
+
+	@Override
+	public List<ProductDTO> getProductListByCategory(int cate_no) {
+		log.trace("getProductListByCategory( cate_no = {} )", cate_no);
+		
+		return mapper.selectProductListByCategory(cate_no);
 	}
 	
 }

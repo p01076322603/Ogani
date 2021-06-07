@@ -144,6 +144,7 @@ public class CheckoutController {
 		return api.paymentByImpUid(imp_uid);
 	}
 	
+	// TODO: rest방식으로 변경하여 result 분기시켜 성공 / 실패 구분하기
 	@Transactional
 	@PostMapping("/complete")
 	public void checkoutComplete(@ModelAttribute OrderDTO order, @RequestParam List<Integer> cartList,

@@ -1,6 +1,7 @@
 package com.ogani.controller;
 
 import java.util.Collections;
+import java.util.List;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
@@ -11,6 +12,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -20,8 +22,10 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.ogani.domain.CustomerDTO;
+import com.ogani.domain.ProductDTO;
 import com.ogani.service.AdminService;
 import com.ogani.service.MemberService;
+import com.ogani.service.ProductService;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -33,13 +37,18 @@ public class OganiController {
 
 	private final MemberService memberService;
 	private final AdminService adminService;
+	private final ProductService productService;
 	private final PasswordEncoder passwordEncoder;
 	
 	// INDEX PAGE
 	@GetMapping("/")
-	public String index() {
+	public String index(Model model) {
 		log.trace("index() GET");
+
+		List<ProductDTO> newProductList = productService.getIndexLists();
+		log.trace("{}", newProductList);
 		
+		model.addAttribute("newProductList", newProductList);
 		return "ogani/index";
 	}
 	

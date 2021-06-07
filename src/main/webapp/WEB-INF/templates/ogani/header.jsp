@@ -1,15 +1,24 @@
+<%@page import="java.util.List"%>
+<%@page import="org.springframework.web.context.support.WebApplicationContextUtils"%>
+<%@page import="org.springframework.web.context.WebApplicationContext"%>
+<%@page import="com.ogani.domain.ProductCategoryDTO"%>
+<%@page import="com.ogani.service.ProductService"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="s" uri="http://www.springframework.org/security/tags" %>
+<% 
+ServletContext servletContext = getServletContext();
+WebApplicationContext webApplicationContext = WebApplicationContextUtils.getRequiredWebApplicationContext(servletContext);
+ProductService productService = (ProductService) webApplicationContext.getBean("ProductService");
+
+List<ProductCategoryDTO> categoryList = productService.getAllCategory();
+pageContext.setAttribute("categoryList", categoryList);
+%>
 <!-- Page Preloder -->
-<div id="preloder">
+<!-- <div id="preloder">
   <div class="loader"></div>
 </div>
-
-<!-- Login Modal Begin -->
-
-<!-- Login Modal End -->
-
+ -->
 <!-- Humberger Begin -->
 <div class="humberger__menu__overlay"></div>
 <div class="humberger__menu__wrapper">
@@ -33,16 +42,9 @@
   <nav class="humberger__menu__nav mobile-menu">
     <ul>
       <li><a href="/">Home</a></li>
-      <li><a href="./shop-grid.html">Shop</a></li>
-      <li><a href="#">Pages</a>
-        <ul class="header__menu__dropdown">
-          <li><a href="./shop-details.html">Shop Details</a></li>
-          <li><a href="./shoping-cart.html">Shoping Cart</a></li>
-          <li><a href="./checkout.html">Check Out</a></li>
-          <li><a href="./blog-details.html">Blog Details</a></li>
-        </ul></li>
-      <li><a href="blog">Blog</a></li>
-      <li><a href="contact">Contact</a></li>
+      <li><a href="/shop">Shop</a></li>
+      <li><a href="/blog">Blog</a></li>
+      <li><a href="/contact">Contact</a></li>
     </ul>
   </nav>
   <div id="mobile-menu-wrap"></div>
@@ -52,8 +54,7 @@
   </div>
   <div class="humberger__menu__contact">
     <ul>
-      <li><i class="fa fa-envelope"></i> hello@colorlib.com</li>
-      <li>Free Shipping for all Order of $99</li>
+      <li><i class="fa fa-envelope"></i> Ogani@colorlib.com</li>
     </ul>
   </div>
 </div>
@@ -67,28 +68,27 @@
         <div class="col-lg-6">
           <div class="header__top__left">
             <ul>
-              <li><i class="fa fa-envelope"></i> hello@colorlib.com</li>
-              <li>Free Shipping for all Order of $99</li>
+              <li><i class="fa fa-envelope"></i> Ogani@colorlib.com</li>
             </ul>
           </div>
         </div>
         <div class="col-lg-6">
           <div class="header__top__right">
-            <div class="header__top__right__auth d-flex float-right">        
+            <div class="header__top__right__auth d-flex float-right" style="position: relative; top: 3px;">        
               <s:authorize access="isAnonymous()">
-                <a href="/login" class="px-3"><i class="fa fa-user"></i>Login</a>
-                <a href="register"><i class="fa fa-user"></i>Register</a>
+                <a href="/login" class="px-3"><i class="fa fa-user"></i>로그인</a>
+                <a href="register"><i class="fa fa-user"></i>회원 가입</a>
               </s:authorize>
               <s:authorize access="hasRole('ROLE_USER')">
                 <s:authentication var="principal" property="principal"/>
                 <p class="m-0" style="position: relative; bottom: 3px;"><c:out value="${principal.cust_id}"/></p>
-                <a href="/logout" class="px-3"><i class="fa fa-user"></i>Logout</a>
-                <a href="/member"><i class="fa fa-user"></i>Info</a>
+                <a href="/logout" class="px-3"><i class="fa fa-user"></i>로그아웃</a>
+                <a href="/member"><i class="fa fa-user"></i>회원 정보</a>
               </s:authorize>
               <s:authorize access="hasRole('ROLE_ADMIN')">
                 <s:authentication var="principal" property="principal"/>
                 <p class="m-0" style="position: relative; bottom: 3px;"><c:out value="${principal.admin_id}"/></p>
-                <a href="/logout" class="px-3"><i class="fa fa-user"></i>Logout</a>
+                <a href="/logout" class="px-3"><i class="fa fa-user"></i>로그아웃</a>
                 <a href="/admin"><i class="fa fa-user"></i>Admin</a>
               </s:authorize>
             </div>
@@ -106,28 +106,18 @@
       </div>
       <div class="col-lg-6">
         <nav class="header__menu">
-          <ul>
+          <ul class="text-center">
             <li><a href="/">Home</a></li>
-            <li><a href="./shop-grid.html">Shop</a></li>
-            <li><a href="#">Pages</a>
-              <ul class="header__menu__dropdown">
-                <li><a href="./shop-details.html">Shop Details</a></li>
-                <li><a href="./shoping-cart.html">Shoping Cart</a></li>
-                <li><a href="./checkout.html">Check Out</a></li>
-                <li><a href="./blog-details.html">Blog Details</a></li>
-              </ul></li>
-            <li><a href="blog">Blog</a></li>
-            <li><a href="contact">Contact</a></li>
+            <li><a href="/shop">Shop</a></li>
+            <li><a href="/blog">Blog</a></li>
+            <li><a href="/contact">Contact</a></li>
           </ul>
         </nav>
       </div>
       <div class="col-lg-3">
         <div class="header__cart">
-          <ul>
-            <li><a href="/cart"><i class="fa fa-shopping-bag"></i> <span>3</span></a></li>
-          </ul>
           <div class="header__cart__price">
-            item: <span>$150.00</span>
+            <a href="/cart" class="text-dark"><i class="fa fa-shopping-bag"></i> 장바구니</a>
           </div>
         </div>
       </div>
@@ -146,20 +136,12 @@
       <div class="col-lg-3">
         <div class="hero__categories">
           <div class="hero__categories__all">
-            <i class="fa fa-bars"></i> <span>All departments</span>
+            <i class="fa fa-bars"></i> <span style="position: relative; top: 2px;">카테고리</span>
           </div>
           <ul>
-            <li><a href="#">Fresh Meat</a></li>
-            <li><a href="#">Vegetables</a></li>
-            <li><a href="#">Fruit & Nut Gifts</a></li>
-            <li><a href="#">Fresh Berries</a></li>
-            <li><a href="#">Ocean Foods</a></li>
-            <li><a href="#">Butter & Eggs</a></li>
-            <li><a href="#">Fastfood</a></li>
-            <li><a href="#">Fresh Onion</a></li>
-            <li><a href="#">Papayaya & Crisps</a></li>
-            <li><a href="#">Oatmeal</a></li>
-            <li><a href="#">Fresh Bananas</a></li>
+            <c:forEach var="category" items="${categoryList}">
+              <li><a href="/shop/${category.cate_no}">${category.cate_name}</a></li>
+            </c:forEach>
           </ul>
         </div>
       </div>
@@ -167,10 +149,7 @@
         <div class="hero__search">
           <div class="hero__search__form">
             <form action="#">
-              <div class="hero__search__categories">
-                All Categories <span class="arrow_carrot-down"></span>
-              </div>
-              <input type="text" placeholder="What do yo u need?">
+              <input type="text" placeholder="검색">
               <button type="submit" class="site-btn">SEARCH</button>
             </form>
           </div>
@@ -179,8 +158,8 @@
               <i class="fa fa-phone"></i>
             </div>
             <div class="hero__search__phone__text">
-              <h5>+65 11.188.888</h5>
-              <span>support 24/7 time</span>
+              <h5>010-7632-2603</h5>
+              <span>연락처</span>
             </div>
           </div>
         </div>

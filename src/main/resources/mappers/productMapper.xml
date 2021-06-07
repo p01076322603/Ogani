@@ -17,6 +17,12 @@
      </selectKey>
   </insert>
 
+  <select id="selectProductListByCategory" resultType="com.ogani.domain.ProductDTO">
+    SELECT *
+    FROM product
+    WHERE cate_no = #{cate_no}
+  </select>
+
   <insert id="insertImage" parameterType="com.ogani.domain.ProductImageDTO">
     INSERT INTO product_image
     VALUES(#{prod_image_uuid}, #{prod_no}, #{prod_image_url}, #{prod_image_name})
@@ -30,6 +36,17 @@
   <select id="selectProductList" resultType="com.ogani.domain.ProductDTO">
   	SELECT *
   	FROM product
+    ORDER BY prod_no
+  </select>
+  
+  <select id="selectNewProducts" resultType="com.ogani.domain.ProductDTO">
+    SELECT *
+    FROM (SELECT ROWNUM,
+                 prod_no, cate_no, prod_name, prod_price, prod_content, 
+                 prod_regdate, prod_stock, prod_salecount, prod_display
+          FROM product
+          WHERE ROWNUM BETWEEN 1 AND 8
+          ORDER BY prod_no DESC)
   </select>
   
   <select id="selectProductImage" resultType="com.ogani.domain.ProductImageDTO">

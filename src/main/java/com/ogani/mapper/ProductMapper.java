@@ -24,6 +24,11 @@ public interface ProductMapper {
 	
 	public List<ProductDTO> selectProductList();
 	
+	// TODO:
+	public List<ProductDTO> selectNewProducts();
+	
+	public List<ProductDTO> selectProductListByCategory(int cate_no);
+	
 	public List<ProductImageDTO> selectProductImage(int prod_no);
 	
 	public List<ProductCategoryDTO> selectAllCategory();

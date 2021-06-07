@@ -15,9 +15,15 @@ public interface ProductService {
 	
 	public boolean removeProduct(int prod_no);
 	
-	public ProductDTO getProduct(int prod_no);
+	// TODO: 메인 화면으로 가져올 리스트들을 새로운 DTO를 만들어 한번에 가져오기
+	public List<ProductDTO> getIndexLists();
 	
 	public List<ProductDTO> getProductList();
 	
+	public List<ProductDTO> getProductListByCategory(int cate_no);
+	
 	public List<ProductCategoryDTO> getAllCategory();
+
+	public ProductDTO getProduct(int prod_no);
+	
 }
