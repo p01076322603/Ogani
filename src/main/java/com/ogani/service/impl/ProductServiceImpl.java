@@ -5,6 +5,8 @@ import java.util.List;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.ogani.domain.Criteria;
+import com.ogani.domain.PageDTO;
 import com.ogani.domain.ProductCategoryDTO;
 import com.ogani.domain.ProductDTO;
 import com.ogani.domain.ProductImageDTO;
@@ -74,6 +76,21 @@ public class ProductServiceImpl implements ProductService {
 		
 		return mapper.selectProductList();
 	}
+	
+
+	@Override
+	public List<ProductDTO> getProductList2(PageDTO pageParam) {
+		log.trace("getProductList()");
+		
+		List<ProductDTO> productList = mapper.selectProductList2(pageParam);
+		productList.forEach(product -> {
+			
+			int prod_no = product.getProd_no();
+			product.setProd_imagelist(mapper.selectProductImage(prod_no));
+		});
+		
+		return productList;
+	}
 
 	@Override
 	@Transactional
@@ -121,5 +138,13 @@ public class ProductServiceImpl implements ProductService {
 		
 		return mapper.selectProductListByCategory(cate_no);
 	}
+
+	@Override
+	public int getProductListCount(Criteria criteria) {
+		log.trace("getProductListCount()");
+		
+		return mapper.selectProductListCount(criteria);
+	}
+
 	
 }

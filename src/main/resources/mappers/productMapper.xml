@@ -39,6 +39,36 @@
     ORDER BY prod_no
   </select>
   
+  <select id="selectProductList2" parameterType="com.ogani.domain.PageDTO" resultType="com.ogani.domain.ProductDTO">
+  <![CDATA[
+    SELECT *
+    FROM (SELECT ROWNUM RNUM, PROD.*
+          FROM (SELECT *
+                FROM product
+                WHERE prod_display = 1
+                  AND prod_stock > 0 
+                  ]]>
+                    <if test="keyword != null and keyword != ''">
+                      AND prod_name LIKE '%'||#{keyword}||'%'
+                    </if>
+                  <![CDATA[
+                ORDER BY prod_no DESC) PROD)
+    WHERE RNUM BETWEEN #{listStart} AND #{listEnd}
+  ]]>
+  </select>
+  
+  <select id="selectProductListCount" resultType="int">
+  <![CDATA[
+    SELECT COUNT(*)
+    FROM product
+    WHERE prod_display = 1
+      AND prod_stock > 0
+  ]]>
+  <if test="keyword != null and keyword != ''">
+    AND prod_name LIKE '%'||#{keyword}||'%'
+  </if>
+  </select>
+  
   <select id="selectNewProducts" resultType="com.ogani.domain.ProductDTO">
     SELECT *
     FROM (SELECT ROWNUM,

@@ -2,6 +2,8 @@ package com.ogani.service;
 
 import java.util.List;
 
+import com.ogani.domain.Criteria;
+import com.ogani.domain.PageDTO;
 import com.ogani.domain.ProductCategoryDTO;
 import com.ogani.domain.ProductDTO;
 
@@ -15,10 +17,17 @@ public interface ProductService {
 	
 	public boolean removeProduct(int prod_no);
 	
-	// TODO: 메인 화면으로 가져올 리스트들을 새로운 DTO를 만들어 한번에 가져오기
+	// TODO: 교체 필요
 	public List<ProductDTO> getIndexLists();
-	
+
+	// TODO: 교체 필요
 	public List<ProductDTO> getProductList();
+
+	// TODO: WIP
+	public List<ProductDTO> getProductList2(PageDTO pageParam);
+
+	// TODO: WIP
+	public int getProductListCount(Criteria criteria);
 	
 	public List<ProductDTO> getProductListByCategory(int cate_no);
 	
