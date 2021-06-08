@@ -5,11 +5,11 @@ import java.util.List;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.ogani.domain.Criteria;
-import com.ogani.domain.PageDTO;
 import com.ogani.domain.ProductCategoryDTO;
 import com.ogani.domain.ProductDTO;
 import com.ogani.domain.ProductImageDTO;
+import com.ogani.domain.paging.ProductCriteria;
+import com.ogani.domain.paging.ProductPageDTO;
 import com.ogani.mapper.ProductMapper;
 import com.ogani.service.ProductService;
 
@@ -71,18 +71,10 @@ public class ProductServiceImpl implements ProductService {
 	}
 
 	@Override
-	public List<ProductDTO> getProductList() {
+	public List<ProductDTO> getProductList(ProductPageDTO pageParam) {
 		log.trace("getProductList()");
 		
-		return mapper.selectProductList();
-	}
-	
-
-	@Override
-	public List<ProductDTO> getProductList2(PageDTO pageParam) {
-		log.trace("getProductList()");
-		
-		List<ProductDTO> productList = mapper.selectProductList2(pageParam);
+		List<ProductDTO> productList = mapper.selectProductList(pageParam);
 		productList.forEach(product -> {
 			
 			int prod_no = product.getProd_no();
@@ -117,22 +109,6 @@ public class ProductServiceImpl implements ProductService {
 	}
 
 	@Override
-	@Transactional
-	public List<ProductDTO> getIndexLists() {
-		log.trace("getIndexLists()");
-		
-		List<ProductDTO> newProductList = mapper.selectNewProducts();
-		newProductList.forEach(product -> {
-			int prod_no = product.getProd_no();
-			
-			List<ProductImageDTO> productImageList = mapper.selectProductImage(prod_no);
-			product.setProd_imagelist(productImageList);
-		});
-		
-		return newProductList;
-	}
-
-	@Override
 	public List<ProductDTO> getProductListByCategory(int cate_no) {
 		log.trace("getProductListByCategory( cate_no = {} )", cate_no);
 		
@@ -140,7 +116,7 @@ public class ProductServiceImpl implements ProductService {
 	}
 
 	@Override
-	public int getProductListCount(Criteria criteria) {
+	public int getProductListCount(ProductCriteria criteria) {
 		log.trace("getProductListCount()");
 		
 		return mapper.selectProductListCount(criteria);

@@ -2,11 +2,11 @@ package com.ogani.mapper;
 
 import java.util.List;
 
-import com.ogani.domain.Criteria;
-import com.ogani.domain.PageDTO;
 import com.ogani.domain.ProductCategoryDTO;
 import com.ogani.domain.ProductDTO;
 import com.ogani.domain.ProductImageDTO;
+import com.ogani.domain.paging.ProductCriteria;
+import com.ogani.domain.paging.ProductPageDTO;
 
 public interface ProductMapper {
 
@@ -24,17 +24,9 @@ public interface ProductMapper {
 	
 	public ProductDTO selectProduct(int prod_no);
 	
-	// TODO: WIP
-	public int selectProductListCount(Criteria criteria);
+	public int selectProductListCount(ProductCriteria criteria);
 	
-	// TODO: 교체 필요
-	public List<ProductDTO> selectProductList();
-
-	// TODO: WIP
-	public List<ProductDTO> selectProductList2(PageDTO pageParam);
-	
-	// TODO: 교체 필요
-	public List<ProductDTO> selectNewProducts();
+	public List<ProductDTO> selectProductList(ProductPageDTO pageParam);
 	
 	public List<ProductDTO> selectProductListByCategory(int cate_no);
 	

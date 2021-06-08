@@ -33,24 +33,15 @@
     FROM product_category
   </select>
 
-  <select id="selectProductList" resultType="com.ogani.domain.ProductDTO">
-  	SELECT *
-  	FROM product
-    ORDER BY prod_no
-  </select>
-  
-  <select id="selectProductList2" parameterType="com.ogani.domain.PageDTO" resultType="com.ogani.domain.ProductDTO">
+  <select id="selectProductList" parameterType="com.ogani.domain.paging.ProductPageDTO" resultType="com.ogani.domain.ProductDTO">
   <![CDATA[
     SELECT *
     FROM (SELECT ROWNUM RNUM, PROD.*
           FROM (SELECT *
                 FROM product
-                WHERE prod_display = 1
-                  AND prod_stock > 0 
+                WHERE prod_no > 0
                   ]]>
-                    <if test="keyword != null and keyword != ''">
-                      AND prod_name LIKE '%'||#{keyword}||'%'
-                    </if>
+                    <include refid="criteria"/>
                   <![CDATA[
                 ORDER BY prod_no DESC) PROD)
     WHERE RNUM BETWEEN #{listStart} AND #{listEnd}
@@ -61,24 +52,26 @@
   <![CDATA[
     SELECT COUNT(*)
     FROM product
-    WHERE prod_display = 1
-      AND prod_stock > 0
+    WHERE prod_no > 0
   ]]>
-  <if test="keyword != null and keyword != ''">
-    AND prod_name LIKE '%'||#{keyword}||'%'
-  </if>
+	<include refid="criteria"/>
   </select>
-  
-  <select id="selectNewProducts" resultType="com.ogani.domain.ProductDTO">
-    SELECT *
-    FROM (SELECT ROWNUM,
-                 prod_no, cate_no, prod_name, prod_price, prod_content, 
-                 prod_regdate, prod_stock, prod_salecount, prod_display
-          FROM product
-          WHERE ROWNUM BETWEEN 1 AND 8
-          ORDER BY prod_no DESC)
-  </select>
-  
+
+  <sql id="criteria">
+ 	<if test="stock != null and stock != ''">
+	  <![CDATA[AND prod_stock >= #{stock}]]>
+    </if>
+    <if test="display != null and display != ''">
+      AND prod_display = #{display}
+    </if>
+    <if test="category != null and category != ''">
+      AND cate_no = #{category}
+    </if>
+    <if test="keyword != null and keyword != ''">
+      AND prod_name LIKE '%'||#{keyword}||'%'
+    </if>
+  </sql>
+
   <select id="selectProductImage" resultType="com.ogani.domain.ProductImageDTO">
   	SELECT *
   	FROM product_image

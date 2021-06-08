@@ -1561,6 +1561,7 @@ ol {
 	height: 270px;
 	position: relative;
 	overflow: hidden;
+	cursor: pointer;
 }
 
 .product__item__pic__hover {

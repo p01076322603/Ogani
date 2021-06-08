@@ -51,12 +51,12 @@
         <div class="col-lg-6 col-md-6">
           <div class="product__details__pic">
             <div class="product__details__pic__item">
-              <c:set var="largeImage" value="${product.prod_imagelist[0]}"/>
+              <c:set var="largeImage" value="${pageProduct.prod_imagelist[0]}"/>
               <img class="product__details__pic__item--large bigImage-wrap"
               src="${uploadLoc}${largeImage.prod_image_url}/${largeImage.prod_image_uuid}_${largeImage.prod_image_name}" alt="">
             </div>
             <div class="product__details__pic__slider owl-carousel">
-              <c:forEach var="image" items="${product.prod_imagelist}">
+              <c:forEach var="image" items="${pageProduct.prod_imagelist}">
                 <img data-imgbigurl="${uploadLoc}${image.prod_image_url}/${image.prod_image_uuid}_${image.prod_image_name}" 
                                 src="${uploadLoc}${image.prod_image_url}/${image.prod_image_uuid}_${image.prod_image_name}" 
                                 alt="product_image" class="image-wrap"> 
@@ -66,7 +66,7 @@
         </div>
         <div class="col-lg-6 col-md-6">
           <div class="product__details__text">
-            <h3><c:out value="${product.prod_name}"/></h3>
+            <h3><c:out value="${pageProduct.prod_name}"/></h3>
             <div class="product__details__rating">
               <i class="fa fa-star"></i> 
               <i class="fa fa-star"></i> 
@@ -75,14 +75,14 @@
               <i class="fa fa-star-half-o"></i> 
               <span>(18 reviews)</span>
             </div>
-            <div class="product__details__price"><fmt:formatNumber value="${product.prod_price}" type="currency"/></div>
-            <p><c:out value="${product.prod_content}"/></p>
+            <div class="product__details__price"><fmt:formatNumber value="${pageProduct.prod_price}" type="currency"/></div>
+            <p><c:out value="${pageProduct.prod_content}"/></p>
             <div class="product__details__quantity">
               <div class="quantity">
                 <div class="pro-qty">
                   <input type="text" value="1" id="cart_quantity">
                 </div>
-                <input type="hidden" value="${product.prod_no}" id="prod_no">
+                <input type="hidden" value="${pageProduct.prod_no}" id="prod_no">
                 <s:authorize access="isAnonymous()">
                   <input type="hidden" value="0" id="cust_no">
                 </s:authorize>
@@ -91,14 +91,14 @@
                 </s:authorize>
               </div>
             </div>
-            <c:if test="${product.prod_display == 1}">
+            <c:if test="${pageProduct.prod_display == 1}">
               <a href="javascript:void(0);" class="primary-btn lead" id="addCart">카트에 담기</a>
             </c:if>
-            <c:if test="${product.prod_display == 0}">
+            <c:if test="${pageProduct.prod_display == 0}">
               <a href="javascript:void(0);" class="secondary-btn" style="cursor: not-allowed;">구매 불가</a>
             </c:if>
             <ul>
-              <li><b>상태 : </b> <span>${product.prod_display == 1 ? '재고 있음' : '재고 없음'}</span></li>
+              <li><b>상태 : </b> <span>${pageProduct.prod_display == 1 ? '재고 있음' : '재고 없음'}</span></li>
             </ul>
           </div>
         </div>
@@ -155,79 +155,38 @@
       <div class="row">
         <div class="col-lg-12">
           <div class="section-title related__product__title">
-            <h2>Related Product</h2>
+            <h2>같은 카테고리의 상품</h2>
           </div>
         </div>
       </div>
       <div class="row">
-        <div class="col-lg-3 col-md-4 col-sm-6">
-          <div class="product__item">
-            <div class="product__item__pic set-bg" data-setbg="/resources/ogani/img/product/product-1.jpg">
-              <ul class="product__item__pic__hover">
-                <li><a href="#"><i class="fa fa-heart"></i></a></li>
-                <li><a href="#"><i class="fa fa-retweet"></i></a></li>
-                <li><a href="#"><i class="fa fa-shopping-cart"></i></a></li>
-              </ul>
+        <c:forEach var="product" items="${productList}">
+          <c:if test="${pageProduct.prod_no != product.prod_no}">
+            <c:set var="image" value="${product.prod_imagelist[0]}"/>
+            <c:set var="imagePath" value="${uploadLoc}${image.prod_image_url}/${image.prod_image_uuid}_${image.prod_image_name}"/>
+            <div class="col-lg-3 col-md-4 col-sm-6">
+              <div class="product__item">
+                <input type="hidden" value="${product.prod_no}">
+                <div class="product__item__pic set-bg rounded" data-setbg="${imagePath}">
+                  <ul class="product__item__pic__hover">
+                    <li>
+                      <a class="product__item__pic__hover__anchor" 
+                         href="javascript:void(0)" data-cart="${product.prod_no}">
+                        <i class="fa fa-shopping-cart"></i>
+                      </a>
+                    </li>
+                  </ul>
+                </div>
+                <div class="product__item__text">
+                  <h6>
+                    <a href="#">${product.prod_name}</a>
+                  </h6>
+                  <h5><fmt:formatNumber value="${product.prod_price}" type="currency"/> </h5>
+                </div>
+              </div>
             </div>
-            <div class="product__item__text">
-              <h6>
-                <a href="#">Crab Pool Security</a>
-              </h6>
-              <h5>$30.00</h5>
-            </div>
-          </div>
-        </div>
-        <div class="col-lg-3 col-md-4 col-sm-6">
-          <div class="product__item">
-            <div class="product__item__pic set-bg" data-setbg="/resources/ogani/img/product/product-2.jpg">
-              <ul class="product__item__pic__hover">
-                <li><a href="#"><i class="fa fa-heart"></i></a></li>
-                <li><a href="#"><i class="fa fa-retweet"></i></a></li>
-                <li><a href="#"><i class="fa fa-shopping-cart"></i></a></li>
-              </ul>
-            </div>
-            <div class="product__item__text">
-              <h6>
-                <a href="#">Crab Pool Security</a>
-              </h6>
-              <h5>$30.00</h5>
-            </div>
-          </div>
-        </div>
-        <div class="col-lg-3 col-md-4 col-sm-6">
-          <div class="product__item">
-            <div class="product__item__pic set-bg" data-setbg="/resources/ogani/img/product/product-3.jpg">
-              <ul class="product__item__pic__hover">
-                <li><a href="#"><i class="fa fa-heart"></i></a></li>
-                <li><a href="#"><i class="fa fa-retweet"></i></a></li>
-                <li><a href="#"><i class="fa fa-shopping-cart"></i></a></li>
-              </ul>
-            </div>
-            <div class="product__item__text">
-              <h6>
-                <a href="#">Crab Pool Security</a>
-              </h6>
-              <h5>$30.00</h5>
-            </div>
-          </div>
-        </div>
-        <div class="col-lg-3 col-md-4 col-sm-6">
-          <div class="product__item">
-            <div class="product__item__pic set-bg" data-setbg="/resources/ogani/img/product/product-7.jpg">
-              <ul class="product__item__pic__hover">
-                <li><a href="#"><i class="fa fa-heart"></i></a></li>
-                <li><a href="#"><i class="fa fa-retweet"></i></a></li>
-                <li><a href="#"><i class="fa fa-shopping-cart"></i></a></li>
-              </ul>
-            </div>
-            <div class="product__item__text">
-              <h6>
-                <a href="#">Crab Pool Security</a>
-              </h6>
-              <h5>$30.00</h5>
-            </div>
-          </div>
-        </div>
+          </c:if>
+        </c:forEach>
       </div>
     </div>
   </section>

@@ -70,6 +70,7 @@ public class CheckoutController {
 	}
 	
 	@PostMapping
+	@Transactional
 	public String checkout(@AuthenticationPrincipal CustomerDTO customer,
 						   @RequestParam List<Integer> cartList, Model model) {
 		log.trace("checkout( {} ) POST", cartList);
@@ -102,6 +103,7 @@ public class CheckoutController {
 	}
 	
 	@ResponseBody
+	@Transactional
 	@PostMapping("/validatePrice")
 	public int validatePrice(@RequestBody String cartArray, @AuthenticationPrincipal CustomerDTO customer) {
 		log.trace("validatePrice( {} )", cartArray);

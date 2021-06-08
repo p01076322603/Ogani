@@ -1,5 +1,8 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
+<%@ taglib prefix="s" uri="http://www.springframework.org/security/tags" %>
 <!DOCTYPE html>
 <html lang="ko">
 
@@ -9,6 +12,7 @@
 <meta name="keywords" content="Ogani, unica, creative, html">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta http-equiv="X-UA-Compatible" content="ie=edge">
+<s:csrfMetaTags/>
 <title>Ogani | Template</title>
 
 <!-- Google Font -->
@@ -38,6 +42,11 @@
 <body>
   
   <jsp:include page="/WEB-INF/templates/ogani/header.jsp"/>
+  <c:set var="uploadLoc" value="/resources/upload/"/>
+  <s:authorize access="hasRole('ROLE_USER')">
+    <s:authentication var="principal" property="principal"/>
+    <input type="hidden" value="${principal.cust_no}" id="cust_no">
+  </s:authorize>
 
   <!-- Breadcrumb Section Begin -->
   <section class="breadcrumb-section set-bg" data-setbg="/resources/ogani/img/breadcrumb.jpg">
@@ -63,7 +72,7 @@
               <h4>카테고리</h4>
               <ul>
                 <c:forEach var="category" items="${categoryList}">
-                  <li><a href="/category/${category.cate_no}">${category.cate_name}</a></li>
+                  <li><a href="javascript:void(0)">${category.cate_name}</a></li>
                 </c:forEach>
               </ul>
             </div>
@@ -140,159 +149,42 @@
               <div class="col-lg-4 col-md-5">
                 <div class="filter__sort">
                   <span>Sort By</span> <select>
-                    <option value="0">Default</option>
-                    <option value="0">Default</option>
+                    <option value="0">등록일</option>
+                    <option value="0">가격</option>
                   </select>
                 </div>
               </div>
               <div class="col-lg-4 col-md-4">
                 <div class="filter__found">
-                  <h6><span>16</span> Products found</h6>
-                </div>
-              </div>
-              <div class="col-lg-4 col-md-3">
-                <div class="filter__option">
-                  <span class="icon_grid-2x2"></span> <span class="icon_ul"></span>
+                  <h6><span>${fn:length(productList)} </span> Products found</h6>
                 </div>
               </div>
             </div>
           </div>
           <div class="row">
-            <div class="col-lg-4 col-md-6 col-sm-6">
-              <div class="product__item">
-                <div class="product__item__pic set-bg" data-setbg="/resources/ogani/img/product/product-1.jpg">
-                  <ul class="product__item__pic__hover">
-                    <li><a href="#"><i class="fa fa-heart"></i></a></li>
-                    <li><a href="#"><i class="fa fa-retweet"></i></a></li>
-                    <li><a href="#"><i class="fa fa-shopping-cart"></i></a></li>
-                  </ul>
-                </div>
-                <div class="product__item__text">
-                  <h6><a href="#">Crab Pool Security</a></h6>
-                  <h5>$30.00</h5>
-                </div>
-              </div>
-            </div>
-            <div class="col-lg-4 col-md-6 col-sm-6">
-              <div class="product__item">
-                <div class="product__item__pic set-bg" data-setbg="/resources/ogani/img/product/product-2.jpg">
-                  <ul class="product__item__pic__hover">
-                    <li><a href="#"><i class="fa fa-heart"></i></a></li>
-                    <li><a href="#"><i class="fa fa-retweet"></i></a></li>
-                    <li><a href="#"><i class="fa fa-shopping-cart"></i></a></li>
-                  </ul>
-                </div>
-                <div class="product__item__text">
-                  <h6><a href="#">Crab Pool Security</a></h6>
-                  <h5>$30.00</h5>
+            <c:forEach var="product" items="${productList}">
+              <c:set var="image" value="${product.prod_imagelist[0]}"/>
+              <c:set var="imagePath" value="${uploadLoc}${image.prod_image_url}/${image.prod_image_uuid}_${image.prod_image_name}"/>
+              <div class="col-lg-4 col-md-6 col-sm-6">
+                <div class="product__item">
+                  <input type="hidden" value="${product.prod_no}">
+                  <div class="product__item__pic set-bg rounded" data-setbg="${imagePath}">
+                    <ul class="product__item__pic__hover">
+                      <li>
+                        <a class="product__item__pic__hover__anchor" 
+                           href="javascript:void(0)" data-cart="${product.prod_no}">
+                          <i class="fa fa-shopping-cart"></i>
+                        </a>
+                      </li>
+                    </ul>
+                  </div>
+                  <div class="product__item__text">
+                    <h6><a href="#">${product.prod_name}</a></h6>
+                    <h5><fmt:formatNumber value="${product.prod_price}" type="currency"/> </h5>
+                  </div>
                 </div>
               </div>
-            </div>
-            <div class="col-lg-4 col-md-6 col-sm-6">
-              <div class="product__item">
-                <div class="product__item__pic set-bg" data-setbg="/resources/ogani/img/product/product-3.jpg">
-                  <ul class="product__item__pic__hover">
-                    <li><a href="#"><i class="fa fa-heart"></i></a></li>
-                    <li><a href="#"><i class="fa fa-retweet"></i></a></li>
-                    <li><a href="#"><i class="fa fa-shopping-cart"></i></a></li>
-                  </ul>
-                </div>
-                <div class="product__item__text">
-                  <h6><a href="#">Crab Pool Security</a></h6>
-                  <h5>$30.00</h5>
-                </div>
-              </div>
-            </div>
-            <div class="col-lg-4 col-md-6 col-sm-6">
-              <div class="product__item">
-                <div class="product__item__pic set-bg" data-setbg="/resources/ogani/img/product/product-4.jpg">
-                  <ul class="product__item__pic__hover">
-                    <li><a href="#"><i class="fa fa-heart"></i></a></li>
-                    <li><a href="#"><i class="fa fa-retweet"></i></a></li>
-                    <li><a href="#"><i class="fa fa-shopping-cart"></i></a></li>
-                  </ul>
-                </div>
-                <div class="product__item__text">
-                  <h6><a href="#">Crab Pool Security</a></h6>
-                  <h5>$30.00</h5>
-                </div>
-              </div>
-            </div>
-            <div class="col-lg-4 col-md-6 col-sm-6">
-              <div class="product__item">
-                <div class="product__item__pic set-bg" data-setbg="/resources/ogani/img/product/product-5.jpg">
-                  <ul class="product__item__pic__hover">
-                    <li><a href="#"><i class="fa fa-heart"></i></a></li>
-                    <li><a href="#"><i class="fa fa-retweet"></i></a></li>
-                    <li><a href="#"><i class="fa fa-shopping-cart"></i></a></li>
-                  </ul>
-                </div>
-                <div class="product__item__text">
-                  <h6><a href="#">Crab Pool Security</a></h6>
-                  <h5>$30.00</h5>
-                </div>
-              </div>
-            </div>
-            <div class="col-lg-4 col-md-6 col-sm-6">
-              <div class="product__item">
-                <div class="product__item__pic set-bg" data-setbg="/resources/ogani/img/product/product-6.jpg">
-                  <ul class="product__item__pic__hover">
-                    <li><a href="#"><i class="fa fa-heart"></i></a></li>
-                    <li><a href="#"><i class="fa fa-retweet"></i></a></li>
-                    <li><a href="#"><i class="fa fa-shopping-cart"></i></a></li>
-                  </ul>
-                </div>
-                <div class="product__item__text">
-                  <h6><a href="#">Crab Pool Security</a></h6>
-                  <h5>$30.00</h5>
-                </div>
-              </div>
-            </div>
-            <div class="col-lg-4 col-md-6 col-sm-6">
-              <div class="product__item">
-                <div class="product__item__pic set-bg" data-setbg="/resources/ogani/img/product/product-7.jpg">
-                  <ul class="product__item__pic__hover">
-                    <li><a href="#"><i class="fa fa-heart"></i></a></li>
-                    <li><a href="#"><i class="fa fa-retweet"></i></a></li>
-                    <li><a href="#"><i class="fa fa-shopping-cart"></i></a></li>
-                  </ul>
-                </div>
-                <div class="product__item__text">
-                  <h6><a href="#">Crab Pool Security</a></h6>
-                  <h5>$30.00</h5>
-                </div>
-              </div>
-            </div>
-            <div class="col-lg-4 col-md-6 col-sm-6">
-              <div class="product__item">
-                <div class="product__item__pic set-bg" data-setbg="/resources/ogani/img/product/product-8.jpg">
-                  <ul class="product__item__pic__hover">
-                    <li><a href="#"><i class="fa fa-heart"></i></a></li>
-                    <li><a href="#"><i class="fa fa-retweet"></i></a></li>
-                    <li><a href="#"><i class="fa fa-shopping-cart"></i></a></li>
-                  </ul>
-                </div>
-                <div class="product__item__text">
-                  <h6><a href="#">Crab Pool Security</a></h6>
-                  <h5>$30.00</h5>
-                </div>
-              </div>
-            </div>
-            <div class="col-lg-4 col-md-6 col-sm-6">
-              <div class="product__item">
-                <div class="product__item__pic set-bg" data-setbg="/resources/ogani/img/product/product-9.jpg">
-                  <ul class="product__item__pic__hover">
-                    <li><a href="#"><i class="fa fa-heart"></i></a></li>
-                    <li><a href="#"><i class="fa fa-retweet"></i></a></li>
-                    <li><a href="#"><i class="fa fa-shopping-cart"></i></a></li>
-                  </ul>
-                </div>
-                <div class="product__item__text">
-                  <h6><a href="#">Crab Pool Security</a></h6>
-                  <h5>$30.00</h5>
-                </div>
-              </div>
-            </div>
+            </c:forEach>
           </div>
           <div class="product__pagination">
             <a href="#">1</a> <a href="#">2</a> <a href="#">3</a> <a href="#"><i class="fa fa-long-arrow-right"></i></a>
@@ -304,6 +196,22 @@
   <!-- Product Section End -->
 
   <jsp:include page="/WEB-INF/templates/ogani/footer.jsp"/>
+
+  <!-- Toast -->
+  <div class="position-fixed bottom-0 right-0 p-3" style="z-index: 5; right: 0; bottom: 0;">
+    <div id="liveToast" class="toast hide" role="alert" aria-live="assertive" aria-atomic="true" data-delay="2000">
+      <div class="toast-header">
+        <strong class="mr-auto">장바구니 추가</strong>
+        <button type="button" class="ml-2 mb-1 close" data-dismiss="toast" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="toast-body">
+        장바구니에 상품이 추가되었습니다.
+      </div>
+    </div>
+  </div>
+  <!-- /Toast -->
 
 </body>
 </html>

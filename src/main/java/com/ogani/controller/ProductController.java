@@ -36,6 +36,9 @@ import com.ogani.config.PathCollections;
 import com.ogani.domain.ProductCategoryDTO;
 import com.ogani.domain.ProductDTO;
 import com.ogani.domain.ProductImageDTO;
+import com.ogani.domain.paging.ProductCriteria;
+import com.ogani.domain.paging.ProductPageDTO;
+import com.ogani.service.PagingService;
 import com.ogani.service.ProductService;
 
 import lombok.RequiredArgsConstructor;
@@ -50,6 +53,7 @@ import net.coobird.thumbnailator.Thumbnails;
 public class ProductController {
 
 	private final ProductService productService;
+	private final PagingService pagingService;
 	
 	private String uploadPath = PathCollections.LOCAL_PATH + File.separator 
 			+ Paths.get("Ogani", "src", "main", "webapp", "resources", "upload").toString();
@@ -58,7 +62,10 @@ public class ProductController {
 	public String productList(Model model) {
 		log.trace("productList() GET");
 
-		List<ProductDTO> productList = productService.getProductList();
+		ProductPageDTO pageParam = pagingService.getProductPageDTO(new ProductCriteria(25, 10));
+		log.debug("{}", pageParam);
+		
+		List<ProductDTO> productList = productService.getProductList(pageParam);
 		model.addAttribute("productList", productList);
 		
 		return "admin/product";

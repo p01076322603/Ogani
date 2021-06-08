@@ -23,8 +23,11 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.ogani.domain.CustomerDTO;
 import com.ogani.domain.ProductDTO;
+import com.ogani.domain.paging.ProductCriteria;
+import com.ogani.domain.paging.ProductPageDTO;
 import com.ogani.service.AdminService;
 import com.ogani.service.MemberService;
+import com.ogani.service.PagingService;
 import com.ogani.service.ProductService;
 
 import lombok.RequiredArgsConstructor;
@@ -38,6 +41,7 @@ public class OganiController {
 	private final MemberService memberService;
 	private final AdminService adminService;
 	private final ProductService productService;
+	private final PagingService pagingService;
 	private final PasswordEncoder passwordEncoder;
 	
 	// INDEX PAGE
@@ -45,7 +49,12 @@ public class OganiController {
 	public String index(Model model) {
 		log.trace("index() GET");
 
-		List<ProductDTO> newProductList = productService.getIndexLists();
+		ProductCriteria criteria = ProductCriteria.builder()
+				.lCount(8).display(1).stock(0).build();
+		
+		ProductPageDTO pageParam = pagingService.getProductPageDTO(criteria);
+		
+		List<ProductDTO> newProductList = productService.getProductList(pageParam);
 		log.trace("{}", newProductList);
 		
 		model.addAttribute("newProductList", newProductList);

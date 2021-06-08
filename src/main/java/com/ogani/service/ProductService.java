@@ -2,10 +2,10 @@ package com.ogani.service;
 
 import java.util.List;
 
-import com.ogani.domain.Criteria;
-import com.ogani.domain.PageDTO;
 import com.ogani.domain.ProductCategoryDTO;
 import com.ogani.domain.ProductDTO;
+import com.ogani.domain.paging.ProductCriteria;
+import com.ogani.domain.paging.ProductPageDTO;
 
 public interface ProductService {
 
@@ -16,18 +16,10 @@ public interface ProductService {
 	public boolean modifyProduct(ProductDTO product);
 	
 	public boolean removeProduct(int prod_no);
-	
-	// TODO: 교체 필요
-	public List<ProductDTO> getIndexLists();
 
-	// TODO: 교체 필요
-	public List<ProductDTO> getProductList();
+	public List<ProductDTO> getProductList(ProductPageDTO pageParam);
 
-	// TODO: WIP
-	public List<ProductDTO> getProductList2(PageDTO pageParam);
-
-	// TODO: WIP
-	public int getProductListCount(Criteria criteria);
+	public int getProductListCount(ProductCriteria criteria);
 	
 	public List<ProductDTO> getProductListByCategory(int cate_no);
 	

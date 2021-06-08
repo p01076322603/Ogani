@@ -339,23 +339,31 @@ $(".featured__item").on("click", ".featured__item__pic__hover__anchor", function
 		location.assign("/login?prod_no=" + prodNo);
 	}
 	
-	$.ajax({
-		url: "/cart/add",
-		type : "POST",
-		data : JSON.stringify({
-			cust_no: custNo,
-			prod_no: prodNo,
-			cart_quantity: 1
-		}),
-		contentType: 'application/json',
-		dataType: "json",
-		beforeSend : (xhr) => xhr.setRequestHeader(CSRFheader, CSRFtoken),
-		success: (data) => {
-			if (data.addCartResult || data.addCartResult === "modified") {
-				cartAddSuccessToast();
-			}
-		}
-	});
+	addCart(custNo, prodNo, 1);
+	
+});
+
+/*-------------------
+   	 Shop page
+-------------------- */
+
+$(".product__item").on("click", ".product__item__pic", function() {
+	var prodNo = $(this).prev().val();
+	location.assign("/goods/" + prodNo);
+});
+
+$(".product__item").on("click", ".product__item__pic__hover__anchor", function(e) {
+	e.stopPropagation();
+	
+	var prodNo = $(this).data("cart");
+	var custNo = $("#cust_no").val();
+
+	if (custNo === undefined || custNo === '0') {
+		location.assign("/login?prod_no=" + prodNo);
+	}
+	
+	addCart(custNo, prodNo, 1);
+	
 });
 
 /*-------------------
@@ -635,16 +643,7 @@ function cartAddSuccessToast() {
 	$('.toast').toast('show');
 }
 
-$("body").on("click", "#addCart", function() {
-	
-	var custNo = $("#cust_no").val();
-	var prodNo = $("#prod_no").val();
-	var cartQuantity = $("#cart_quantity").val();
-	
-	if (custNo === "0") {
-		location.href = "/login?prod_no=" + prodNo;
-		return;
-	}
+function addCart(custNo, prodNo, cartQuantity) {
 	
 	$.ajax({
 		url: "/cart/add",
@@ -663,6 +662,21 @@ $("body").on("click", "#addCart", function() {
 			}
 		}
 	});
+}
+
+$("body").on("click", "#addCart", function() {
+	
+	var custNo = $("#cust_no").val();
+	var prodNo = $("#prod_no").val();
+	var cartQuantity = $("#cart_quantity").val();
+	
+	if (custNo === "0") {
+		location.href = "/login?prod_no=" + prodNo;
+		return;
+	}
+	
+	addCart(custNo, prodNo, cartQuantity);
+	
 });	
 
 $(".cartDetails").on("click", ".icon_close", function() {
