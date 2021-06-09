@@ -13,6 +13,19 @@
       </selectKey>
     </update>
   
+  	<select id="selectMemberAuth" parameterType="com.ogani.domain.EmailConfirmDTO" resultType="int">
+ 	  SELECT COUNT(*)
+ 	  FROM customer
+ 	  WHERE cust_email = #{cust_email} 
+ 	    AND cust_authkey = #{cust_authkey}
+  	</select>
+  	
+  	<update id="updateMemberAuth">
+  	  UPDATE customer
+  	  SET cust_authstatus = 1
+  	  WHERE cust_id = #{cust_id}
+  	</update>
+  
   	<update id="updateEnabled" parameterType="hashMap">
   		UPDATE customer
   		SET cust_enabled = #{cust_enabled}
@@ -32,8 +45,8 @@
 	</select>
 	
     <insert id="insertMember">
-      INSERT INTO customer(cust_no, cust_id, cust_password, cust_phone, cust_email)
-      VALUES(seq_customer.NEXTVAL, #{cust_id}, #{cust_password}, #{cust_phone}, #{cust_email})
+      INSERT INTO customer(cust_no, cust_id, cust_password, cust_phone, cust_email, cust_authkey)
+      VALUES(seq_customer.NEXTVAL, #{cust_id}, #{cust_password}, #{cust_phone}, #{cust_email}, #{cust_authkey})
     </insert>
 
     <insert id="updateMember">

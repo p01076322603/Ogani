@@ -13,6 +13,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.authentication.DisabledException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -60,6 +61,7 @@ public class CustomSuccessHandler implements AuthenticationSuccessHandler {
 		if (principal instanceof CustomerAdapter && isCustomer) {
 			CustomerAdapter customerAdapter = (CustomerAdapter) authentication.getPrincipal();
 			CustomerDTO customer = customerAdapter.getCustomer();
+			
 			customer.setCust_password("[PROTECTED]");
 			
 			customerAdapter.eraseCredentials();

@@ -503,6 +503,9 @@ function loginCheck() {
 				$("#login-result").text("아이디 혹은 비밀번호가 일치하지 않습니다").shake();	
 				$("#password").val("");
 			}
+			if (data.loginResult == -1) {
+				$("#login-result").text("이메일 인증이 되지 않은 계정입니다.").shake();	
+			}
 			if (data.loginResult == 1) {
 				 $(document).ajaxStop(function(){
     			     window.location.assign(data.targetUrl);

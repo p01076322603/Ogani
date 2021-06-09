@@ -3,6 +3,7 @@ package com.ogani.mapper;
 import java.util.Map;
 
 import com.ogani.domain.CustomerDTO;
+import com.ogani.domain.EmailConfirmDTO;
 
 public interface MemberMapper {
 
@@ -17,4 +18,8 @@ public interface MemberMapper {
 	public int updateEnabled(Map<String, Object> noAndEnabled);
 	
 	public int insertMember(CustomerDTO customer);
+	
+	public int selectMemberAuth(EmailConfirmDTO customerAuth);
+	
+	public int updateMemberAuth(String cust_id);
 }

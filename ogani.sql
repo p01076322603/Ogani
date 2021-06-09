@@ -15,6 +15,9 @@ CREATE TABLE customer (
 	cust_mailing	NUMBER(1)	        DEFAULT '0' NOT NULL
 );
 
+ALTER TABLE customer ADD cust_authkey VARCHAR2(50);
+ALTER TABLE customer ADD cust_authstatus NUMBER(1) DEFAULT '0';
+
 ALTER TABLE customer ADD CONSTRAINT customer_cust_no_PK PRIMARY KEY(cust_no);
 
 CREATE SEQUENCE seq_customer

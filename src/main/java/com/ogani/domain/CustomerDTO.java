@@ -23,5 +23,7 @@ public class CustomerDTO {
 	private Date cust_regdate;
 	private Date cust_lastlogin;
 	private int cust_mailing;
+	private String cust_authkey;
+	private int cust_authstatus;
 	
 }

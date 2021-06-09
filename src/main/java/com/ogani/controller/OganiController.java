@@ -38,11 +38,8 @@ import lombok.extern.slf4j.Slf4j;
 @RequiredArgsConstructor
 public class OganiController {
 
-	private final MemberService memberService;
-	private final AdminService adminService;
 	private final ProductService productService;
 	private final PagingService pagingService;
-	private final PasswordEncoder passwordEncoder;
 	
 	// INDEX PAGE
 	@GetMapping("/")
@@ -82,48 +79,6 @@ public class OganiController {
 		}
 		
 		return "redirect:/";
-	}
-	
-	// REGISTER
-	@GetMapping("/register")
-	public String registerForm() {
-		log.trace("registerForm() GET");
-		
-		return "ogani/register";
-	}
-	
-	@PostMapping("/register")
-	public String register(@ModelAttribute CustomerDTO customer, RedirectAttributes redirectAttr) {
-		log.trace("register(customer, redirectAttr) POST");
-		log.debug("register( {} )", customer);
-
-		String id    = customer.getCust_id().toLowerCase(); 
-		String email = customer.getCust_email().toLowerCase();
-		String encodedPassword = passwordEncoder.encode(customer.getCust_password());
-		
-		customer.setCust_id(id);
-		customer.setCust_email(email);
-		customer.setCust_password(encodedPassword);
-		
-		boolean registerResult = memberService.registerMember(customer);
-		if (registerResult) {
-			log.debug("register result = {}", registerResult);
-			redirectAttr.addFlashAttribute("registerResult", registerResult);
-		}
-		return "redirect:/login";
-	}
-	
-	@ResponseBody
-	@PostMapping("/register/idcheck")
-	public Map<String, Object> validateDuplicateMember(@RequestBody String id) {
-		log.trace("validateDuplicateMember(id) POST");
-		log.debug("validateDuplicateMember( id = {} )", id);
-		
-					 int result = memberService.getMemberById(id) == null ? 0 : 1;
-		if (result == 0) result = adminService.getAdminById(id)   == null ? 0 : 1;
-		log.debug("result = {}", result);
-		
-		return Collections.singletonMap("checkResult", result);
 	}
 	
 	// OTHER PAGES

@@ -45,12 +45,23 @@
 
   <jsp:include page="/WEB-INF/templates/ogani/header.jsp" />
 
-  <c:if test="${registerResult}">
+  <c:if test="${not empty registerEmail}">
     <div class="container">
       <div class="alert alert-success alert-dismissible fade show" role="alert">
-        <strong>회원가입을 환영합니다!</strong> 로그인 해주세요.
+        <strong>회원가입을 환영합니다!</strong> ${registerEmail} 으로 인증 이메일이 발송되었습니다.
         <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-          <span aria-hidden="true">&times;</span>
+          <span aria-hidden="true"><i class="fa fa-times"></i></span>
+        </button>
+      </div>
+    </div>
+  </c:if>
+
+  <c:if test="${emailAuthResult}">
+    <div class="container">
+      <div class="alert alert-success alert-dismissible fade show" role="alert">
+        <strong>이메일이 인증되었습니다.</strong> 로그인 해주세요.
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+          <span aria-hidden="true"><i class="fa fa-times"></i></span>
         </button>
       </div>
     </div>

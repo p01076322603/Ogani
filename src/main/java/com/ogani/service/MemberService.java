@@ -3,6 +3,7 @@ package com.ogani.service;
 import java.util.Date;
 
 import com.ogani.domain.CustomerDTO;
+import com.ogani.domain.EmailConfirmDTO;
 
 public interface MemberService {
 
@@ -17,4 +18,6 @@ public interface MemberService {
 	public CustomerDTO modifyMember(CustomerDTO customer);
 	
 	public boolean leaveMember(int cust_no);
+	
+	public boolean checkEmailAuth(EmailConfirmDTO customerAuth);
 }

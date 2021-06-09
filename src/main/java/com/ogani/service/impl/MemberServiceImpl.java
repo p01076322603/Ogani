@@ -5,8 +5,10 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.ogani.domain.CustomerDTO;
+import com.ogani.domain.EmailConfirmDTO;
 import com.ogani.mapper.MemberMapper;
 import com.ogani.service.MemberService;
 
@@ -70,6 +72,17 @@ public class MemberServiceImpl implements MemberService {
 		paramMap.put("cust_enabled", 0);
 		
 		return mapper.updateEnabled(paramMap) == 1;
+	}
+
+	@Override
+	@Transactional
+	public boolean checkEmailAuth(EmailConfirmDTO customerAuth) {
+		log.trace("leaveMember( {} )", customerAuth);
+		
+		boolean authResult = mapper.selectMemberAuth(customerAuth) == 1;
+		
+		return authResult ? mapper.updateMemberAuth(customerAuth.getCust_id()) == 1
+						  : false;
 	}
 	
 }
