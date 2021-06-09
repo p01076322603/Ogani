@@ -71,8 +71,9 @@
             <div class="sidebar__item">
               <h4>카테고리</h4>
               <ul>
+                <li><a href="/shop">전체</a></li>
                 <c:forEach var="category" items="${categoryList}">
-                  <li><a href="javascript:void(0)">${category.cate_name}</a></li>
+                  <li><a href="/shop/${category.cate_no}">${category.cate_name}</a></li>
                 </c:forEach>
               </ul>
             </div>
@@ -156,7 +157,7 @@
               </div>
               <div class="col-lg-4 col-md-4">
                 <div class="filter__found">
-                  <h6><span>${fn:length(productList)} </span> Products found</h6>
+                  <h6><span>${pageParam.productCount} </span> Products found</h6>
                 </div>
               </div>
             </div>
@@ -187,7 +188,26 @@
             </c:forEach>
           </div>
           <div class="product__pagination">
-            <a href="#">1</a> <a href="#">2</a> <a href="#">3</a> <a href="#"><i class="fa fa-long-arrow-right"></i></a>
+            <c:set var="searchKeyword" value="${not empty keyword ? '&keyword=' : ''}${not empty keyword ? keyword : ''}"/>
+            <a href="#"><i class="fa fa-long-arrow-left"></i></a>
+            <c:forEach begin="1" end="${pageParam.paginationCount}" varStatus="status">
+              <c:set var="thisPage" value="${pageParam.blockNum * pageParam.paginationCount + status.index}"/>
+              <c:if test="${thisPage <= pageParam.pageCount}">
+                <c:choose>
+                  <c:when test="${not empty pageParam.category}">
+                    <a <c:out value="${pageParam.currentPage == thisPage ? 'class=paging-active' : ''}"/> 
+                      href="/shop/${pageParam.category}?page=${thisPage}<c:out value="${searchKeyword}"/>">
+                      ${thisPage}</a>                                      
+                  </c:when>
+                  <c:otherwise>
+                    <a <c:out value="${pageParam.currentPage == thisPage ? 'class=paging-active' : ''}"/> 
+                      href="/shop?page=${thisPage}<c:out value="${searchKeyword}"/>">
+                      ${thisPage}</a>
+                  </c:otherwise>
+                </c:choose>
+              </c:if>
+            </c:forEach>
+            <a href="#"><i class="fa fa-long-arrow-right"></i></a>
           </div>
         </div>
       </div>

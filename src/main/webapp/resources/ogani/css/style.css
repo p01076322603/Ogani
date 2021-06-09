@@ -1668,10 +1668,11 @@ ol {
 }
 
 .product__pagination a:hover,
-.blog__pagination a:hover {
+.blog__pagination a:hover,
+.paging-active {
 	background: #7fad39;
 	border-color: #7fad39;
-	color: #ffffff;
+	color: #ffffff !important;
 }
 
 .product__pagination a:last-child,
