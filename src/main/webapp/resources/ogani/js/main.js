@@ -367,6 +367,20 @@ $(".product__item").on("click", ".product__item__pic__hover__anchor", function(e
 });
 
 /*-------------------
+   Shop pagination
+-------------------- */
+
+var shopBlockNum = $(".product__pagination").data("blockNum");
+var shopLastBlockNum = $(".product__pagination").data("lastBlockNum");
+
+if (shopBlockNum === 0) {
+	$(".product__pagination .prev_bt").hide();
+}
+if (shopBlockNum === shopLastBlockNum || shopLastBlockNum === '-1') {
+	$(".product__pagination .next_bt").hide();
+}
+
+/*-------------------
   Register Validation	
 --------------------- */
 
@@ -504,7 +518,7 @@ $("#username, #password").on('keypress', (e) => {
     	if(e.which == 13) { loginCheck(); }
 });
 
-/*-------------------
+/*---------------------
 MemberModify Validation	
 --------------------- */
 

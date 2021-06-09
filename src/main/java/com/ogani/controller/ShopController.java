@@ -33,8 +33,9 @@ public class ShopController {
 	@GetMapping
 	public String categoryAll(Model model, @ModelAttribute ProductCriteria criteria) {
 		log.debug("categoryAll( {} ) GET", criteria);
-		
+
 		criteria.setLCount(9);
+		criteria.setPCount(5);
 		criteria.setDisplay(1);
 		criteria.setStock(0);
 		
@@ -57,6 +58,7 @@ public class ShopController {
 		
 		criteria.setCategory(cate_no);
 		criteria.setLCount(9);
+		criteria.setPCount(5);
 		criteria.setDisplay(1);
 		criteria.setStock(0);
 		

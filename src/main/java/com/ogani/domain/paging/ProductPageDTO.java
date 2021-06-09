@@ -53,17 +53,18 @@ public class ProductPageDTO {
 	private int listStart;
 	private int listEnd;
 	private int blockNum;
+	private int lastBlockNum;
 	
 	private void createParam() {
 
 		// 전체 페이지
-		this.pageCount = (productCount % listCount != 0) ? productCount / listCount + 1
+		this.pageCount = (productCount % listCount != 0) ? (productCount / listCount) + 1
 													     : productCount / listCount;
 
 		// 페이지 직접 입력 범위 제한
 		this.currentPage = (currentPage > pageCount) ? currentPage = pageCount 
 						 : (currentPage < 1)         ? currentPage = 1 
-						 : currentPage;
+						 							 : currentPage;
 		
 		// 현재 페이지의 시작 게시글 ROWNUM
 		this.listStart = (currentPage - 1) * listCount + 1;
@@ -75,6 +76,9 @@ public class ProductPageDTO {
 		this.blockNum = (currentPage % paginationCount == 0) ? (currentPage / paginationCount) - 1
 															 : currentPage / paginationCount;
 		
+		// 마지막 블럭 구간의 수치
+		this.lastBlockNum = (pageCount % paginationCount) == 0 ? (pageCount / paginationCount) - 1 
+															   : pageCount / paginationCount;
 	}
 	
 }

@@ -187,27 +187,28 @@
               </div>
             </c:forEach>
           </div>
-          <div class="product__pagination">
+          <div class="product__pagination" data-block-num="${pageParam.blockNum}" data-last-block-num="${pageParam.lastBlockNum}">
             <c:set var="searchKeyword" value="${not empty keyword ? '&keyword=' : ''}${not empty keyword ? keyword : ''}"/>
-            <a href="#"><i class="fa fa-long-arrow-left"></i></a>
+            <c:if test="${not empty pageParam.category}">
+              <c:set var="paginationHrefPage" value="/shop/${pageParam.category}?page="/>
+            </c:if>
+            <c:if test="${empty pageParam.category}">
+              <c:set var="paginationHrefPage" value="/shop?page="/>
+            </c:if>
+            <a class="prev_bt" href="${paginationHrefPage}${pageParam.blockNum * pageParam.paginationCount}<c:out value="${searchKeyword}"/>">
+              <i class="fa fa-long-arrow-left"></i>
+            </a>
             <c:forEach begin="1" end="${pageParam.paginationCount}" varStatus="status">
               <c:set var="thisPage" value="${pageParam.blockNum * pageParam.paginationCount + status.index}"/>
               <c:if test="${thisPage <= pageParam.pageCount}">
-                <c:choose>
-                  <c:when test="${not empty pageParam.category}">
-                    <a <c:out value="${pageParam.currentPage == thisPage ? 'class=paging-active' : ''}"/> 
-                      href="/shop/${pageParam.category}?page=${thisPage}<c:out value="${searchKeyword}"/>">
-                      ${thisPage}</a>                                      
-                  </c:when>
-                  <c:otherwise>
-                    <a <c:out value="${pageParam.currentPage == thisPage ? 'class=paging-active' : ''}"/> 
-                      href="/shop?page=${thisPage}<c:out value="${searchKeyword}"/>">
-                      ${thisPage}</a>
-                  </c:otherwise>
-                </c:choose>
+              <a <c:out value="${pageParam.currentPage == thisPage ? 'class=paging-active' : ''}"/> 
+                href="${paginationHrefPage}${thisPage}<c:out value="${searchKeyword}"/>">
+                ${thisPage}</a>
               </c:if>
             </c:forEach>
-            <a href="#"><i class="fa fa-long-arrow-right"></i></a>
+            <a class="next_bt" href="${paginationHrefPage}${(pageParam.blockNum + 1) * pageParam.paginationCount + 1}<c:out value="${searchKeyword}"/>">
+              <i class="fa fa-long-arrow-right"></i>
+            </a>
           </div>
         </div>
       </div>
