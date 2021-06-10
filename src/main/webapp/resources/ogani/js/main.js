@@ -366,10 +366,6 @@ $(".product__item").on("click", ".product__item__pic__hover__anchor", function(e
 	
 });
 
-/*-------------------
-   Shop pagination
--------------------- */
-
 var shopBlockNum = $(".product__pagination").data("blockNum");
 var shopLastBlockNum = $(".product__pagination").data("lastBlockNum");
 
@@ -379,6 +375,101 @@ if (shopBlockNum === 0) {
 if (shopBlockNum === shopLastBlockNum || shopLastBlockNum === '-1') {
 	$(".product__pagination .next_bt").hide();
 }
+
+/*-------------------
+   	findIdPw page
+-------------------- */
+
+$("#idfind-submit").click(function() {
+	
+	var email = $("#idfind-email").val();
+	
+	if (!getEmail.test(email)) {
+		$("#idfind-result").text("올바르지 않은 이메일입니다").shake();
+		$("#idfind-email").focus();
+		return false;
+	}
+	
+	$.ajax({
+		url: "/findidpw/findid",
+		type: "POST",
+		data: email,
+		contentType: "text/plain",
+		dataType: "json",
+		beforeSend: (xhr) => xhr.setRequestHeader(CSRFheader, CSRFtoken),
+		success: (result) => {
+			console.log(result.findIdResult);
+			if (result.findIdResult === true) 
+				$("#idfind-result").text("아이디가 이메일로 전송되었습니다.").shake();
+			if (result.findIdResult === false) 
+				$("#idfind-result").text("등록된 계정을 찾지 못하였습니다.").shake();
+		}
+	}); 
+});
+
+$("#pwfind-submit").click(function() {
+	
+	var id = $("#pwfind-id").val();
+	var email = $("#pwfind-email").val();
+	
+	if (!getEmail.test(email)) {
+		$("#pwfind-result").text("올바르지 않은 이메일입니다").shake();
+		$("#pwfind-email").focus();
+		return false;
+	}
+	
+	$.ajax({
+		url: "/findidpw/findpw",
+		type: "POST",
+		data: JSON.stringify({
+			cust_id: id,
+			cust_email: email	
+		}),
+		contentType: "application/json",
+		dataType: "json",
+		beforeSend: (xhr) => xhr.setRequestHeader(CSRFheader, CSRFtoken),
+		success: (result) => {
+			console.log(result.findIdResult);
+			if (result.findPwResult === true) 
+				$("#pwfind-result").text("비밀번호 변경 링크가 이메일로 전송되었습니다.").shake();
+			if (result.findPwResult === false) 
+				$("#pwfind-result").text("등록된 계정을 찾지 못하였습니다.").shake();
+		}
+	}); 
+});
+
+/*-------------------
+   	changePw page
+-------------------- */
+
+$("#changepw-submit").click(function() {
+	
+	var id = $("input[name='cust_id']").val();
+	var newPassword = $("#pwchange-new-password").val();
+	var confirmNewPassword = $("#pwchange-new-password-confirm").val();
+	
+	if (!getPwd.test(newPassword)) {
+		$("#changepw-result").text("비밀번호가 올바르지 않습니다.").shake();
+		$("#pwchange-new-password").focus();
+	return false;
+	}
+	if (id == newPassword) {
+		$("#changepw-result").text("아이디와 비밀번호가 같습니다").shake();
+		$("#pwchange-new-password-confirm").val("");
+		$("#pwchange-new-password").val("").focus();
+	return false;
+	}
+	if (newPassword != confirmNewPassword) {
+		$("#changepw-result").text("비밀번호가 일치하지 않습니다").shake();
+		$("#pwchange-new-password-confirm").val("").focus();
+	return false;
+	}
+	
+	var form = $("form[name='pwfind']")
+	form.submit();
+});
+
+
 
 /*-------------------
   Register Validation	

@@ -2,6 +2,7 @@ package com.ogani.service.impl;
 
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.springframework.stereotype.Service;
@@ -36,6 +37,13 @@ public class MemberServiceImpl implements MemberService {
 		return mapper.selectByNo(cust_no);
 	}
 
+	@Override
+	public List<CustomerDTO> getMemberByEmail(String cust_email) {
+		log.trace("getCustomerByEmail( cust_email = {} )", cust_email);
+		
+		return mapper.selectByEmail(cust_email);
+	}
+	
 	@Override
 	public boolean registerMember(CustomerDTO customer) {
 		log.trace("registerMember( {} )", customer);
@@ -83,6 +91,19 @@ public class MemberServiceImpl implements MemberService {
 		
 		return authResult ? mapper.updateMemberAuth(customerAuth.getCust_id()) == 1
 						  : false;
+	}
+
+	public CustomerDTO getMemberByIdAndEmail(Map<String, String> idAndEmail) {
+		log.trace("getMemberByIdAndEmail( {} )", idAndEmail);
+		
+		return mapper.selectByIdAndEmail(idAndEmail);
+	}
+
+	@Override
+	public boolean updatePassword(Map<String, String> idPasswordAuthkey) {
+		log.trace("updatePassword( {} )", idPasswordAuthkey);
+		
+		return mapper.updatePassword(idPasswordAuthkey) == 1;
 	}
 	
 }

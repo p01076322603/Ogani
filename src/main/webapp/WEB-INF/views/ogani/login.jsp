@@ -59,7 +59,18 @@
   <c:if test="${emailAuthResult}">
     <div class="container">
       <div class="alert alert-success alert-dismissible fade show" role="alert">
-        <strong>이메일이 인증되었습니다.</strong> 로그인 해주세요.
+        <strong>이메일이 인증되었습니다.</strong>
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+          <span aria-hidden="true"><i class="fa fa-times"></i></span>
+        </button>
+      </div>
+    </div>
+  </c:if>
+  
+  <c:if test="${updatePasswordResult}">
+    <div class="container">
+      <div class="alert alert-success alert-dismissible fade show" role="alert">
+        <strong>비밀번호가 변경되었습니다.</strong>
         <button type="button" class="close" data-dismiss="alert" aria-label="Close">
           <span aria-hidden="true"><i class="fa fa-times"></i></span>
         </button>
@@ -83,8 +94,8 @@
         <small id="login-result" class="text-danger" style="min-height: 30px;"></small>
       </div>
       <div class="form-group small clearfix">
-        <label class="form-check-label"><input type="checkbox"> 로그인 기억하기</label> <a href="#"
-          class="forgot-link">비밀번호 찾기</a>
+        <label class="form-check-label"><input type="checkbox"> 로그인 기억하기</label> 
+        <a href="/findidpw" class="forgot-link">아이디 / 비밀번호 찾기</a>
       </div>
       <input type="button" id="login-submit" class="btn btn-primary btn-block btn-lg" value="Login">
       <s:csrfInput/>

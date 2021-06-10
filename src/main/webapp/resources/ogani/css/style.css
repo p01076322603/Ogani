@@ -267,6 +267,9 @@ ol {
 .bg-ogani {
   background-color: #7FAD39;
 }
+.text-ogani {
+	color: #7FAD39;
+}
 
 /*---------------------
   Header
@@ -3062,6 +3065,12 @@ ol {
 }
 .login-form .query-result {
   min-height: 25px;
+}
+
+/*--------------------------------- findIdPw Page -----------------------------*/
+
+.find-id-pw .login-form {
+	padding: 10px 0;
 }
 
 /*--------------------------------- Register Page -----------------------------*/

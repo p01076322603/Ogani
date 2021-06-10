@@ -13,10 +13,30 @@
       </selectKey>
     </update>
   
+    <update id="updatePassword" parameterType="hashMap">
+      UPDATE customer
+      SET cust_password = #{cust_password}
+      WHERE cust_id = #{cust_id}
+        AND cust_authkey = #{cust_authkey}
+    </update>
+  
+    <select id="selectByEmail" resultType="com.ogani.domain.CustomerDTO">
+      SELECT *
+      FROM customer
+      WHERE cust_email = #{cust_email}
+    </select>
+  
+    <select id="selectByIdAndEmail" resultType="com.ogani.domain.CustomerDTO">
+      SELECT * 
+      FROM customer
+      WHERE cust_email = #{cust_email}
+        AND cust_id = #{cust_id}
+    </select>
+  
   	<select id="selectMemberAuth" parameterType="com.ogani.domain.EmailConfirmDTO" resultType="int">
  	  SELECT COUNT(*)
  	  FROM customer
- 	  WHERE cust_email = #{cust_email} 
+ 	  WHERE cust_email = #{cust_email}
  	    AND cust_authkey = #{cust_authkey}
   	</select>
   	

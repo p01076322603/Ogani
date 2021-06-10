@@ -1,5 +1,6 @@
 package com.ogani.mapper;
 
+import java.util.List;
 import java.util.Map;
 
 import com.ogani.domain.CustomerDTO;
@@ -9,7 +10,13 @@ public interface MemberMapper {
 
 	public CustomerDTO selectById(String cust_id);
 	
+	public List<CustomerDTO> selectByEmail(String cust_email);
+
 	public CustomerDTO selectByNo(int cust_no);
+	
+	public CustomerDTO selectByIdAndEmail(Map<String, String> idAndEmail);
+	
+	public int updatePassword(Map<String, String> idPasswordAuthkey);
 	
 	public int updateLastLogin(CustomerDTO customer);
 	

@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import com.ogani.config.PathCollections;
 import com.ogani.domain.CustomerDTO;
 import com.ogani.domain.EmailConfirmDTO;
 import com.ogani.service.AdminService;
@@ -82,8 +83,8 @@ public class RegisterController {
 		sendMail.setSubject("[Ogani] 회원가입 이메일 인증");
 		sendMail.setText(new StringBuffer()
 					.append("<h1>[Ogani 이메일 인증]</h1>")
-					.append("<p style='color: lightblue;'>아래 링크를 클릭하시면 이메일 인증이 완료됩니다.</p>")
-					.append("<a href='http://localhost:8888/register/emailConfirm")
+					.append("<p>아래 링크를 클릭하시면 이메일 인증이 완료됩니다.</p>")
+					.append("<a href='" + PathCollections.LOCALHOST + "/register/emailConfirm")
 					.append("?cust_id=").append(customer.getCust_id())
 					.append("&cust_email=").append(customer.getCust_email())
 					.append("&cust_authkey=").append(customer.getCust_authkey())
