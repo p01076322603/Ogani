@@ -43,15 +43,11 @@ public class MemberController {
 	
 	@GetMapping
 	public String memberInfo() {
-		log.trace("memberInfo() GET");
-
 		return "ogani/memberInfo";
 	}
 
 	@GetMapping("/modify")
 	public String memberModifyForm(@AuthenticationPrincipal CustomerDTO customer, Model model) {
-		log.trace("memberModifyForm() GET");
-		log.debug("memberModifyForm( {} )", customer);
 		
 		if (customer.getCust_address() != null) {
 			String[] address = customer.getCust_address().split("，");
@@ -63,8 +59,6 @@ public class MemberController {
 
 	@PostMapping("/modify")
 	public String memberModify(@RequestParam Map<String, String> paramMap, RedirectAttributes redirectAttr) {
-		log.trace("memberModify() POST");
-		log.debug("memberModify( paramMap = {} )", paramMap);
 
 		// 필수 항목
 		CustomerDTO newCustomerInfo = CustomerDTO.builder()
@@ -127,8 +121,6 @@ public class MemberController {
 	@ResponseBody
 	@PostMapping("/modify/passwordcheck")
 	public Map<String, Object> passwordCheck(@RequestBody Map<String, String> validateInfo) { 
-		log.trace("passwordCheck() POST");
-		log.debug("passwordCheck( validateInfo = {} )", validateInfo);
 		
 		CustomerDTO customer = memberService.getMemberByNo(Integer.parseInt(validateInfo.get("cust_no")));
 		boolean result = passwordEncoder.matches(validateInfo.get("cust_password"), customer.getCust_password());
@@ -140,8 +132,6 @@ public class MemberController {
 	@PostMapping("/modify/leave")
 	public String memberLeave(@RequestParam int cust_no, RedirectAttributes redirectAttr,
 							  HttpServletRequest request, HttpServletResponse response) {
-		log.trace("memberLeave() POST");
-		log.debug("memberLeave( cust_no = {} )", cust_no);
 		
 		boolean leaveResult = memberService.leaveMember(cust_no);
 		log.debug("memberLeave result = {}", leaveResult);

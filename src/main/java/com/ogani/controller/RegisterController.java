@@ -42,15 +42,11 @@ public class RegisterController {
 	
 	@GetMapping
 	public String registerForm() {
-		log.trace("registerForm() GET");
-		
 		return "ogani/register";
 	}
 	
 	@PostMapping
 	public String register(@ModelAttribute CustomerDTO customer, RedirectAttributes redirectAttr) {
-		log.trace("register(customer, redirectAttr) POST");
-		log.debug("register( {} )", customer);
 
 		String id    = customer.getCust_id().toLowerCase(); 
 		String email = customer.getCust_email().toLowerCase();
@@ -98,8 +94,6 @@ public class RegisterController {
 	@ResponseBody
 	@PostMapping("/idcheck")
 	public Map<String, Object> validateDuplicateMember(@RequestBody String id) {
-		log.trace("validateDuplicateMember(id) POST");
-		log.debug("validateDuplicateMember( id = {} )", id);
 		
 					 int result = memberService.getMemberById(id) == null ? 0 : 1;
 		if (result == 0) result = adminService.getAdminById(id)   == null ? 0 : 1;

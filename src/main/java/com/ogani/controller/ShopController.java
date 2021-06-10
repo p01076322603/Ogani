@@ -32,7 +32,6 @@ public class ShopController {
 	
 	@GetMapping
 	public String categoryAll(Model model, @ModelAttribute ProductCriteria criteria) {
-		log.debug("categoryAll( {} ) GET", criteria);
 
 		criteria.setLCount(9);
 		criteria.setPCount(5);
@@ -40,10 +39,8 @@ public class ShopController {
 		criteria.setStock(0);
 		
 		ProductPageDTO pageParam = pagingService.getProductPageDTO(criteria);
-		log.debug("{}", pageParam);
 		
 		List<ProductDTO> productList = productService.getProductList(pageParam);
-		
 		List<ProductCategoryDTO> categoryList = productService.getAllCategory();
 		
 		model.addAttribute("pageParam", pageParam);
@@ -54,7 +51,6 @@ public class ShopController {
 
 	@GetMapping("/{cate_no}")
 	public String category(@PathVariable int cate_no, @ModelAttribute ProductCriteria criteria, Model model) {
-		log.debug("category( cate_no = {} ) GET", cate_no);
 		
 		criteria.setCategory(cate_no);
 		criteria.setLCount(9);
@@ -63,8 +59,8 @@ public class ShopController {
 		criteria.setStock(0);
 		
 		ProductPageDTO pageParam = pagingService.getProductPageDTO(criteria);
+
 		List<ProductDTO> productList = productService.getProductList(pageParam);
-		
 		List<ProductCategoryDTO> categoryList = productService.getAllCategory();
 		
 		model.addAttribute("pageParam", pageParam);

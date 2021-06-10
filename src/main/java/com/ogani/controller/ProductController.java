@@ -60,7 +60,6 @@ public class ProductController {
 	
 	@GetMapping
 	public String productList(Model model) {
-		log.trace("productList() GET");
 
 		ProductPageDTO pageParam = pagingService.getProductPageDTO(new ProductCriteria(25, 10));
 		log.debug("{}", pageParam);
@@ -73,7 +72,6 @@ public class ProductController {
 	
 	@GetMapping("/{prod_no}")
 	public String product(@PathVariable int prod_no, Model model) {
-		log.debug("product( prod_no = {} ) GET", prod_no);
 
 		List<ProductCategoryDTO> categoryList = productService.getAllCategory();
 		model.addAttribute("categoryList", categoryList);
@@ -86,7 +84,6 @@ public class ProductController {
 
 	@GetMapping("/register")
 	public String productRegisterForm(Model model) {
-		log.trace("productRegisterForm() GET");
 		
 		List<ProductCategoryDTO> categoryList = productService.getAllCategory();
 		model.addAttribute("categoryList", categoryList);
@@ -96,7 +93,6 @@ public class ProductController {
 	
 	@PostMapping("/register")
 	public String productRegister(@ModelAttribute ProductDTO product, RedirectAttributes redirectAttr) {
-		log.debug("productRegister( {} ) POST", product);
 
 		boolean result = productService.registerProduct(product);
 		
@@ -106,7 +102,6 @@ public class ProductController {
 	
 	@PostMapping("/modify")
 	public String productModify(@ModelAttribute ProductDTO product, RedirectAttributes redirectAttr) {
-		log.debug("productModify( {} ) POST", product);
 
 		boolean result = productService.modifyProduct(product);
 		
@@ -118,7 +113,6 @@ public class ProductController {
 	@Transactional
 	public String productRemove(@RequestParam int prod_no, RedirectAttributes redirectAttr, 
 								@ModelAttribute ProductDTO product) {
-		log.debug("productRemove( prod_no = {}, {} ) POST", prod_no, product);
 
 		List<ProductImageDTO> prod_imagelist = product.getProd_imagelist();
 		prod_imagelist.forEach(imageData -> {
@@ -137,7 +131,6 @@ public class ProductController {
 	
 	@PostMapping("/registerCategory")
 	public String registerCategory(@ModelAttribute ProductCategoryDTO category, RedirectAttributes redirectAttr) {
-		log.debug("productRegister( {} ) POST", category);
 		
 		boolean result = productService.registerCategory(category);
 
@@ -148,7 +141,6 @@ public class ProductController {
 	@ResponseBody
 	@PostMapping(value = "/uploadProductImage", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
 	public List<ProductImageDTO> uploadProductImage(MultipartFile[] uploadedImage) {
-		log.debug("uploadAjaxPost( {} ) POST", uploadedImage);
 		
 		List<ProductImageDTO> imageList = new ArrayList<>();
 
@@ -193,7 +185,6 @@ public class ProductController {
 	@ResponseBody
 	@GetMapping("/displayImage")
 	public ResponseEntity<byte[]> displayImage(@RequestParam String imageName) {
-		log.debug("displayImage( fileName = {} ) GET", imageName);
 
 		File image = new File(uploadPath + File.separator + imageName);
 		log.debug("image file path = {}", image);
@@ -215,7 +206,6 @@ public class ProductController {
 	@ResponseBody
 	@PostMapping("/deleteImage")
 	public ResponseEntity<String> deleteImage(@RequestBody String imageName) {
-		log.debug("deleteImage( imageName = {} )", imageName);
 
 		boolean result = deleteUploadedImage(imageName);
 		
@@ -242,8 +232,6 @@ public class ProductController {
 	}
 	
 	private String getDateFolder() {
-		log.trace("getFolder()");
-		
 		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy\\MM\\dd");
 		return dateFormat.format(new Date());
 	}

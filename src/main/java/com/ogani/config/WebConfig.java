@@ -30,7 +30,7 @@ extends AbstractAnnotationConfigDispatcherServletInitializer {
         CharacterEncodingFilter encodingFilter = new CharacterEncodingFilter();
         encodingFilter.setEncoding("UTF-8");
 
-        return new Filter[]{encodingFilter};
+        return new Filter[]{ encodingFilter };
     }
 
 }

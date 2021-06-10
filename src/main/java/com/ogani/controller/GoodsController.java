@@ -32,7 +32,6 @@ public class GoodsController {
 	
 	@GetMapping("/{prod_no}")
 	public String getGoodsDetails(@PathVariable int prod_no, Model model) {
-		log.debug("getGoodsDetails( prod_no = {} )", prod_no);
 
 		ProductDTO product = goodsService.getGoods(prod_no);
 		ProductCriteria criteria = ProductCriteria.builder()

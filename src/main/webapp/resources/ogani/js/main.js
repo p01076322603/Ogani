@@ -469,8 +469,6 @@ $("#changepw-submit").click(function() {
 	form.submit();
 });
 
-
-
 /*-------------------
   Register Validation	
 --------------------- */

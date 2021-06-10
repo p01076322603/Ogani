@@ -64,8 +64,6 @@ public class CheckoutController {
 	
 	@GetMapping
 	public String checkout() {
-		log.trace("checkout() GET");
-		
 		return "redirect:/cart";
 	}
 	
@@ -73,7 +71,6 @@ public class CheckoutController {
 	@Transactional
 	public String checkout(@AuthenticationPrincipal CustomerDTO customer,
 						   @RequestParam List<Integer> cartList, Model model) {
-		log.trace("checkout( {} ) POST", cartList);
 
 		if (customer.getCust_address() != null) {
 			String[] cust_address = customer.getCust_address().split("，");
@@ -106,7 +103,6 @@ public class CheckoutController {
 	@Transactional
 	@PostMapping("/validatePrice")
 	public int validatePrice(@RequestBody String cartArray, @AuthenticationPrincipal CustomerDTO customer) {
-		log.trace("validatePrice( {} )", cartArray);
 		
 		// 주문시 요청한 카트의 고유번호
 		List<Integer> requestedCartList = Collections.emptyList();
@@ -141,7 +137,6 @@ public class CheckoutController {
 	@PostMapping("/verifyCheckout/{imp_uid}")
 	public IamportResponse<Payment> paymentByImpUid(@PathVariable String imp_uid) 
 			throws IamportResponseException, IOException {
-		log.debug("paymentByImpUid( imp_uid = {} )", imp_uid);
 		
 		return api.paymentByImpUid(imp_uid);
 	}
@@ -152,8 +147,6 @@ public class CheckoutController {
 	public void checkoutComplete(@ModelAttribute OrderDTO order, @RequestParam List<Integer> cartList,
 								   @RequestParam int save_request, Model model,
 								   @AuthenticationPrincipal CustomerDTO customer) {
-		log.debug("checkoutComplete( {}, {} ) POST", order, cartList);
-		log.debug("checkoutComplete( save_request = {} ) POST", save_request);
 		
 		int cust_no = customer.getCust_no();
 		String order_uid = order.getOrder_uid();
@@ -210,7 +203,6 @@ public class CheckoutController {
 	
 	@GetMapping("/complete")
 	public String checkoutComplete(@RequestParam String imp_uid, @RequestParam String merchant_uid, Model model) {
-		log.debug("checkoutComplete( imp_uid = {}, merchant_uid = {} ) GET", imp_uid, merchant_uid);
 
 		OrderDTO order = orderService.getOrder(merchant_uid);
 

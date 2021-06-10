@@ -43,15 +43,12 @@ public class FindIdPwController {
 	
 	@GetMapping
 	public String findIdPw() {
-		log.trace("findIdPw()");
-		
 		return "ogani/findIdPw";
 	}
 	
 	@ResponseBody
 	@PostMapping("/findid")
 	public Map<String, Object> findId(@RequestBody String email) {
-		log.debug("findIdPw( email = {} )", email);
 
 		List<CustomerDTO> customerList = memberService.getMemberByEmail(email);
 		if (customerList.size() == 0) {
@@ -71,7 +68,6 @@ public class FindIdPwController {
 	@ResponseBody
 	@PostMapping("/findpw")
 	public Map<String, Object> findPw(@RequestBody String idAndEmail) {
-		log.debug("findPw( idAndEmail = {} )", idAndEmail);
 		
 		Map<String, String> paramMap = Collections.emptyMap();
 		try {
@@ -94,7 +90,6 @@ public class FindIdPwController {
 	
 	@GetMapping("/changepw")
 	public String changePw(@ModelAttribute EmailConfirmDTO customerAuth, Model model) {
-		log.debug("changePw( customerAuth = {} )", customerAuth);
 
 		boolean emailAuthResult = false;
 		if (customerAuth.getCust_email() != null && customerAuth.getCust_authkey() != null) {
@@ -108,7 +103,6 @@ public class FindIdPwController {
 	@PostMapping("/changepw")
 	public String changePw(@RequestParam Map<String, String> idPasswordAuthkey, 
 						   RedirectAttributes redirectAttr) {
-		log.debug("changePw( {} )", idPasswordAuthkey);
 
 		String encodedPassword = passwordEncoder.encode(idPasswordAuthkey.get("cust_password"));
 		idPasswordAuthkey.put("cust_password", encodedPassword);

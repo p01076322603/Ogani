@@ -42,8 +42,6 @@ public class CartController {
 	
 	@GetMapping
 	public String cart(Model model, @AuthenticationPrincipal CustomerDTO customer) {
-		log.trace("cart() GET");
-		
 		int cust_no = customer.getCust_no();
 		
 		List<CartDTO> cartList = cartService.getCustomerCartList(cust_no);
@@ -74,15 +72,12 @@ public class CartController {
 	
 	@GetMapping("/add")
 	public String addCartGET() {
-		log.debug("addCartGET() GET");
-		
 		return "redirect:/cart";
 	}
 	
 	@ResponseBody
 	@PostMapping("/add")
 	public Map<String, Object> addCart(@RequestBody Map<String, Integer> cartMap) {
-		log.debug("addCart( cartMap = {} ) POST", cartMap);
 
 		int cust_no = cartMap.get("cust_no");
 		int prod_no = cartMap.get("prod_no");
@@ -124,7 +119,6 @@ public class CartController {
 	@ResponseBody
 	@PostMapping("/remove")
 	public void removeCart(@RequestBody Map<String, Integer> paramMap) {
-		log.debug("removeCart( cart_no = {} )", paramMap);
 
 		boolean result = cartService.removeCart(paramMap.get("cart_no"));
 		log.debug("removeCart result = {}", result);
@@ -134,7 +128,6 @@ public class CartController {
 	@ResponseBody
 	@PostMapping("/modify")
 	public void modifyCart(@RequestBody String cartParam) {
-		log.debug("modifyCart( {} )", cartParam);
 	
 		ObjectMapper mapper = new ObjectMapper();
 		List<Map<String, Integer>> cartList = Collections.emptyList();
