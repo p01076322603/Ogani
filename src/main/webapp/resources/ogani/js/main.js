@@ -745,7 +745,8 @@ $('[data-oper="leave"]').click( () => {
   		 Cart	
 --------------------- */
 
-function cartAddSuccessToast() {
+function cartAddSuccessToast(prod_no, cart_quantity) {
+	// TODO: toast 정보와 함께 동적인 추가
 	$('.toast').toast('show');
 }
 
@@ -764,7 +765,7 @@ function addCart(custNo, prodNo, cartQuantity) {
 		beforeSend : (xhr) => xhr.setRequestHeader(CSRFheader, CSRFtoken),
 		success: (data) => {
 			if (data.addCartResult || data.addCartResult === "modified") {
-				cartAddSuccessToast();
+				cartAddSuccessToast(data.prod_no, data.cart_quantity);
 			}
 		}
 	});

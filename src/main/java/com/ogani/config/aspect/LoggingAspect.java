@@ -35,38 +35,25 @@ public class LoggingAspect {
 		
 		ObjectMapper objectMapper = new ObjectMapper();
 		
-		HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.currentRequestAttributes()).getRequest();
-		HttpServletResponse response = ((ServletRequestAttributes) RequestContextHolder.currentRequestAttributes()).getResponse();
-	
-		ContentCachingRequestWrapper cachingRequest = (ContentCachingRequestWrapper) request;
-		ContentCachingResponseWrapper cachingResponse = (ContentCachingResponseWrapper) response;
+		HttpServletRequest req = ((ServletRequestAttributes) RequestContextHolder.currentRequestAttributes()).getRequest();
+		ContentCachingRequestWrapper request = (ContentCachingRequestWrapper) req;
 		
 		try {
 			return joinPoint.proceed(joinPoint.getArgs());
 		} finally {
-			log.debug("Request: {} {}", joinPoint.getSignature().getName(), cachingRequest.getMethod());
+			log.debug("Request: {} {}", joinPoint.getSignature().getName(), request.getMethod());
 			
 			// REQUEST
-			if (cachingRequest.getContentType() != null && cachingRequest.getContentType().contains("application/json")) {
-				if (cachingRequest.getContentAsByteArray() != null && cachingRequest.getContentAsByteArray().length != 0){
-	                log.debug("Request Body : {}", objectMapper.readTree(cachingRequest.getContentAsByteArray()));
+			if (request.getContentType() != null && request.getContentType().contains("application/json")) {
+				if (request.getContentAsByteArray() != null && request.getContentAsByteArray().length != 0){
+	                log.debug("Request Body: {}", objectMapper.readTree(request.getContentAsByteArray()));
 	            }
 	        
-			} else if (cachingRequest.getContentType() != null && cachingRequest.getContentType().contains("text/plain")) {
-				log.debug("Request Body : {}", new String(cachingRequest.getContentAsByteArray()));
+			} else if (request.getContentType() != null && request.getContentType().contains("text/plain")) {
+				log.debug("Request Body: {}", new String(request.getContentAsByteArray()));
 			
-			} else if (cachingRequest.getParameterMap().size() > 0) {
-				log.debug("Request : {}", paramMapToString(request.getParameterMap()));
-			}
-
-			// RESPONSE
-			if (cachingResponse.getContentType() != null && cachingResponse.getContentType().contains("application/json")) {
-	        	if (cachingResponse.getContentAsByteArray() != null && cachingResponse.getContentAsByteArray().length != 0) {
-	                log.debug("Response Body : {}", objectMapper.readTree(cachingResponse.getContentAsByteArray()));
-	            }
-	        
-			} else if (cachingResponse.getContentType() != null && cachingResponse.getContentType().contains("text/plain")) {
-				log.debug("Request Body : {}", new String(cachingResponse.getContentAsByteArray()));
+			} else if (request.getParameterMap().size() > 0) {
+				log.debug("Request Param: {}", paramMapToString(request.getParameterMap()));
 			}
 		}
 	}

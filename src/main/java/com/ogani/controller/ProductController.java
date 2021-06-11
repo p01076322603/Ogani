@@ -59,12 +59,15 @@ public class ProductController {
 			+ Paths.get("Ogani", "src", "main", "webapp", "resources", "upload").toString();
 	
 	@GetMapping
-	public String productList(Model model) {
+	public String productList(Model model, @ModelAttribute ProductCriteria criteria) {
 
-		ProductPageDTO pageParam = pagingService.getProductPageDTO(new ProductCriteria(25, 10));
-		log.debug("{}", pageParam);
+		criteria.setLCount(10);
+		criteria.setPCount(5);
 		
+		ProductPageDTO pageParam = pagingService.getProductPageDTO(criteria);
 		List<ProductDTO> productList = productService.getProductList(pageParam);
+		
+		model.addAttribute("pageParam", pageParam);
 		model.addAttribute("productList", productList);
 		
 		return "admin/product";

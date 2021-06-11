@@ -20,7 +20,6 @@ import lombok.extern.slf4j.Slf4j;
 
 //TODO: Product 항목과 통합
 
-@Slf4j
 @Controller
 @RequiredArgsConstructor
 @RequestMapping("/goods")

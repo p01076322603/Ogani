@@ -139,22 +139,37 @@
                 </table>
                 <div class="d-flex flex-wrap justify-content-between">
                   <nav aria-label="Page navigation example">
-                    <ul class="pagination">
-                      <li class="page-item">
-                        <a class="page-link" href="#" aria-label="Previous">
+                    <ul class="pagination product_pagination" data-block-num="${pageParam.blockNum}" data-last-block-num="${pageParam.lastBlockNum}">
+                      <c:set var="paginationHrefPage" value="/admin/product?page="/>
+                      <c:set var="searchKeyword" value="${not empty keyword ? '&keyword=' : ''}${not empty keyword ? keyword : ''}"/>
+                      
+                      <li class="page-item page-prev">
+                        <a class="page-link" href="${paginationHrefPage}${pageParam.blockNum * pageParam.paginationCount}<c:out value="${searchKeyword}"/>" 
+                           aria-label="Previous">
                           <span aria-hidden="true">&laquo;</span>
                           <span class="sr-only">Previous</span>
                         </a>
                       </li>
-                      <li class="page-item"><a class="page-link" href="#">1</a></li>
-                      <li class="page-item"><a class="page-link" href="#">2</a></li>
-                      <li class="page-item"><a class="page-link" href="#">3</a></li>
-                      <li class="page-item">
-                        <a class="page-link" href="#" aria-label="Next">
+                      
+                      <c:forEach begin="1" end="${pageParam.paginationCount}" varStatus="status">
+                        <c:set var="thisPage" value="${pageParam.blockNum * pageParam.paginationCount + status.index}"/>
+                        <c:if test="${thisPage <= pageParam.pageCount}">
+                          <li class="page-item">
+                            <a class="page-link <c:out value="${pageParam.currentPage == thisPage ? 'paging-active' : ''}"/>" 
+                               href="${paginationHrefPage}${thisPage}<c:out value="${searchKeyword}"/>">
+                               ${thisPage}</a>
+                          </li>
+                        </c:if>
+                      </c:forEach>
+                      
+                      <li class="page-item page-next">
+                        <a class="page-link" href="${paginationHrefPage}${(pageParam.blockNum + 1) * pageParam.paginationCount + 1}<c:out value="${searchKeyword}"/>" 
+                           aria-label="Next">
                           <span aria-hidden="true">&raquo;</span>
                           <span class="sr-only">Next</span>
                         </a>
                       </li>
+                      
                     </ul>
                   </nav>
                   <a href="/admin/product/register"><button class="btn btn-primary float-right">상품 / 카테고리 등록</button></a>

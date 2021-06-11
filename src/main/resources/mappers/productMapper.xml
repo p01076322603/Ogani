@@ -7,7 +7,7 @@
   <select id="getOldImages" resultType="com.ogani.domain.ProductImageDTO">
     SELECT *
     FROM product_image
-    WHERE prod_image_url = TO_CHAR(SYSDATE - 4, 'yyyy/mm/dd') || '/product'
+    WHERE prod_image_url = TO_CHAR(SYSDATE - 1, 'yyyy/mm/dd') || '/product'
   </select>    
     
   <insert id="insertCategory" parameterType="com.ogani.domain.ProductCategoryDTO">

@@ -21,7 +21,6 @@ import com.ogani.service.ProductService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
-@Slf4j
 @Controller
 @RequestMapping("/shop")
 @RequiredArgsConstructor

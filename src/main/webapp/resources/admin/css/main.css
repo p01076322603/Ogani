@@ -31,6 +31,14 @@
     padding: 0 3px !important;
   }
 }
+
+.product_pagination .paging-active {
+	background-color: #eee;
+}
+
+.product_pagination li:nth-child(2) {
+	border-left: 1px solid #ccc;
+}
 /* 상품 등록 페이지 */
 
 .productRegister input[type=number]::-webkit-inner-spin-button, 

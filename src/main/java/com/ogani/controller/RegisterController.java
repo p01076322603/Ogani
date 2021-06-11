@@ -97,7 +97,7 @@ public class RegisterController {
 		
 					 int result = memberService.getMemberById(id) == null ? 0 : 1;
 		if (result == 0) result = adminService.getAdminById(id)   == null ? 0 : 1;
-		log.debug("result = {}", result);
+		log.debug("validateDuplicateMember result = {}", result);
 		
 		return Collections.singletonMap("checkResult", result);
 	}

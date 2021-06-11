@@ -6,6 +6,20 @@ var CSRFheader = $("meta[name='_csrf_header']").attr('content');
 var CSRFtoken  = $("meta[name='_csrf']").attr('content');
 
 /* --------------------------- 
+  	  product List Page
+--------------------------- */
+
+var prodBlockNum = $(".product_pagination").data("blockNum");
+var prodLastBlockNum = $(".product_pagination").data("lastBlockNum");
+
+if (prodBlockNum === 0) {
+	$(".product_pagination .page-prev").hide();
+}
+if (prodBlockNum === prodLastBlockNum || prodLastBlockNum === '-1') {
+	$(".product_pagination .page-next").hide();
+}
+
+/* --------------------------- 
   product Register & Modify
 --------------------------- */
 
