@@ -13,8 +13,11 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.EnableAspectJAutoProxy;
+import org.springframework.jdbc.datasource.DataSourceTransactionManager;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.JavaMailSenderImpl;
+import org.springframework.scheduling.annotation.EnableScheduling;
+import org.springframework.transaction.annotation.EnableTransactionManagement;
 import org.springframework.web.multipart.MultipartResolver;
 import org.springframework.web.multipart.commons.CommonsMultipartResolver;
 
@@ -26,10 +29,18 @@ import lombok.RequiredArgsConstructor;
 @Configuration
 @ComponentScan(basePackages = { "com.ogani" })
 @MapperScan(basePackages = { "com.ogani.mapper" })
+@EnableScheduling
+@EnableAspectJAutoProxy
+@EnableTransactionManagement
 @RequiredArgsConstructor
 public class RootConfig {
 	
 	private final ApplicationContext applicationContext;
+	
+	@Bean
+	public DataSourceTransactionManager transactionManager() {
+		return new DataSourceTransactionManager(dataSource());
+	}
 	
 	@Bean
 	public DataSource dataSource() {

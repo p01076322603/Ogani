@@ -16,6 +16,8 @@ public interface ProductMapper {
 
 	public int insertImage(ProductImageDTO image);
 	
+	public List<ProductImageDTO> getOldImages();
+	
 	public int updateProduct(ProductDTO product);
 
 	public int deleteProduct(int prod_no);

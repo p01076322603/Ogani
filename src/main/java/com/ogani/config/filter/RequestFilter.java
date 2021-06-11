@@ -1,4 +1,4 @@
-package com.ogani.util;
+package com.ogani.config.filter;
 
 import java.io.IOException;
 
@@ -10,13 +10,19 @@ import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 import javax.servlet.annotation.WebFilter;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import org.springframework.web.util.ContentCachingRequestWrapper;
+import org.springframework.web.util.ContentCachingResponseWrapper;
 
 @WebFilter(urlPatterns = "/*")
 public class RequestFilter implements Filter { 
 	@Override public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) 
 			throws IOException, ServletException { 
-		RereadableRequestWrapper rereadableRequestWrapper = new RereadableRequestWrapper((HttpServletRequest) request); 
-		chain.doFilter(rereadableRequestWrapper, response); 
+		ContentCachingRequestWrapper requestWrapper = new ContentCachingRequestWrapper((HttpServletRequest) request);
+		ContentCachingResponseWrapper responseWrapper = new ContentCachingResponseWrapper((HttpServletResponse) response);
+		chain.doFilter(requestWrapper, responseWrapper);
+		responseWrapper.copyBodyToResponse();
 	}
 
 	@Override

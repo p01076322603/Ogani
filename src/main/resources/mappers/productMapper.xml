@@ -3,6 +3,12 @@
   PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
   "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.ogani.mapper.ProductMapper">
+
+  <select id="getOldImages" resultType="com.ogani.domain.ProductImageDTO">
+    SELECT *
+    FROM product_image
+    WHERE prod_image_url = TO_CHAR(SYSDATE - 4, 'yyyy/mm/dd') || '/product'
+  </select>    
     
   <insert id="insertCategory" parameterType="com.ogani.domain.ProductCategoryDTO">
     INSERT INTO product_category(cate_no, cate_name<if test="cate_parentno != 0">, cate_parentno</if>)
