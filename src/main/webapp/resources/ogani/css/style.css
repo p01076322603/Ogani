@@ -114,6 +114,11 @@ ol {
 .color-green {
 	color: #7FAD39;
 }
+
+.no-border {
+    border: 0 !important;
+}
+ 
 /*---------------------
   Helper CSS
 -----------------------*/

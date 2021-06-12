@@ -88,7 +88,8 @@ public class CartController {
 				cartList.stream().filter(cart -> cart.getProd_no() == prod_no).findFirst();
 
 		Map<String, Object> resultMap = new HashMap<>();
-
+		String prod_name = productService.getProduct(prod_no).getProd_name();
+		
 		if (cartAlreadyExists.isPresent()) {
 			CartDTO cart = cartAlreadyExists.get();
 			
@@ -100,7 +101,7 @@ public class CartController {
 			log.debug("cart modifyResult = {}", modifyResult);
 			
 			resultMap.put("addCartResult", "modified");
-		
+
 		} else {
 			CartDTO cart = CartDTO.builder()
 					.cust_no(cust_no)
@@ -113,6 +114,9 @@ public class CartController {
 			resultMap.put("addCartResult", true);
 		}
 
+		resultMap.put("prod_name", prod_name);
+		resultMap.put("cart_quantity", cart_quantity);
+		
 		return resultMap;
 	}
 	

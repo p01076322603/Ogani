@@ -8,15 +8,15 @@
     INSERT INTO order_info(order_uid, cust_no, order_imp_uid, order_name, 
     					   order_regdate, order_price, order_card_approval, 
     					   order_buyer, order_email, order_postcode, order_address, 
-    					   order_phone<if test="order_request != ''">, order_request</if>)
+    					   order_phone<if test="order_request != '' and order_request != null">, order_request</if>)
     VALUES(#{order_uid}, #{cust_no}, #{order_imp_uid}, #{order_name},
     	   SYSDATE, #{order_price}, #{order_card_approval},
     	   #{order_buyer}, #{order_email}, #{order_postcode}, #{order_address},
-    	   #{order_phone}<if test="order_request != ''">, #{order_request}</if>)
+    	   #{order_phone}<if test="order_request != '' and order_request != null">, #{order_request}</if>)
   </insert>
   
   <insert id="insertOrderDetail" parameterType="com.ogani.domain.OrderDetailDTO">
-  	INSERT INTO order_detail
+  	INSERT INTO order_detail(order_detail_no, prod_no, order_uid, order_detail_quantity)
   	VALUES(seq_order_detail.NEXTVAL, #{prod_no}, #{order_uid}, #{order_detail_quantity})
   </insert>
 
@@ -30,6 +30,12 @@
   	SELECT *
   	FROM order_detail
   	WHERE order_uid = #{order_uid}
+  </select>
+  
+  <select id="selectOrderByCustNo" resultType="com.ogani.domain.OrderDTO">
+  	SELECT *
+  	FROM order_info
+  	WHERE cust_no = #{cust_no}
   </select>
   
 </mapper>

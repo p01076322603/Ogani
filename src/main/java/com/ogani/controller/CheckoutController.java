@@ -17,15 +17,12 @@ import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.util.UriComponents;
-import org.springframework.web.util.UriComponentsBuilder;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -41,11 +38,14 @@ import com.ogani.service.OrderService;
 import com.ogani.service.ProductService;
 import com.siot.IamportRestClient.IamportClient;
 import com.siot.IamportRestClient.exception.IamportResponseException;
+import com.siot.IamportRestClient.request.CancelData;
 import com.siot.IamportRestClient.response.IamportResponse;
 import com.siot.IamportRestClient.response.Payment;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+
+// TODO: 서버 장애시 환불 로직 작성
 
 @Slf4j
 @Controller
@@ -141,13 +141,22 @@ public class CheckoutController {
 		return api.paymentByImpUid(imp_uid);
 	}
 	
-	// TODO: rest방식으로 변경하여 result 분기시켜 성공 / 실패 구분하기
 	@Transactional
+	@ResponseBody
 	@PostMapping("/complete")
-	public void checkoutComplete(@ModelAttribute OrderDTO order, @RequestParam List<Integer> cartList,
-								   @RequestParam int save_request, Model model,
-								   @AuthenticationPrincipal CustomerDTO customer) {
+	public Map<String, Boolean> checkoutComplete(@RequestBody Map<String, String> orderMap,
+																@AuthenticationPrincipal CustomerDTO customer) {
 		
+		ObjectMapper objectMapper = new ObjectMapper();
+
+		OrderDTO order = new OrderDTO();
+		List<Integer> cartList = Collections.emptyList();
+		try {
+			order = objectMapper.readValue(orderMap.get("order"), new TypeReference<OrderDTO>() {});
+			cartList = objectMapper.readValue(orderMap.get("cart"), new TypeReference<List<Integer>>() {});
+		} catch (Exception e) { e.printStackTrace(); }
+		
+		int save_request = Integer.parseInt(orderMap.get("save_request"));
 		int cust_no = customer.getCust_no();
 		String order_uid = order.getOrder_uid();
 
@@ -173,38 +182,45 @@ public class CheckoutController {
 		log.debug("registerOrder result = {}", result);
 		
 		if (save_request == 1) {
-			String cust_address = order.getOrder_postcode() + "，" 
-								+ order.getOrder_address();
-			
-			CustomerDTO requestedCustomer = CustomerDTO.builder()
-					.cust_no(cust_no)
-					.cust_mailing(customer.getCust_mailing())
-					.cust_name(order.getOrder_buyer())
-					.cust_phone(order.getOrder_phone())
-					.cust_email(order.getOrder_email())
-					.cust_address(cust_address)
-					.build();
-			log.debug("{}", requestedCustomer);
-			CustomerDTO modifiedCustomer = memberService.modifyMember(requestedCustomer);
-			
-			String modifiedPassword = modifiedCustomer.getCust_password();
-			modifiedCustomer.setCust_password("[PROTECTED]");
-			
-			Collection<? extends GrantedAuthority> authorities = 
-					SecurityContextHolder.getContext().getAuthentication().getAuthorities();
-
-			log.debug("modifiedCustomer = {}", modifiedCustomer);
-			
-			SecurityContextHolder.getContext()
-					.setAuthentication(new UsernamePasswordAuthenticationToken(modifiedCustomer, modifiedPassword, authorities));
+			saveNewCustomerInformation(customer, order, cust_no);
 		}
 		
+		return Collections.singletonMap("checkoutResult", true);
+	}
+
+	private void saveNewCustomerInformation(CustomerDTO customer, OrderDTO order, int cust_no) {
+		
+		String cust_address = order.getOrder_postcode() + "，" 
+							+ order.getOrder_address();
+		
+		CustomerDTO requestedCustomer = CustomerDTO.builder()
+				.cust_no(cust_no)
+				.cust_mailing(customer.getCust_mailing())
+				.cust_name(order.getOrder_buyer())
+				.cust_phone(order.getOrder_phone())
+				.cust_email(order.getOrder_email())
+				.cust_address(cust_address)
+				.build();
+		
+		CustomerDTO modifiedCustomer = memberService.modifyMember(requestedCustomer);
+		
+		String modifiedPassword = modifiedCustomer.getCust_password();
+		modifiedCustomer.setCust_password("[PROTECTED]");
+		
+		Collection<? extends GrantedAuthority> authorities = 
+				SecurityContextHolder.getContext().getAuthentication().getAuthorities();
+		
+		SecurityContextHolder.getContext()
+				.setAuthentication(new UsernamePasswordAuthenticationToken(modifiedCustomer, modifiedPassword, authorities));
 	}
 	
 	@GetMapping("/complete")
 	public String checkoutComplete(@RequestParam String imp_uid, @RequestParam String merchant_uid, Model model) {
 
-		OrderDTO order = orderService.getOrder(merchant_uid);
+		OrderDTO order = orderService.getOrderByUid(merchant_uid);
+		if (order == null) {
+			return "redirect:/";
+		}
 
 		model.addAttribute("order", order);
 		return "ogani/complete";

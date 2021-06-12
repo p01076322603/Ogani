@@ -745,8 +745,25 @@ $('[data-oper="leave"]').click( () => {
   		 Cart	
 --------------------- */
 
-function cartAddSuccessToast(prod_no, cart_quantity) {
-	// TODO: toast 정보와 함께 동적인 추가
+function cartAddSuccessToast(prod_name, cart_quantity) {
+	
+	var toast = 
+	`
+	  <div class="position-fixed bottom-0 right-0 p-3" style="z-index: 5; right: 0; bottom: 0;">
+	    <div id="liveToast" class="toast hide" role="alert" aria-live="assertive" aria-atomic="true" data-delay="2000">
+	      <div class="toast-header">
+	        <strong class="mr-auto">장바구니 추가</strong>
+	        <button type="button" class="ml-2 mb-1 close" data-dismiss="toast" aria-label="Close">
+	          <span aria-hidden="true">&times;</span>
+	        </button>
+	      </div>
+	      <div class="toast-body">
+	        장바구니에 ${prod_name} 상품이 ${cart_quantity}개 추가되었습니다.
+	      </div>
+	    </div>
+	  </div>
+	`
+	$("body").append(toast);
 	$('.toast').toast('show');
 }
 
@@ -765,7 +782,7 @@ function addCart(custNo, prodNo, cartQuantity) {
 		beforeSend : (xhr) => xhr.setRequestHeader(CSRFheader, CSRFtoken),
 		success: (data) => {
 			if (data.addCartResult || data.addCartResult === "modified") {
-				cartAddSuccessToast(data.prod_no, data.cart_quantity);
+				cartAddSuccessToast(data.prod_name, data.cart_quantity);
 			}
 		}
 	});
@@ -1049,7 +1066,7 @@ $(".place-order").click(function() {
 
 			if (rsp.paid_amount == data.response.amount) {
 				/* 금액 일치 */
-				var successObj = {
+				var orderInfo = {
 					order_uid: rsp.merchant_uid,
 					order_imp_uid: rsp.imp_uid,
 					order_price: rsp.paid_amount,
@@ -1060,21 +1077,27 @@ $(".place-order").click(function() {
 					order_address: buyerAddr,
 					order_phone: buyerTel,
 					order_email: buyerEmail,
-					order_request: $("#order_request").val(),
-					save_request: $("input[name='save-request']").is(":checked") ? 1 : 0,
-					cartList: cartArray
+					order_request: $("#order_request").val()
 				};
+
+				var	save_request = $("input[name='save-request']").is(":checked") ? 1 : 0;
 				
 				$.ajax({
 					url: "/checkout/complete",
 					type: "POST",
 					async: false,
 					traditional: true,
-					data: successObj,
-					beforeSend: (xhr) => xhr.setRequestHeader(CSRFheader, CSRFtoken)
-				
-				}).always(function () {
-					window.location.assign("/checkout/complete?imp_uid=" + rsp.imp_uid + "&merchant_uid=" + rsp.merchant_uid);
+					data: JSON.stringify({
+						cart: JSON.stringify(cartArray),
+						order: JSON.stringify(orderInfo),
+						save_request: JSON.stringify(save_request)
+					}),	
+					contentType: "application/json; charset=UTF-8",
+					beforeSend: (xhr) => xhr.setRequestHeader(CSRFheader, CSRFtoken),
+					success: () => window.location.assign("/checkout/complete?imp_uid=" + rsp.imp_uid + "&merchant_uid=" + rsp.merchant_uid),
+					fail: () => {
+						// 서버 장애시 환불 로직 작성 
+					}
 				});
 				
 			} else {

@@ -21,6 +21,8 @@ public class RequestFilter implements Filter {
 			throws IOException, ServletException { 
 		ContentCachingRequestWrapper requestWrapper = new ContentCachingRequestWrapper((HttpServletRequest) request);
 		ContentCachingResponseWrapper responseWrapper = new ContentCachingResponseWrapper((HttpServletResponse) response);
+		requestWrapper.setCharacterEncoding("UTF-8");
+		responseWrapper.setCharacterEncoding("UTF-8");
 		chain.doFilter(requestWrapper, responseWrapper);
 		responseWrapper.copyBodyToResponse();
 	}

@@ -58,58 +58,79 @@
       <div class="text-center">
         <h2>Member Info</h2>
       </div>
-      <div class="row">
-        <div class="col-lg-6">
-          <div class="form-group row">
-            <label class="col-form-label col-sm-4 col-12">아이디</label>
-            <div class="col-sm-8 align-middle">
-              <p><c:out value="${principal.cust_id}"/></p>
+      
+      <ul class="nav nav-tabs" id="myTab" role="tablist">
+        <li class="nav-item" role="presentation">
+          <a class="nav-link active" id="member-info-tab" data-toggle="tab" href="#member-info" role="tab" aria-controls="member-info" aria-selected="true">회원 정보</a>
+        </li>
+        <li class="nav-item" role="presentation">
+          <a class="nav-link" id="member-order-tab" data-toggle="tab" href="#member-order" role="tab" aria-controls="member-order" aria-selected="false">주문 정보</a>
+        </li>
+      </ul>
+      <div class="tab-content" id="myTabContent">
+        <div class="tab-pane fade show active" id="member-info" role="tabpanel" aria-labelledby="member-info-tab">
+          <div class="row mt-2">
+            <div class="col-lg-6">
+              <div class="form-group row no-border">
+                <label class="col-form-label col-sm-4 col-12">아이디</label>
+                <div class="col-sm-8 align-middle">
+                  <p><c:out value="${principal.cust_id}"/></p>
+                </div>
+              </div>
+              <div class="form-group row">
+                <label class="col-form-label col-sm-4 col-12">이메일</label>
+                <div class="col-sm-8 align-middle">
+                  <p><c:out value="${principal.cust_email}"/></p>
+                </div>
+              </div>
+              <div class="form-group row">
+                <label class="col-form-label col-sm-4 col-12">핸드폰 번호</label>
+                <div class="col-sm-8 align-middle">
+                  <p><c:out value="${principal.cust_phone}"/></p>
+                </div>
+              </div>
+              <div class="form-group row">
+                <label class="col-form-label col-sm-4 col-12">가입일</label>
+                <div class="col-sm-8 align-middle">
+                  <p><fmt:formatDate value="${principal.cust_regdate}" dateStyle="full"/></p>
+                </div>
+              </div>
+              <div class="form-group row">
+                <label class="col-form-label col-sm-4 col-12">이전 로그인 시각</label>
+                <div class="col-sm-8 align-middle">
+                  <p><fmt:formatDate value="${principal.cust_lastlogin}" pattern="yyyy-MM-dd HH:mm:ss"/></p>
+                </div>
+              </div>
             </div>
-          </div>
-          <div class="form-group row">
-            <label class="col-form-label col-sm-4 col-12">이메일</label>
-            <div class="col-sm-8 align-middle">
-              <p><c:out value="${principal.cust_email}"/></p>
-            </div>
-          </div>
-          <div class="form-group row">
-            <label class="col-form-label col-sm-4 col-12">핸드폰 번호</label>
-            <div class="col-sm-8 align-middle">
-              <p><c:out value="${principal.cust_phone}"/></p>
-            </div>
-          </div>
-          <div class="form-group row">
-            <label class="col-form-label col-sm-4 col-12">가입일</label>
-            <div class="col-sm-8 align-middle">
-              <p><fmt:formatDate value="${principal.cust_regdate}" dateStyle="full"/></p>
-            </div>
-          </div>
-          <div class="form-group row">
-            <label class="col-form-label col-sm-4 col-12">이전 로그인 시각</label>
-            <div class="col-sm-8 align-middle">
-              <p><fmt:formatDate value="${principal.cust_lastlogin}" pattern="yyyy-MM-dd HH:mm:ss"/></p>
+            <div class="col-lg-6">
+              <div class="form-group row no-border">
+                <label class="col-form-label col-sm-4 col-12">이름</label>
+                <div class="col-sm-8 align-middle">
+                  <p><c:out value="${principal.cust_name}"/></p>
+                </div>
+              </div>
+              <div class="form-group row">
+                <label class="col-form-label col-sm-4 col-12">메일링 동의 여부</label>
+                <div class="col-sm-8 align-middle">
+                  <p><c:out value="${principal.cust_mailing == 1 ? '동의합니다.' : '동의하지 않습니다.'}"/></p>
+                </div>
+              </div>
+              <div class="form-group row">
+                <label class="col-form-label col-sm-4 col-12">주소</label>
+                <div class="col-sm-8 align-middle">
+                  <p><c:out value="${principal.cust_address}"/></p>
+                </div>
+              </div>
             </div>
           </div>
         </div>
-        <div class="col-lg-6">
-          <div class="form-group row">
-            <label class="col-form-label col-sm-4 col-12">이름</label>
-            <div class="col-sm-8 align-middle">
-              <p><c:out value="${principal.cust_name}"/></p>
-            </div>
-          </div>
-          <div class="form-group row">
-            <label class="col-form-label col-sm-4 col-12">메일링 동의 여부</label>
-            <div class="col-sm-8 align-middle">
-              <p><c:out value="${principal.cust_mailing == 1 ? '동의합니다.' : '동의하지 않습니다.'}"/></p>
-            </div>
-          </div>
-          <div class="form-group row">
-            <label class="col-form-label col-sm-4 col-12">주소</label>
-            <div class="col-sm-8 align-middle">
-              <p><c:out value="${principal.cust_address}"/></p>
-            </div>
-          </div>
+        <div class="tab-pane fade" id="member-order" role="tabpanel" aria-labelledby="member-order-tab">
+          <c:if test="${empty order}">
+            <p class="lead text-center p-5">주문 내역이 없습니다.</p>
+          </c:if>
+          <c:if test="${not empty order}">
+            <c:out value="${order.cust_no}"/>
+          </c:if>
         </div>
       </div>
       <div class="d-flex justify-content-center">

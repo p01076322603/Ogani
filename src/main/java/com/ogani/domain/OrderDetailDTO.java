@@ -10,4 +10,5 @@ public class OrderDetailDTO {
 	private int prod_no;
 	private String order_uid;
 	private int order_detail_quantity;
+	private int order_detail_shipstatus;
 }

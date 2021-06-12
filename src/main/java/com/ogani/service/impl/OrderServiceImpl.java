@@ -39,11 +39,27 @@ public class OrderServiceImpl implements OrderService {
 
 	@Override
 	@Transactional
-	public OrderDTO getOrder(String order_uid) {
+	public OrderDTO getOrderByUid(String order_uid) {
 		log.trace("getOrder( order_uid = {} )", order_uid);
 		
 		OrderDTO order = mapper.selectOrderByUid(order_uid);
-		order.setOrderDetailList(mapper.selectOrderDetailByUid(order_uid));
+		if (order != null) {
+			order.setOrderDetailList(mapper.selectOrderDetailByUid(order_uid));
+		}
+		
+		return order;
+	}
+
+
+	@Override
+	@Transactional
+	public OrderDTO getOrderByCustNo(int cust_no) {
+		log.trace("getOrderByCustNo( cust_no = {} )", cust_no);
+		
+		OrderDTO order = mapper.selectOrderByCustNo(cust_no);
+		if (order != null) {
+			order.setOrderDetailList(mapper.selectOrderDetailByUid(order.getOrder_uid()));
+		}
 		
 		return order;
 	}

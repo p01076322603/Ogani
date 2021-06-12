@@ -127,6 +127,8 @@ CREATE TABLE order_detail (
 	order_detail_quantity   NUMBER(10)	  NOT NULL
 );
 
+ALTER TABLE order_detail ADD order_detail_shipstatus NUMBER(1) DEFAULT '0';
+
 ALTER TABLE order_detail ADD CONSTRAINT order_detail_no_PK 
 PRIMARY KEY(order_detail_no);
 ALTER TABLE order_detail ADD CONSTRAINT order_detail_order_uid_PK 

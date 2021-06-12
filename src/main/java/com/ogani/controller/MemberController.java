@@ -26,7 +26,9 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.ogani.domain.CustomerDTO;
+import com.ogani.domain.OrderDTO;
 import com.ogani.service.MemberService;
+import com.ogani.service.OrderService;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -40,9 +42,16 @@ public class MemberController {
 
 	private final MemberService memberService;
 	private final PasswordEncoder passwordEncoder;
+	private final OrderService orderService;
 	
 	@GetMapping
-	public String memberInfo() {
+	public String memberInfo(@AuthenticationPrincipal CustomerDTO customer, Model model) {
+		
+		OrderDTO order = orderService.getOrderByCustNo(customer.getCust_no());
+		if (order != null) {
+			model.addAttribute("order", order);
+		}
+		
 		return "ogani/memberInfo";
 	}
 
