@@ -122,55 +122,63 @@
                       <th>진열 여부</th>
                     </tr>
                   </thead>
-
                   <tbody>
-                    <c:forEach var="product" items="${productList}">
-                      <tr>
-                        <td><a href="/admin/product/${product.prod_no}">${product.prod_no}</a></td>
-                        <td class="long-width"><a href="/admin/product/${product.prod_no}"><c:out value="${product.prod_name}"/></a></td>
-                        <td><a href="/admin/product/${product.prod_no}">${product.prod_price}</a></td>
-                        <td><a href="/admin/product/${product.prod_no}">${product.prod_stock}</a></td>
-                        <td><a href="/admin/product/${product.prod_no}">${product.prod_salecount}</a></td>
-                        <td><a href="/admin/product/${product.prod_no}">${product.prod_display == 1 ? 'O' : 'X'}</a></td>
-                      </tr>
-                    </c:forEach>
+                  <c:choose>
+                    <c:when test="${pageParam.productCount == 0}">
+                    <tr>
+                      <td colspan="6">
+                        <p class="text-center lead mt-3">상품이 존재하지 않습니다.</p>
+                      </td>
+                    </tr>
+                    </c:when>
+                    <c:otherwise>
+                      <c:forEach var="product" items="${productList}">
+                        <tr>
+                          <td><a href="/admin/product/${product.prod_no}">${product.prod_no}</a></td>
+                          <td class="long-width"><a href="/admin/product/${product.prod_no}"><c:out value="${product.prod_name}"/></a></td>
+                          <td><a href="/admin/product/${product.prod_no}">${product.prod_price}</a></td>
+                          <td><a href="/admin/product/${product.prod_no}">${product.prod_stock}</a></td>
+                          <td><a href="/admin/product/${product.prod_no}">${product.prod_salecount}</a></td>
+                          <td><a href="/admin/product/${product.prod_no}">${product.prod_display == 1 ? 'O' : 'X'}</a></td>
+                        </tr>
+                      </c:forEach>
+                    </c:otherwise>
+                  </c:choose>
                   </tbody>
                   
                 </table>
                 <div class="d-flex flex-wrap justify-content-between">
                   <nav aria-label="Page navigation example">
-                    <ul class="pagination product_pagination" data-block-num="${pageParam.blockNum}" data-last-block-num="${pageParam.lastBlockNum}">
-                      <c:set var="paginationHrefPage" value="/admin/product?page="/>
-                      <c:set var="searchKeyword" value="${not empty keyword ? '&keyword=' : ''}${not empty keyword ? keyword : ''}"/>
-                      
-                      <li class="page-item page-prev">
-                        <a class="page-link" href="${paginationHrefPage}${pageParam.blockNum * pageParam.paginationCount}<c:out value="${searchKeyword}"/>" 
-                           aria-label="Previous">
-                          <span aria-hidden="true">&laquo;</span>
-                          <span class="sr-only">Previous</span>
-                        </a>
-                      </li>
-                      
-                      <c:forEach begin="1" end="${pageParam.paginationCount}" varStatus="status">
-                        <c:set var="thisPage" value="${pageParam.blockNum * pageParam.paginationCount + status.index}"/>
-                        <c:if test="${thisPage <= pageParam.pageCount}">
-                          <li class="page-item">
-                            <a class="page-link <c:out value="${pageParam.currentPage == thisPage ? 'paging-active' : ''}"/>" 
-                               href="${paginationHrefPage}${thisPage}<c:out value="${searchKeyword}"/>">
-                               ${thisPage}</a>
-                          </li>
-                        </c:if>
-                      </c:forEach>
-                      
-                      <li class="page-item page-next">
-                        <a class="page-link" href="${paginationHrefPage}${(pageParam.blockNum + 1) * pageParam.paginationCount + 1}<c:out value="${searchKeyword}"/>" 
-                           aria-label="Next">
-                          <span aria-hidden="true">&raquo;</span>
-                          <span class="sr-only">Next</span>
-                        </a>
-                      </li>
-                      
-                    </ul>
+                    <c:if test="${pageParam.productCount > 0}">
+                      <ul class="pagination product_pagination" data-block-num="${pageParam.blockNum}" data-last-block-num="${pageParam.lastBlockNum}">
+                        <c:set var="paginationHrefPage" value="/admin/product?page="/>
+                        <c:set var="searchKeyword" value="${not empty keyword ? '&keyword=' : ''}${not empty keyword ? keyword : ''}"/>
+                        <li class="page-item page-prev">
+                          <a class="page-link" href="${paginationHrefPage}${pageParam.blockNum * pageParam.paginationCount}<c:out value="${searchKeyword}"/>" 
+                             aria-label="Previous">
+                            <span aria-hidden="true">&laquo;</span>
+                            <span class="sr-only">Previous</span>
+                          </a>
+                        </li>
+                        <c:forEach begin="1" end="${pageParam.paginationCount}" varStatus="status">
+                          <c:set var="thisPage" value="${pageParam.blockNum * pageParam.paginationCount + status.index}"/>
+                          <c:if test="${thisPage <= pageParam.pageCount}">
+                            <li class="page-item">
+                              <a class="page-link <c:out value="${pageParam.currentPage == thisPage ? 'paging-active' : ''}"/>" 
+                                 href="${paginationHrefPage}${thisPage}<c:out value="${searchKeyword}"/>">
+                                 ${thisPage}</a>
+                            </li>
+                          </c:if>
+                        </c:forEach>
+                        <li class="page-item page-next">
+                          <a class="page-link" href="${paginationHrefPage}${(pageParam.blockNum + 1) * pageParam.paginationCount + 1}<c:out value="${searchKeyword}"/>" 
+                             aria-label="Next">
+                            <span aria-hidden="true">&raquo;</span>
+                            <span class="sr-only">Next</span>
+                          </a>
+                        </li>
+                      </ul>
+                    </c:if>
                   </nav>
                   <a href="/admin/product/register"><button class="btn btn-primary float-right">상품 / 카테고리 등록</button></a>
                 </div>
