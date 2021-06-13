@@ -148,12 +148,14 @@
           <div class="filter__item">
             <div class="row">
               <div class="col-lg-4 col-md-5">
-                <div class="filter__sort">
-                  <span>Sort By</span> <select>
-                    <option value="0">등록일</option>
-                    <option value="0">가격</option>
-                  </select>
-                </div>
+                <c:if test="${pageParam.productCount > 0}">
+                  <div class="filter__sort">
+                    <span>Sort By</span> <select>
+                      <option value="0">등록일</option>
+                      <option value="0">가격</option>
+                    </select>
+                  </div>
+                </c:if>
               </div>
               <div class="col-lg-4 col-md-4">
                 <div class="filter__found">
@@ -162,54 +164,63 @@
               </div>
             </div>
           </div>
-          <div class="row">
-            <c:forEach var="product" items="${productList}">
-              <c:set var="image" value="${product.prod_imagelist[0]}"/>
-              <c:set var="imagePath" value="${uploadLoc}${image.prod_image_url}/${image.prod_image_uuid}_${image.prod_image_name}"/>
-              <div class="col-lg-4 col-md-6 col-sm-6">
-                <div class="product__item">
-                  <input type="hidden" value="${product.prod_no}">
-                  <div class="product__item__pic set-bg rounded" data-setbg="${imagePath}">
-                    <ul class="product__item__pic__hover">
-                      <li>
-                        <a class="product__item__pic__hover__anchor" 
-                           href="javascript:void(0)" data-cart="${product.prod_no}">
-                          <i class="fa fa-shopping-cart"></i>
-                        </a>
-                      </li>
-                    </ul>
-                  </div>
-                  <div class="product__item__text">
-                    <h6><a href="#">${product.prod_name}</a></h6>
-                    <h5><fmt:formatNumber value="${product.prod_price}" type="currency"/> </h5>
-                  </div>
+            <c:choose>
+              <c:when test="${pageParam.productCount == 0}">
+                <p class="text-center lead">상품이 존재하지 않습니다.</p>
+              </c:when>
+              <c:otherwise>
+                <div class="row">
+                  <c:forEach var="product" items="${productList}">
+                    <c:set var="image" value="${product.prod_imagelist[0]}"/>
+                    <c:set var="imagePath" value="${uploadLoc}${image.prod_image_url}/${image.prod_image_uuid}_${image.prod_image_name}"/>
+                    <div class="col-lg-4 col-md-6 col-sm-6">
+                      <div class="product__item">
+                        <input type="hidden" value="${product.prod_no}">
+                        <div class="product__item__pic set-bg rounded" data-setbg="${imagePath}">
+                          <ul class="product__item__pic__hover">
+                            <li>
+                              <a class="product__item__pic__hover__anchor" 
+                                 href="javascript:void(0)" data-cart="${product.prod_no}">
+                                <i class="fa fa-shopping-cart"></i>
+                              </a>
+                            </li>
+                          </ul>
+                        </div>
+                        <div class="product__item__text">
+                          <h6><a href="#">${product.prod_name}</a></h6>
+                          <h5><fmt:formatNumber value="${product.prod_price}" type="currency"/> </h5>
+                        </div>
+                      </div>
+                    </div>
+                  </c:forEach>
                 </div>
-              </div>
-            </c:forEach>
-          </div>
-          <div class="product__pagination" data-block-num="${pageParam.blockNum}" data-last-block-num="${pageParam.lastBlockNum}">
-            <c:set var="searchKeyword" value="${not empty keyword ? '&keyword=' : ''}${not empty keyword ? keyword : ''}"/>
-            <c:if test="${not empty pageParam.category}">
-              <c:set var="paginationHrefPage" value="/shop/${pageParam.category}?page="/>
-            </c:if>
-            <c:if test="${empty pageParam.category}">
-              <c:set var="paginationHrefPage" value="/shop?page="/>
-            </c:if>
-            <a class="prev_bt" href="${paginationHrefPage}${pageParam.blockNum * pageParam.paginationCount}<c:out value="${searchKeyword}"/>">
-              <i class="fa fa-long-arrow-left"></i>
-            </a>
-            <c:forEach begin="1" end="${pageParam.paginationCount}" varStatus="status">
-              <c:set var="thisPage" value="${pageParam.blockNum * pageParam.paginationCount + status.index}"/>
-              <c:if test="${thisPage <= pageParam.pageCount}">
-              <a <c:out value="${pageParam.currentPage == thisPage ? 'class=paging-active' : ''}"/> 
-                href="${paginationHrefPage}${thisPage}<c:out value="${searchKeyword}"/>">
-                ${thisPage}</a>
+              </c:otherwise>
+            </c:choose>
+          <c:if test="${pageParam.productCount > 0}">
+            <div class="product__pagination" data-block-num="${pageParam.blockNum}" data-last-block-num="${pageParam.lastBlockNum}">
+              <c:set var="searchKeyword" value="${not empty keyword ? '&keyword=' : ''}${not empty keyword ? keyword : ''}"/>
+              <c:if test="${not empty pageParam.category}">
+                <c:set var="paginationHrefPage" value="/shop/${pageParam.category}?page="/>
               </c:if>
-            </c:forEach>
-            <a class="next_bt" href="${paginationHrefPage}${(pageParam.blockNum + 1) * pageParam.paginationCount + 1}<c:out value="${searchKeyword}"/>">
-              <i class="fa fa-long-arrow-right"></i>
-            </a>
-          </div>
+              <c:if test="${empty pageParam.category}">
+                <c:set var="paginationHrefPage" value="/shop?page="/>
+              </c:if>
+              <a class="prev_bt" href="${paginationHrefPage}${pageParam.blockNum * pageParam.paginationCount}<c:out value="${searchKeyword}"/>">
+                <i class="fa fa-long-arrow-left"></i>
+              </a>
+              <c:forEach begin="1" end="${pageParam.paginationCount}" varStatus="status">
+                <c:set var="thisPage" value="${pageParam.blockNum * pageParam.paginationCount + status.index}"/>
+                <c:if test="${thisPage <= pageParam.pageCount}">
+                <a <c:out value="${pageParam.currentPage == thisPage ? 'class=paging-active' : ''}"/> 
+                  href="${paginationHrefPage}${thisPage}<c:out value="${searchKeyword}"/>">
+                  ${thisPage}</a>
+                </c:if>
+              </c:forEach>
+              <a class="next_bt" href="${paginationHrefPage}${(pageParam.blockNum + 1) * pageParam.paginationCount + 1}<c:out value="${searchKeyword}"/>">
+                <i class="fa fa-long-arrow-right"></i>
+              </a>
+            </div>
+          </c:if>
         </div>
       </div>
     </div>

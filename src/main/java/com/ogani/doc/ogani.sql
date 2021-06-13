@@ -45,10 +45,10 @@ CREATE TABLE product_category (
 	cate_name	  VARCHAR2(50) UNIQUE NOT NULL
 );
 
-ALTER TABLE product ADD CONSTRAINT product_cate_no_FK 
-FOREIGN KEY(cate_no) REFERENCES product_category(cate_no);
 ALTER TABLE product_category ADD CONSTRAINT product_category_cate_no_PK 
 PRIMARY KEY(cate_no);
+ALTER TABLE product ADD CONSTRAINT product_cate_no_FK 
+FOREIGN KEY(cate_no) REFERENCES product_category(cate_no);
 ALTER TABLE product_category ADD CONSTRAINT product_cate_parentno_FK 
 FOREIGN KEY(cate_parentno) REFERENCES product_category(cate_no);
 
@@ -173,4 +173,4 @@ INCREMENT BY 1
 NOCYCLE;
 
 INSERT INTO admin_info(admin_no, admin_id, admin_password, admin_name, admin_phone, admin_email)
-VALUES(seq_admin_info.NEXTVAL, 'admin', '$2a$10$vPHJ0Kim4CoAVY3GZ0VpauIByaQVnrxtErT.Hxlyymwuy0VQvPkEy', 'admin', '010-1234-5678', 'admin@email.com');
+VALUES(seq_admin_info.NEXTVAL, 'admin', '$2a$10$PDCTt4tZiIF9th8wYy71tOvQyiCLCR20gtPV2hR9/paHSePOxODCO', 'admin', '010-1234-5678', 'admin@email.com');
