@@ -93,7 +93,7 @@ public class RootConfig {
 		mailSender.setHost("smtp.gmail.com");
 		mailSender.setPort(587);
 		mailSender.setUsername("p01076322603@gmail.com");
-		mailSender.setPassword("dms12309");
+		mailSender.setPassword("password");
 		mailSender.setDefaultEncoding("utf-8");
 		mailSender.setJavaMailProperties(properties);
 		
