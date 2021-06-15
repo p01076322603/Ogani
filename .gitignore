@@ -107,3 +107,6 @@ hs_err_pid*
 # End of https://www.toptal.com/developers/gitignore/api/eclipse,java
 
 ## uploaded image folder
+
+## SMTP Mail config file
+MailConfig.java

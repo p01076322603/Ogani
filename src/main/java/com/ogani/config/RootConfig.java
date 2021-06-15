@@ -1,7 +1,5 @@
 package com.ogani.config;
 
-import java.util.Properties;
-
 import javax.sql.DataSource;
 
 import org.apache.ibatis.session.SqlSessionFactory;
@@ -14,8 +12,6 @@ import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.EnableAspectJAutoProxy;
 import org.springframework.jdbc.datasource.DataSourceTransactionManager;
-import org.springframework.mail.javamail.JavaMailSender;
-import org.springframework.mail.javamail.JavaMailSenderImpl;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 import org.springframework.web.multipart.MultipartResolver;
@@ -78,27 +74,6 @@ public class RootConfig {
 	    resolver.setMaxUploadSize(10 * 1024 * 1024);
 	    resolver.setDefaultEncoding("UTF-8");
 	    return resolver;
-	}
-	
-	@Bean(name="mailSender")
-	public JavaMailSender getJavaMailSender() {
-		Properties properties = new Properties(); 
-		properties.put("mail.smtp.auth", true);
-		properties.put("mail.transport.protocol", "smtp");
-		properties.put("mail.smtp.starttls.enable", true);
-		properties.put("mail.smtp.starttls.required", true);
-		properties.put("mail.debug", true);
-		
-		JavaMailSenderImpl mailSender = new JavaMailSenderImpl();
-		mailSender.setHost("smtp.gmail.com");
-		mailSender.setPort(587);
-		mailSender.setUsername("p01076322603@gmail.com");
-		mailSender.setPassword("password");
-		mailSender.setDefaultEncoding("utf-8");
-		mailSender.setJavaMailProperties(properties);
-		
-		return mailSender;
-		
 	}
 	
 }
