@@ -2,6 +2,7 @@ package com.ogani.controller;
 
 import java.util.Collection;
 import java.util.Collections;
+import java.util.List;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
@@ -46,11 +47,9 @@ public class MemberController {
 	
 	@GetMapping
 	public String memberInfo(@AuthenticationPrincipal CustomerDTO customer, Model model) {
-		
-		OrderDTO order = orderService.getOrderByCustNo(customer.getCust_no());
-		if (order != null) {
-			model.addAttribute("order", order);
-		}
+
+		List<OrderDTO> orderList = orderService.getOrderByCustNo(customer.getCust_no());
+		model.addAttribute("orderList", orderList);
 		
 		return "ogani/memberInfo";
 	}

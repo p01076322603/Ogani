@@ -3204,12 +3204,37 @@ ol {
 	background: #41cba9;
 	outline: none !important;
 }
+
+.member-form .order-each p {
+	margin: 8px 0;
+}
+
+.member-form .order-each p,
+.member-form .order-each strong {
+  display: inline-block;
+  text-align: center;
+  width: 24%;
+}
+
+.member-form #orderHeading strong {
+	position: relative;
+	right: 12px;
+}
+
 #leaveModal button {
   width: 80px;
 }
 
 @media only screen and (max-width: 576px) {
 
+  .memberInfo .container {
+  	padding: 0;
+  }
+	
+  .member-form {
+  	padding: 30px 5px;
+  }
+	
   .member-form .btn {
     width: 49%;
     min-width: 90px;

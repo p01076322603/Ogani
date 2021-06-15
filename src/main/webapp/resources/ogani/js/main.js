@@ -610,6 +610,13 @@ $("#username, #password").on('keypress', (e) => {
     	if(e.which == 13) { loginCheck(); }
 });
 
+/*-------------------
+  	 MemberInfo	
+--------------------- */
+$(".order-each").on("click", "#orderHeading", function() {
+	$(this).siblings("#orderCollapse").collapse('toggle');	
+});
+
 /*---------------------
 MemberModify Validation	
 --------------------- */
@@ -724,6 +731,7 @@ function modifyCheck() {
 /*-------------------
   MemberModify Leave	
 --------------------- */
+
 $('[data-oper="leaveModal"]').click( () => {
 	$('#leaveModal').modal({ backdrop: 'static', keyboard: false });
 	$('#leaveModalModal').modal('show');

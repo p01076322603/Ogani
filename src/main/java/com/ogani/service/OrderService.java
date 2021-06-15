@@ -1,5 +1,7 @@
 package com.ogani.service;
 
+import java.util.List;
+
 import com.ogani.domain.OrderDTO;
 
 public interface OrderService {
@@ -8,5 +10,5 @@ public interface OrderService {
 	
 	public OrderDTO getOrderByUid(String order_uid);
 	
-	public OrderDTO getOrderByCustNo(int cust_no);
+	public List<OrderDTO> getOrderByCustNo(int cust_no);
 }

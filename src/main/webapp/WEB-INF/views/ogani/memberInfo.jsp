@@ -2,6 +2,7 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <%@ taglib prefix="s" uri="http://www.springframework.org/security/tags" %>
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 
 <!DOCTYPE html>
 <html lang="ko">
@@ -37,7 +38,7 @@
 <script defer src="/resources/ogani/js/owl.carousel.min.js"></script>
 <script defer src="/resources/ogani/js/main.js"></script>
 </head>
-<body>
+<body class="memberInfo">
 
   <jsp:include page="/WEB-INF/templates/ogani/header.jsp" />
   <s:authentication var="principal" property="principal"/>
@@ -125,11 +126,59 @@
           </div>
         </div>
         <div class="tab-pane fade" id="member-order" role="tabpanel" aria-labelledby="member-order-tab">
-          <c:if test="${empty order}">
+          <c:if test="${empty orderList}">
             <p class="lead text-center p-5">주문 내역이 없습니다.</p>
           </c:if>
-          <c:if test="${not empty order}">
-            <c:out value="${order.cust_no}"/>
+
+          <c:if test="${not empty orderList}">
+            <div class="card mt-3">
+              <div class="card-header" id="orderHeading">
+                <div class="d-flex text-center">
+                  <strong class="w-25">구매일</strong>
+                  <strong class="w-25">구매 내용</strong>
+                  <strong class="w-25">총 가격</strong>
+                  <strong class="w-25">품목 수</strong>
+                </div>
+              </div>
+            </div>
+            <div class="accordion" id="accordion">
+              <c:forEach var="order" items="${orderList}">
+                <div class="card order-each" style="cursor: pointer;">
+                  <div class="card-header p-0" id="orderHeading">
+                    <p><fmt:formatDate value="${order.order_regdate}" pattern="yy-MM-dd"/></p> 
+                    <p>${order.order_name}</p> 
+                    <p><fmt:formatNumber value="${order.order_price}" type="currency"/></p> 
+                    <p>${fn:length(order.orderDetailList)}개</p>
+                  </div>
+                  <div id="orderCollapse" class="collapse" aria-labelledby="orderHeading" data-parent="#accordion">
+                    <div class="card-body p-0 py-2">
+                      <strong>주문 번호</strong>
+                      <strong>상품 이름</strong>
+                      <strong>상품 개수</strong>
+                      <strong>배송 상태</strong>
+                    </div>
+                    <c:forEach var="orderDetail" items="${order.orderDetailList}">
+                      <div class="card-body p-0">
+                        <p>${orderDetail.order_uid}</p>
+                        <p>${orderDetail.prod_name}</p>
+                        <p>${orderDetail.order_detail_quantity}</p>
+                        <c:choose>
+                          <c:when test="${orderDetail.order_detail_shipstatus == 1}">
+                            <p>배송중</p>
+                          </c:when>
+                          <c:when test="${orderDetail.order_detail_shipstatus == 2}">
+                            <p>배송 완료</p>
+                          </c:when>
+                          <c:otherwise>
+                            <p>주문 접수</p>
+                          </c:otherwise>
+                        </c:choose>
+                      </div>
+                    </c:forEach>
+                  </div>
+                </div>
+              </c:forEach>
+            </div>
           </c:if>
         </div>
       </div>

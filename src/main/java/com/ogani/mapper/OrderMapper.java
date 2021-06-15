@@ -13,7 +13,7 @@ public interface OrderMapper {
 	
 	public OrderDTO selectOrderByUid(String order_uid);
 	
-	public OrderDTO selectOrderByCustNo(int cust_no);
+	public List<OrderDTO> selectOrderByCustNo(int cust_no);
 	
 	public List<OrderDetailDTO> selectOrderDetailByUid(String order_uid);
 }
