@@ -45,8 +45,6 @@ import com.siot.IamportRestClient.response.Payment;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
-// TODO: 서버 장애시 환불 로직 작성
-
 @Slf4j
 @Controller
 @Secured("ROLE_USER")
@@ -137,8 +135,16 @@ public class CheckoutController {
 	@PostMapping("/verifyCheckout/{imp_uid}")
 	public IamportResponse<Payment> paymentByImpUid(@PathVariable String imp_uid) 
 			throws IamportResponseException, IOException {
-		
+
 		return api.paymentByImpUid(imp_uid);
+	}
+
+	@ResponseBody
+	@PostMapping("/checkoutFail/{imp_uid}")
+	public IamportResponse<Payment> cancelPaymentByImpUid(@PathVariable String imp_uid) 
+			throws IamportResponseException, IOException {
+		
+		return api.cancelPaymentByImpUid(new CancelData(imp_uid, true));
 	}
 	
 	@Transactional

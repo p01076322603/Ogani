@@ -129,7 +129,7 @@
           <c:if test="${empty orderList}">
             <p class="lead text-center p-5">주문 내역이 없습니다.</p>
           </c:if>
-
+          <!-- 모바일 사이즈 반응형 처리 필요 -->
           <c:if test="${not empty orderList}">
             <div class="card mt-3">
               <div class="card-header" id="orderHeading">
@@ -141,7 +141,7 @@
                 </div>
               </div>
             </div>
-            <div class="accordion" id="accordion">
+            <div class="accordion mt-2" id="accordion">
               <c:forEach var="order" items="${orderList}">
                 <div class="card order-each" style="cursor: pointer;">
                   <div class="card-header p-0" id="orderHeading">
@@ -167,7 +167,9 @@
                             <p>배송중</p>
                           </c:when>
                           <c:when test="${orderDetail.order_detail_shipstatus == 2}">
-                            <p>배송 완료</p>
+                            <a href="#" data-toggle="tooltip" data-placement="right" title="리뷰를 쓰실 수 있습니다.">
+                              <p class="btn text-white" style="min-width: 95px;">배송 완료</p>
+                            </a>
                           </c:when>
                           <c:otherwise>
                             <p>주문 접수</p>
@@ -190,5 +192,6 @@
   </div>
 
   <jsp:include page="/WEB-INF/templates/ogani/footer.jsp" />
+  
 </body>
 </html>

@@ -58,7 +58,7 @@ public class ImageRemoveTask {
 		
 		File targetDir = Paths.get(uploadPath, getFolderBeforeDay(1), "product").toFile();
 		File[] targetImageList = targetDir.listFiles(file -> oldImagePathList.contains(file.toPath()) == false);
-		if (targetImageList.length > 0) {
+		if (targetImageList != null) {
 			for (File targetFile : targetImageList) {
 				log.debug("targetFile = {}", targetFile);
 				targetFile.delete();

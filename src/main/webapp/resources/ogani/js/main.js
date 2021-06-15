@@ -1105,6 +1105,12 @@ $(".place-order").click(function() {
 					success: () => window.location.assign("/checkout/complete?imp_uid=" + rsp.imp_uid + "&merchant_uid=" + rsp.merchant_uid),
 					fail: () => {
 						// 서버 장애시 환불 로직 작성 
+						$.ajax({
+						url: "/checkout/checkoutFail/" + rsp.imp_uid,
+						type: "POST",
+						beforeSend : (xhr) => xhr.setRequestHeader(CSRFheader, CSRFtoken),
+						success: () => alert("결제에 실패하였습니다. (서버 장애)")
+						});
 					}
 				});
 				
@@ -1116,3 +1122,5 @@ $(".place-order").click(function() {
 		});
 	});
 });
+
+$('[data-toggle="tooltip"]').tooltip();
